@@ -18,7 +18,7 @@ class conteneurcorps extends StatelessWidget {
         border: GradientBoxBorder(gradient: LinearGradient(colors: [colbordure, colorg]),width: 2, ),
         borderRadius: BorderRadius.circular(10),
          boxShadow: 
-           [ BoxShadow(
+           const[ BoxShadow(
               blurRadius: 10,
               spreadRadius: 0,
               offset: Offset(0,4),

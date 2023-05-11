@@ -75,7 +75,7 @@ class _listecompteurState extends State<listecompteur> {
                         text: "LOGEMENT",
                         couleur1: Color.fromRGBO(17, 45, 194, 0.11), couleur2: Colors.transparent,),
                          onTap: () {
-                        
+                           
                       },
                   ),
                 ),

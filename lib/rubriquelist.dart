@@ -2,12 +2,14 @@ import 'dart:math';
 
 import 'package:ams_mobile/conteneurrubrique.dart';
 import 'package:ams_mobile/list_rubrique.dart';
+import 'package:ams_mobile/listescles.dart';
 import 'package:flutter/material.dart';
 
 import 'button.dart';
 import 'conteneur.dart';
 import 'conteneurmenu.dart';
 import 'listecompteurs.dart';
+import 'logement.dart';
 import 'piece.dart';
 class rubriqueliste extends StatefulWidget {
   const rubriqueliste({super.key});
@@ -76,7 +78,8 @@ class _rubriquelisteState extends State<rubriqueliste> {
                         text: "LOGEMENT",
                         couleur1: Color.fromRGBO(17, 45, 194, 0.11), couleur2: Colors.transparent,),
                          onTap: () {
-                        
+                        Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Logement()));
                       },
                   ),
                 ),
@@ -111,7 +114,8 @@ class _rubriquelisteState extends State<rubriqueliste> {
                         text: "CLES",
                         couleur1: Color.fromRGBO(17, 45, 194, 0.11),couleur2: Colors.transparent,),
                          onTap: () {
-                        
+                         Navigator.push(
+                context, MaterialPageRoute(builder: (context) => listcle()));
                       },
                       ),
                     ),

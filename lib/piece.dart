@@ -6,6 +6,7 @@ import 'button.dart';
 import 'conteneurmenu.dart';
 import 'listecompteurs.dart';
 import 'listescles.dart';
+import 'logement.dart';
 class piececonteneur extends StatefulWidget {
    
 
@@ -73,7 +74,8 @@ class _piececonteneurState extends State<piececonteneur> {
                         text: "LOGEMENT",
                         couleur1: Color.fromRGBO(17, 45, 194, 0.11), couleur2: Colors.transparent,),
                          onTap: () {
-                        
+                        Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Logement()));
                       },
                   ),
                 ),

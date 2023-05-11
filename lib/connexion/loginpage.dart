@@ -2,7 +2,7 @@ import 'package:ams_mobile/Acceuil/acceuil.dart';
 import 'package:ams_mobile/piedpage/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+
 
 class login extends StatefulWidget {
   const login({super.key});

@@ -4,10 +4,10 @@ import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/conteneurliste.dart';
 import 'package:ams_mobile/conteneurmenu.dart';
 import 'package:ams_mobile/listecompteurs.dart';
-import 'package:ams_mobile/piedpage/home.dart';
+import 'package:ams_mobile/layout/AppLayout.dart';
 import 'package:ams_mobile/rubriquelist.dart';
 import 'package:flutter/material.dart';
-
+import 'logement.dart';
 import 'piece.dart';
 
 class listcle extends StatefulWidget {
@@ -77,7 +77,8 @@ class _listcleState extends State<listcle> {
                         text: "LOGEMENT",
                         couleur1: Color.fromRGBO(17, 45, 194, 0.11), couleur2: Colors.transparent,),
                          onTap: () {
-                        
+                        Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Logement()));
                       },
                   ),
                 ),
@@ -267,8 +268,8 @@ class _listcleState extends State<listcle> {
                 )),
           ),
           onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => home()));
+            // Navigator.push(
+            //     context, MaterialPageRoute(builder: (context) => home()));
           },
         ),
 
