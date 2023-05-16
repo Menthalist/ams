@@ -86,7 +86,16 @@ final  String compteur, consom;
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          camera(),
+                          ListTile(
+                            title: new Text('Photo',style: TextStyle(fontFamily: "FuturaLT.ttf",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,),),
+                            leading: new Icon(Icons.camera,color: Colors.black,),
+                            
+                            onTap: () {
+                              camera();
+                            },
+                          ),
                           ListTile(
                             title: new Text('Modifier',style: TextStyle(fontFamily: "FuturaLT.ttf",
                               fontSize: 14,

@@ -1,31 +1,65 @@
+import 'package:ams_mobile/Textform_Constat.dart';
 import 'package:ams_mobile/camera.dart';
 import 'package:ams_mobile/connexion/loginpage.dart';
+import 'package:ams_mobile/conteneur.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 class Formulaire_Constat extends StatefulWidget {
-  const Formulaire_Constat({super.key});
+
    
   @override
   State<Formulaire_Constat> createState() => _Formulaire_ConstatState();
 }
+   
 
 
 class _Formulaire_ConstatState extends State<Formulaire_Constat> {
+   
+
   _Formulaire_ConstatState(){
-    _selectedval = _ConstatList[0];
-    _SelectedVal = _EtatList[0] ;
-    _selectedVal = _commentaireList[0];
-    _SelectedVAL = _ajoutList[0];
+   
+    selectchoice = constatList[0];
+   // _SelectedVal = _EtatList[0] ;
+    //_selectedVal = _commentaireList[0];
+    //_SelectedVAL = _ajoutList[0];
   }
-   final _ConstatList = ["rubriques","1","2","3","4"];
+  /* final _ConstatList = ["rubriques","1","2","3","4"];
   String? _selectedval = "";
   String? _SelectedVAL = "";
   final _ajoutList = ["Informations generales","pièce de tests","Information locataire","Information AGENT CONSTAT","information des clés"];
   final _EtatList = ["A","B","C","D"];
   String _SelectedVal = "";
-  final _commentaireList = ["Descriptions","Defauts","Phrases Types","Observations"];
+  final _commentaireList = [];
  // String val = "";
-  String _selectedVal = "";
+  String _selectedVal = "";*/
+  String selectchoice="rubriques";
+  List constatList = [
+    "rubriques",
+    "Boites aux Lettres",
+    "Detecteur de monoxyde de carbon",
+    "Decteur de fumée",
+  ];
+   String selectchoix="Etat";
+  List etatList = [
+    "Etat",
+    "Bon état",
+    "Mauvais état",
+    "Neuf",
+    "Vétuste",
+    "Fonctionne",
+    "Ne fonctionne pas",
+    "Rénové",
+    "Etat d'usage",
+  ];
+   String selectcommentaire="Descriptions";
+  List commentaireList = [
+    "Descriptions","Defauts","Phrases Types","Observations"
+  ];
+  String p="Piece";
+  String a= "1",b="3";
+  camera cam = camera();
+
+  
   
   
   
@@ -36,205 +70,211 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return Scaffold(
-      
-      body: ListView(
-        children: [
-          Text("Formulaire de constat".toUpperCase(),style: TextStyle(
-            fontWeight: FontWeight.w900,fontSize: 18,fontFamily: 'Futura.LT',
+    return Scaffold( 
+      backgroundColor: Colors.white,
+       appBar: AppBar(
+        toolbarHeight: 56,
+        backgroundColor: Colors.white,
+        actions: [
+          InkWell(
+            child: const Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+                child: Icon(
+                  Icons.settings,
+                  size: 25,
+                  color: Colors.black,
+                )),
+            onTap: () {
+              
+               
+            },
+          )
+        ],
+        leading: InkWell(
+          child: const Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Icon(
+              Icons.arrow_back,
+              size: 25,
+              color: Colors.black,
+            ),
           ),
-          textAlign: TextAlign.left,),
-          SizedBox(
-            height: MediaQuery.of(context).size.height*0.09,
-         
-     ),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+        centerTitle: true,
+        title: const Text(
+          "AMEXPERT",
+          //textAlign: TextAlign.right,
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              fontFamily: 'FuturaLT.ttf',
+              color: Colors.black),
+        ),
+      ),  
+      body: ListView(
+   children: [
+    conteneur(text: "FORMULAIRE DE CONSTAT"),
+    Container(
+      margin: EdgeInsets.only(left: 20,right: 20,top: 15),
+      width: MediaQuery.of(context).size.width,
+      height: 35,
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(218, 219, 219, 215) ,
+      ),
+      child: Center(
+          child: Text(
+        p + " " + a + "/" + b ,
+        style: const TextStyle(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            fontFamily: "FuturaLT.ttf"),
+      )),
+    ),
+    Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(left: 20,right: 20,top: 15),
+      child: DropdownButton(
+       
+        value: selectchoice,
+        items: constatList.map(
+          (e) => DropdownMenuItem(child: Text(e),value: e,)
+          ).toList(),
+        onChanged: (val){
+          setState(() {
+            selectchoice = val as String;
+          });
+               },
+ /* icon: const  Icon(
+        
+      Icons.arrow_drop_down_circle,
+   // color: Colors.grey,
+  ),*/
+  dropdownColor: Colors.white,
+  
+  
+  
+ 
+  ),
+    ),
      Container(
-                 margin: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                 color: Colors.white60,
-                   child:DropdownButtonFormField(
-                     elevation: 8,
-                 value: _selectedval
-                 ,
-                 items: _ConstatList.map(
-                         (e) => DropdownMenuItem(child: Text(e), value: e,)
-                 ).toList(),
-                 onChanged: (val){
-                   setState(() {
-                     _selectedval = val as String;
-                   });
-                 },
-                 icon: const Icon(Icons.arrow_drop_down_circle,
-                 color: Colors.black,),
-                 dropdownColor: Colors.white,
-                 decoration: InputDecoration(
-                   focusColor: Colors.white,
-                   labelText: "faites votre choix",
-                   labelStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.w900),
-                   prefixIcon: Icon(
-                     Icons.accessibility_new_rounded,
-                     color: Colors.black,
-                   ),
-                   border: UnderlineInputBorder()
-                 )
-               )
-               ),
-               SizedBox(height: 15,),
-               Row(
-                   mainAxisAlignment: MainAxisAlignment.start,
-                   children: [
-                     Container(
-                       height: MediaQuery.of(context).size.height*0.08,
-                       width: MediaQuery.of(context).size.width*0.4,
-                       margin: EdgeInsets.symmetric(horizontal: 20),
-                       decoration: BoxDecoration(
-                         color: Colors.white70,
-                         borderRadius: BorderRadius.circular(20),
-
-                       ),
-
-                       child: Container(
-                           margin: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-                           height: MediaQuery.of(context).size.height*0.02,
-                           color: Colors.black,
-                           child: Center(child: Text("ETAT",style: TextStyle(fontWeight: FontWeight.w900,fontSize: 20,color: Colors.white,),textAlign: TextAlign.center,),),),
-
-                     ),
-                   ],),
-               SizedBox(height: 5,),
-
-                   Container(
-                     margin: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                     color: Colors.white,
-                     child: DropdownButtonFormField(
-                         value: _SelectedVal
-                         ,
-                         items: _EtatList.map(
-                                 (e) => DropdownMenuItem(child: Text(e), value: e,)
-                         ).toList(),
-                         onChanged: (val){
-                           setState(() {
-                             _SelectedVal = val as String;
-                           });
-                         },
-                         icon: const Icon(Icons.arrow_drop_down_circle,
-                           color: Colors.black,),
-                         iconSize: 24,
-                         dropdownColor: Colors.white,
-                         decoration: InputDecoration(
-                             focusColor: Colors.white,
-                             labelText: "faites votre choix",
-                             labelStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.w900),
-                             prefixIcon: Icon(
-                               Icons.accessibility_new_rounded,
-                               color: Colors.black,
-                             ),
-                             border: OutlineInputBorder()
-                         )
-                     ),
-                   ),
-               SizedBox(height: 5,),
-               Row(
-                 mainAxisAlignment: MainAxisAlignment.start,
-                 children: [
-                   Container(
-                     height: MediaQuery.of(context).size.height*0.08,
-                     width: MediaQuery.of(context).size.width*0.6,
-                     margin: EdgeInsets.symmetric(horizontal: 20),
-                     decoration: BoxDecoration(
-                       color: Colors.white60,
-                       borderRadius: BorderRadius.circular(20),
-
-                     ),
-
-                     child: Container(
-                       margin: EdgeInsets.symmetric(vertical: 20,),
-                       height: MediaQuery.of(context).size.height*0.02,
-
-                       color: Colors.black,
-                       child: Center(child: Text("TYPE DE COMMENTAIRE",style: TextStyle(fontWeight: FontWeight.w900,fontSize: 20,color: Colors.white,),textAlign: TextAlign.center,),),),
-
-                   ),
-                 ],),
-               SizedBox(height: 5,),
-
-               Container(
-                   margin: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                   color: Colors.white,
-                   child:DropdownButtonFormField(
-                     value: _selectedVal
-                     ,
-                     items: _commentaireList.map(
-                             (e) => DropdownMenuItem(child: Text(e), value: e,)
-                     ).toList(),
-                     onChanged: (val){
-                       setState(() {
-                         _selectedVal = val as String;
-                       });
-                     },
-                     icon: const Icon(Icons.arrow_drop_down_circle,
-                       color: Colors.black,),
-                     iconSize: 24,
-                     dropdownColor: Colors.white,
-                     decoration: InputDecoration(
-                         focusColor: Colors.white,
-                         labelText: "faites votre choix",
-                         labelStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.w900),
-                         prefixIcon: Icon(
-                           Icons.accessibility_new_rounded,
-                           color: Colors.black,
-                         ),
-                         border: OutlineInputBorder()
-                     )
-                 ),
-               ),
-               SizedBox(height: 5,),
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(left: 20,right: 20,top: 20),
+      child: DropdownButton(
+        value: selectchoix,
+        items: etatList.map(
+          (e) => DropdownMenuItem(child: Text(e),value: e,)
+          ).toList(),
+        onChanged: (Val){
+          setState(() {
+            selectchoix = Val as String;
+          });
+               },
+ /* icon: const  Icon(
+        
+      Icons.arrow_drop_down_circle,
+   // color: Colors.grey,
+  ),*/
+  dropdownColor: Colors.white,
+  
+  
+  
+ 
+  ),
+    ),
+     Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(left: 20,right: 20,top: 20),
+      child: DropdownButton(
+        value: selectcommentaire,
+        items: commentaireList.map(
+          (e) => DropdownMenuItem(child: Text(e),value: e,)
+          ).toList(),
+        onChanged: (Val){
+          setState(() {
+            selectcommentaire = Val as String;
+          });
+               },
+ /* icon: const  Icon(
+        
+      Icons.arrow_drop_down_circle,
+   // color: Colors.grey,
+  ),*/
+  dropdownColor: Colors.white,
+      ),),
+      
+      Conteneur_formulaire(hauteur: MediaQuery.of(context).size.height*0.06, text: "Commentaire"),
+      Conteneur_formulaire(hauteur: MediaQuery.of(context).size.height*0.2, text: "Commentaire Final"),
+      
          Container(
-             margin: EdgeInsets.symmetric(horizontal: 20),
-             height: MediaQuery.of(context).size.height/12,
-             width: MediaQuery.of(context).size.width*0.9,
-             decoration: BoxDecoration(
-                 borderRadius: BorderRadius.circular(20),
-                 color: Colors.white.withOpacity(0.5)
-             ),
-             child:Column(
-                 children: [
-                   TextField(
-                     decoration: InputDecoration(
-                         labelStyle: TextStyle(
-                           color: Colors.black.withOpacity(0.9),
-                           fontSize: 20,
-
-                         ),
-                         labelText: "Commentaire final"
-                     ),
-                   ),
-             ]
-           ),
-         ),
-               Container(
-              child: camera(),),
-
-               SizedBox(height: 40,),
-
-               InkWell(
-                 child: Container(
-                   width: MediaQuery.of(context).size.width*0.42,
-                   height: MediaQuery.of(context).size.width*0.12,
-                   margin: EdgeInsets.symmetric(horizontal: 120),
-                   decoration: BoxDecoration(
-                       color: Colors.black,
-                       borderRadius: BorderRadius.circular(10)
-                   ),
-                   child: Center(child: Text("ENREGISTRER",style: TextStyle(fontWeight: FontWeight.w900,fontSize: 20,color: Colors.white,),textAlign: TextAlign.center,)),
-                 ),
-                 onTap: (){
-                   Navigator.push(context, MaterialPageRoute(builder: (context) => login()));
-                 },
+          height: MediaQuery.of(context).size.height*0.08,
+          margin: EdgeInsets.only(top: 30,right: 170,left: 170),
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(120),
+            border: Border.all(width: 1,color: Colors.black)
+            ),
+           child: Center(child: IconButton(onPressed: (){camera();}, icon: Icon(Icons.camera_alt,size: 30,color: Colors.white,),))),
+      
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+       children: [
+        InkWell(
+          child: Container(
+            height: MediaQuery.of(context).size.height*0.06,
+            width: MediaQuery.of(context).size.width*0.3,
+            margin: EdgeInsets.only(left: 10,top: 30),
+            decoration:  BoxDecoration(
+              
+                 color: Colors.red,
+                  borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Center(child: Text("ANNULER",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w700,color: Colors.white),)),
+                 
                ),
+               onTap: () {
+                 
+               },
+        ),
+        InkWell(
+          child: Container(
+            height: MediaQuery.of(context).size.height*0.06,
+            width: MediaQuery.of(context).size.width*0.3,
+            margin: EdgeInsets.only(right: 10,top: 30),
+            decoration:  BoxDecoration(
+              
+                 color: Colors.black,
+                  borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Center(child: Text("ENREGISTRER",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w700,color: Colors.white),)),
+                 
+               ),
+               onTap: () {
+                 
+               },
+        )
+          
+    ] ),
+       ],
+      )
 
-             ])
+  
+  
+  
+    
+
+ 
+      
+
+      
+    
+   );
+
          
-     );
+     
 
 
 

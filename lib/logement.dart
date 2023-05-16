@@ -7,7 +7,10 @@ import 'conteneur.dart';
 import 'listecompteurs.dart';
 import 'listescles.dart';
 class Logement extends StatefulWidget {
-  const Logement({super.key});
+  
+   String type_piece1=" 1 Salon",piece=" 4 PIECES",type_piece2="",type_piece3="",type_piece4="";
+  
+
 
   @override
   State<Logement> createState() => _LogementState();
@@ -57,7 +60,7 @@ class _LogementState extends State<Logement> {
               color: Colors.black),
         ),
       ),
-      body: Column(children: [
+      body: ListView(children: [
         conteneur(text: "CONSTAT D'ETAT DE LIEU"),
         Container(
           height: MediaQuery.of(context).size.height * 0.055,
@@ -127,6 +130,44 @@ class _LogementState extends State<Logement> {
             ),
             
         ),
+        Container(
+          margin: EdgeInsets.only(top: 20, left: 10,right: 10),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height*0.12,
+          decoration: const BoxDecoration(
+             color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 8,
+                spreadRadius: -1,
+                 offset: Offset.zero,
+
+              )
+      ]),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            padding: EdgeInsets.only(left: 10,top: 5,bottom: 5,),
+            width: MediaQuery.of(context).size.width*0.25,
+            child: const  Image(image: AssetImage("assets/img/pie1.png",),
+           fit: BoxFit.cover)),
+           Column(
+           crossAxisAlignment: CrossAxisAlignment.end,
+           mainAxisAlignment: MainAxisAlignment.start,
+            children:  [
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 5,right: 10),
+                child: Text(widget.piece.toUpperCase(),style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,fontFamily: "Futura.LT"),)),
+                Padding(
+                padding: const EdgeInsets.only(left: 10, top: 5,right: 10),
+                child: Text(widget.type_piece1.toUpperCase(),style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,fontFamily: "Futura.LT"),))
+            ],
+           )
+           
+        ],
+      ),
+        )
         
 
       ]),

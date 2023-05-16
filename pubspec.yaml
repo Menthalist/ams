@@ -46,6 +46,8 @@ dependencies:
   syncfusion_flutter_sliders: ^21.2.4
   carousel_slider: ^4.2.1
   provider: ^6.0.5
+  get: ^4.6.5
+  multi_select_flutter: ^4.1.3
   
 dev_dependencies:
   flutter_test:
@@ -81,6 +83,7 @@ flutter:
     - assets/img/me.png
     - assets/img/rect.png
     - assets/img/profil.png
+    - assets/img/pie1.png
   #  - assets/img/image1.png
 
   #   - images/a_dot_ham.jpeg
