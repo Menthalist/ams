@@ -145,7 +145,7 @@ class _LogementState extends State<Logement> {
               )
       ]),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        
         children: [
           Container(
             padding: EdgeInsets.only(left: 10,top: 5,bottom: 5,),
@@ -153,17 +153,17 @@ class _LogementState extends State<Logement> {
             child: const  Image(image: AssetImage("assets/img/pie1.png",),
            fit: BoxFit.cover)),
            Column(
-         mainAxisAlignment: MainAxisAlignment.start,
+        // mainAxisAlignment: MainAxisAlignment.start,
          crossAxisAlignment: CrossAxisAlignment.start,
             children:  [
               Padding(
-                padding: const EdgeInsets.only(left: 10, top: 5,),
-                child: Text(widget.nbrepiece + "piece".toUpperCase(),style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,fontFamily: "Futura.LT"),)),
+                padding: const EdgeInsets.only(top: 5,left: 20),
+                child: Text(widget.nbrepiece + " " +"pieces".toUpperCase(),style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,fontFamily: "Futura.LT"),)),
                 Padding(
-                padding: const EdgeInsets.only(left: 10, top: 5,right: 10),
-                child: Text(widget.nbrecompteur + "compteurs".toUpperCase(),style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500,fontFamily: "Futura.LT"),)),
-                Padding(padding: const EdgeInsets.only(left: 10, top: 5,right: 10),
-                child: Text(widget.nbrecle + "clés".toUpperCase(),style: const  TextStyle(fontSize: 14, fontWeight: FontWeight.w500,fontFamily: "Futura.LT"),)),
+                padding: const EdgeInsets.only( top:20,right: 10,left: 20),
+                child: Text(widget.nbrecompteur + " " + "compteurs".toUpperCase(),style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500,fontFamily: "Futura.LT"),)),
+                Padding(padding: const EdgeInsets.only( top: 20,right: 10,left: 20),
+                child: Text(widget.nbrecle + " " + "clés".toUpperCase(),style: const  TextStyle(fontSize: 16, fontWeight: FontWeight.w500,fontFamily: "Futura.LT"),)),
                 
             ],
            )
