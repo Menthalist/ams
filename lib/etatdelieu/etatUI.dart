@@ -13,6 +13,7 @@ class etatUIdesign extends StatefulWidget {
       nbrecom,
       datej;
   String? etat;
+  VoidCallback change;
 
   Color couleurconteneur = Color.fromRGBO(232, 247, 227, 1);
   Color couleurbordure = Color.fromRGBO(57, 182, 14, 1);
@@ -26,7 +27,8 @@ class etatUIdesign extends StatefulWidget {
       required this.nbrepar,
       required this.datej,
       required this.nbrecom,
-      this.etat});
+      this.etat,
+      required this.change});
 
   @override
   State<etatUIdesign> createState() => _etatUIdesignState();
@@ -61,10 +63,7 @@ class _etatUIdesignState extends State<etatUIdesign> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (() {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => listcle()));
-      }),
+      onTap: widget.change,
       child: Container(
         margin: EdgeInsets.only(left: 13, top: 20, right: 13),
         padding: EdgeInsets.only(

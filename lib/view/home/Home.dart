@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../etatdelieu/etatUI.dart';
 import '../../etatdelieu/liste_etat.dart';
+import '../../piece.dart';
 import '../../providers/etat_realisation.dart';
 
 class Home extends StatefulWidget {
@@ -24,6 +26,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late SharedPreferences globals;
+  EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
   List<EtatRealisation> etat1 = [];
   final List<String> _etat = [
     "EDL SORTANT APPROUVE",
@@ -34,7 +38,21 @@ class _HomeState extends State<Home> {
     "EDL SORTANT ANNULE"
   ];
 
+  void initSharedPref() async {
+    globals = await SharedPreferences.getInstance();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    initSharedPref();
+    etatRealisationProvider.getItems();
+    super.initState();
+  }
+
   String _selectedetat = "EDL SORTANT APPROUVE";
+  String totalEdl = "";
+
   @override
   Widget build(BuildContext context) {
     etat1 = Provider.of<EtatRealisationProvider>(context).getEtats;
@@ -42,6 +60,11 @@ class _HomeState extends State<Home> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    var total = etat1.length.toString();
+
+    if (total != null) {
+      totalEdl = total;
+    }
     return Scaffold(
         body: ListView(children: [
       Column(
@@ -73,7 +96,7 @@ class _HomeState extends State<Home> {
                   const Padding(
                       padding: EdgeInsets.only(left: 5, bottom: 35, top: 15),
                       child: Text(
-                        "NOMBRE D'ETAT DE LIEUX REALISES",
+                        "TOTAL D'ETAT DE LIEUX",
                         style: TextStyle(
                             fontSize: 16,
                             fontFamily: "FuturaLT.ttf",
@@ -100,10 +123,10 @@ class _HomeState extends State<Home> {
                     ),
                   )
                 ]),
-                const Align(
+                Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "864",
+                      totalEdl,
                       style: TextStyle(
                         fontSize: 42,
                         fontFamily: "FuturaLT.ttf",
@@ -200,6 +223,16 @@ class _HomeState extends State<Home> {
       Column(
           children: etat1.map((e) {
         return etatUIdesign(
+          change: () {
+            var id = e.id;
+            if (id != null) {
+              globals.setString("edlId", id);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => piececonteneur(idToEdit: id)));
+            }
+          },
           etat: e.etat,
           textedl: e.rue,
           typedl: e.edl,
