@@ -8,7 +8,7 @@ import 'listecompteurs.dart';
 import 'listescles.dart';
 class Logement extends StatefulWidget {
   
-   String type_piece1=" 1 Salon",piece=" 4 PIECES",type_piece2="",type_piece3="",type_piece4="";
+   String nbrecompteur="1",nbrepiece="4",nbrecle ="2";
   
 
 
@@ -149,19 +149,22 @@ class _LogementState extends State<Logement> {
         children: [
           Container(
             padding: EdgeInsets.only(left: 10,top: 5,bottom: 5,),
-            width: MediaQuery.of(context).size.width*0.25,
+            width: MediaQuery.of(context).size.width*0.26,
             child: const  Image(image: AssetImage("assets/img/pie1.png",),
            fit: BoxFit.cover)),
            Column(
-           crossAxisAlignment: CrossAxisAlignment.end,
-           mainAxisAlignment: MainAxisAlignment.start,
+         mainAxisAlignment: MainAxisAlignment.start,
+         crossAxisAlignment: CrossAxisAlignment.start,
             children:  [
               Padding(
-                padding: const EdgeInsets.only(left: 10, top: 5,right: 10),
-                child: Text(widget.piece.toUpperCase(),style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,fontFamily: "Futura.LT"),)),
+                padding: const EdgeInsets.only(left: 10, top: 5,),
+                child: Text(widget.nbrepiece + "piece".toUpperCase(),style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,fontFamily: "Futura.LT"),)),
                 Padding(
                 padding: const EdgeInsets.only(left: 10, top: 5,right: 10),
-                child: Text(widget.type_piece1.toUpperCase(),style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700,fontFamily: "Futura.LT"),))
+                child: Text(widget.nbrecompteur + "compteurs".toUpperCase(),style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500,fontFamily: "Futura.LT"),)),
+                Padding(padding: const EdgeInsets.only(left: 10, top: 5,right: 10),
+                child: Text(widget.nbrecle + "clés".toUpperCase(),style: const  TextStyle(fontSize: 14, fontWeight: FontWeight.w500,fontFamily: "Futura.LT"),)),
+                
             ],
            )
            
