@@ -1,3 +1,4 @@
+import 'package:ams_mobile/CustumBottomNavigation.dart';
 import 'package:ams_mobile/button.dart';
 import 'package:ams_mobile/clelist.dart';
 import 'package:ams_mobile/conteneur.dart';
@@ -33,7 +34,10 @@ class _listcleState extends State<listcle> {
                   size: 25,
                   color: Colors.black,
                 )),
-            onTap: () {},
+            onTap: () {
+               // Navigator.push(
+                //context, MaterialPageRoute(builder: (context) => CustomBottomNavigation()));
+            },
           )
         ],
         leading: InkWell(
@@ -60,6 +64,7 @@ class _listcleState extends State<listcle> {
               color: Colors.black),
         ),
       ),
+      
       body: ListView(
         children: [
           conteneur(text: "CONSTAT D'ETAT DE LIEU"),

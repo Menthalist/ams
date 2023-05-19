@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:ams_mobile/Textform_Constat.dart';
 import 'package:ams_mobile/camera.dart';
 import 'package:ams_mobile/connexion/loginpage.dart';
 import 'package:ams_mobile/conteneur.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 class Formulaire_Constat extends StatefulWidget {
-
+const Formulaire_Constat({Key? key}) : super(key: key);
+ 
    
   @override
   State<Formulaire_Constat> createState() => _Formulaire_ConstatState();
@@ -14,24 +19,13 @@ class Formulaire_Constat extends StatefulWidget {
 
 
 class _Formulaire_ConstatState extends State<Formulaire_Constat> {
-   
 
   _Formulaire_ConstatState(){
    
     selectchoice = constatList[0];
-   // _SelectedVal = _EtatList[0] ;
-    //_selectedVal = _commentaireList[0];
-    //_SelectedVAL = _ajoutList[0];
+  
   }
-  /* final _ConstatList = ["rubriques","1","2","3","4"];
-  String? _selectedval = "";
-  String? _SelectedVAL = "";
-  final _ajoutList = ["Informations generales","pièce de tests","Information locataire","Information AGENT CONSTAT","information des clés"];
-  final _EtatList = ["A","B","C","D"];
-  String _SelectedVal = "";
-  final _commentaireList = [];
- // String val = "";
-  String _selectedVal = "";*/
+  
   String selectchoice="rubriques";
   List constatList = [
     "rubriques",
@@ -57,13 +51,10 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
   ];
   String p="Piece";
   String a= "1",b="3";
-  camera cam = camera();
-
-  
-  
-  
+ 
   
   @override
+  
   
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -217,8 +208,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
             borderRadius: BorderRadius.circular(120),
             border: Border.all(width: 1,color: Colors.black)
             ),
-           child: Center(child: IconButton(onPressed: (){camera();}, icon: Icon(Icons.camera_alt,size: 30,color: Colors.white,),))),
-      
+           child: const  Center(child: camera())),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
        children: [
@@ -243,13 +233,13 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
           child: Container(
             height: MediaQuery.of(context).size.height*0.06,
             width: MediaQuery.of(context).size.width*0.3,
-            margin: EdgeInsets.only(right: 10,top: 30),
+            margin: const EdgeInsets.only(right: 10,top: 30),
             decoration:  BoxDecoration(
               
                  color: Colors.black,
                   borderRadius: BorderRadius.circular(6),
                   ),
-                  child: Center(child: Text("ENREGISTRER",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w700,color: Colors.white),)),
+                  child: const Center(child: Text("ENREGISTRER",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w700,color: Colors.white),)),
                  
                ),
                onTap: () {
