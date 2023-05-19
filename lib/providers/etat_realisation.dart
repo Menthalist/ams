@@ -63,10 +63,20 @@ class EtatRealisation {
 class EtatRealisationProvider extends ChangeNotifier {
   List<EtatRealisation> _etat = [];
   List<dynamic> _edlJson = [];
+  List<dynamic> _pieces = [];
+  List<dynamic> _rubriques = [];
+  List<dynamic> _clefs = [];
+  List<dynamic> _compteurs = [];
   UnmodifiableListView<EtatRealisation> get getEtats =>
       UnmodifiableListView(_etat);
-  UnmodifiableListView<dynamic> get getEdlJson =>
+  UnmodifiableListView<dynamic> get getEdlJsons =>
       UnmodifiableListView(_edlJson);
+  UnmodifiableListView<dynamic> get getPieces => UnmodifiableListView(_pieces);
+  UnmodifiableListView<dynamic> get getRubriques =>
+      UnmodifiableListView(_rubriques);
+  UnmodifiableListView<dynamic> get getCompteurs =>
+      UnmodifiableListView(_rubriques);
+  UnmodifiableListView<dynamic> get getClefs => UnmodifiableListView(_clefs);
 
   Future getItems() async {
     Uri getAllClient = Uri(
@@ -79,8 +89,7 @@ class EtatRealisationProvider extends ChangeNotifier {
       });
       if (response.statusCode == 200) {
         (json.decode(response.body) as List).map((usersJson) {
-          _edlJson.add(usersJson);
-          EtatRealisation etat = EtatRealisation(
+          _etat.add(EtatRealisation(
               titre: "EDL " + usersJson['type_edl'],
               numero: "",
               rue: "Rue indéfinie",
@@ -90,9 +99,11 @@ class EtatRealisationProvider extends ChangeNotifier {
               participant: "",
               pieces: "",
               date: usersJson['date_edl'],
-              id: usersJson["_id"]);
-          _etat.add(etat);
+              id: usersJson["_id"]));
+          _edlJson.add(usersJson);
+          usersJson = {};
         }).toList();
+
         this.notifyListeners();
       }
     } catch (e) {
@@ -139,6 +150,60 @@ class EtatRealisationProvider extends ChangeNotifier {
           titre: "EDL de Test1"),
     ];
     this.notifyListeners();*/
+  }
+
+  List getSpecificEDL(String _id) {
+    this._pieces = [];
+    List liste =
+        UnmodifiableListView(this.getEdlJsons.where((edl) => edl["_id"] == _id))
+            .toList();
+    //print(this.getEdlJsons);
+    if (liste.isEmpty == false) {
+      var edl = liste[0];
+      edl["logement"]['type_log']['piece'].forEach((key, value) {
+        _pieces.add(value);
+      });
+    }
+    return _pieces;
+  }
+
+  List getRubriqueOfApiece(_id) {
+    _rubriques = [];
+    List liste =
+        UnmodifiableListView(this.getPieces.where((edl) => edl["_id"] == _id));
+    if (liste.isEmpty == false) {
+      var piece = liste[0];
+      piece['rubriq'].forEach((key, value) {
+        _rubriques.add(value);
+      });
+    }
+    return _rubriques;
+  }
+
+  List getCompteur(_id) {
+    _compteurs = [];
+    List liste = UnmodifiableListView(
+        this.getEdlJsons.where((edl) => edl["_id"] == _id));
+    if (liste.isEmpty == false) {
+      var piece = liste[0];
+      piece['logement']['type_log']['compteur'].forEach((key, value) {
+        _compteurs.add(value);
+      });
+    }
+    return _compteurs;
+  }
+
+  List getClef(_id) {
+    _clefs = [];
+    List liste = UnmodifiableListView(
+        this.getEdlJsons.where((edl) => edl["_id"] == _id));
+    if (liste.isEmpty == false) {
+      var piece = liste[0];
+      piece['logement']['type_log']['cles'].forEach((key, value) {
+        _clefs.add(value);
+      });
+    }
+    return _clefs;
   }
 
   void add(EtatRealisation item) {
