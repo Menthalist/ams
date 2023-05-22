@@ -187,7 +187,7 @@ class _listecompteurState extends State<listecompteur> {
             child: Column(
               children: compteurs.map((e) {
                 return conteneurcompteur(
-                  compteur: e['nom'] == null ? e['nom'] : "",
+                  compteur: e['nom'] == null ? "" : e['nom'],
                   consom: "N° ordre: " + e['num_ordre'] == null
                       ? e["num_ordre"]
                       : "",

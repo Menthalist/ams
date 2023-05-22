@@ -63,11 +63,15 @@ class _cameraState extends State<camera> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
+    return IconButton(
+      onPressed: () {
         getImage(ImageSource.camera);
       },
+      icon: Icon(
+        Icons.camera_alt,
+        size: 30,
+        color: Colors.white,
+      ),
     );
   }
 }

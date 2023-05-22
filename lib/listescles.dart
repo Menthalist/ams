@@ -1,3 +1,4 @@
+import 'package:ams_mobile/CustumBottomNavigation.dart';
 import 'package:ams_mobile/button.dart';
 import 'package:ams_mobile/clelist.dart';
 import 'package:ams_mobile/conteneur.dart';
@@ -58,7 +59,10 @@ class _listcleState extends State<listcle> {
                   size: 25,
                   color: Colors.black,
                 )),
-            onTap: () {},
+            onTap: () {
+              // Navigator.push(
+              //context, MaterialPageRoute(builder: (context) => CustomBottomNavigation()));
+            },
           )
         ],
         leading: InkWell(
@@ -355,8 +359,8 @@ class _listcleState extends State<listcle> {
             children: cles.map((e) {
               return conteneurliste(
                 piece:
-                    "N° ordre: " + e['num_ordre'] == null ? e['num_ordre'] : "",
-                nbrecle: e['nom'] == null ? e['nom'] : "",
+                    "N° ordre: " + e['num_ordre'] == null ? "" : e['num_ordre'],
+                nbrecle: e['nom'] == null ? "" : e['nom'],
               );
             }).toList(),
           )

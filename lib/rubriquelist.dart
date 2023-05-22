@@ -195,10 +195,10 @@ class _rubriquelisteState extends State<rubriqueliste> {
               children: rubriques.map((e) {
                 return InkWell(
                   child: conteneurrubrique(
-                      piece: e['nom'] == null ? e['nom'] : "",
+                      piece: e['nom'] == null ? "" : e['nom'],
                       nbrei: "total",
                       nbrem: "1",
-                      typepi: e['etat'] == null ? e['etat'] : "",
+                      typepi: e['etat'] == null ? "" : e['etat'],
                       image: Image.asset("assets/img/rect.png")),
                   onTap: () {
                     globals.setString("nomRubriqueConstat", e['nom']);
