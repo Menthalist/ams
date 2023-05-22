@@ -194,15 +194,15 @@ class _piececonteneurState extends State<piececonteneur> {
               children: pieces.map((e) {
                 return InkWell(
                     child: conteneurrubrique(
-                      piece: e['nom'],
+                      piece: e['nom'] == null ? e["nom"] : "",
                       nbrei: "N° ordre: ",
                       image: Image.asset("assets/img/pie2.png"),
-                      nbrem: e['num_ordre'],
-                      typepi: e['etat'],
+                      nbrem: e['num_ordre'] == null ? e['num_ordre'] : "",
+                      typepi: e['etat'] == null ? e["etat"] : "",
                     ),
                     onTap: () {
                       globals.setString("pieceId", e["_id"]);
-                      globals.setString("nomPiece", e["nom"]);
+                      //globals.setString("nomPiece", e["nom"]);
                       Navigator.push(
                           context,
                           MaterialPageRoute(

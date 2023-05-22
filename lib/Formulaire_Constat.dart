@@ -4,7 +4,11 @@ import 'package:ams_mobile/connexion/loginpage.dart';
 import 'package:ams_mobile/conteneur.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:path/path.dart';
 
 class Formulaire_Constat extends StatefulWidget {
   @override
@@ -60,6 +64,42 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
   String p = "Piece";
   String a = "1", b = "3";
   final camera cam = camera();
+
+  File? _image;
+  //fonction permettant de prendre une photo
+  Future getImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+
+      //final imageTemporary = File(image.path);
+      final imagePermanent = await saveFilePermanently(image.path);
+
+      setState(() {
+        this._image = imagePermanent;
+      });
+    } on PlatformException catch (e) {
+      print('Echec de la prise de photo: $e');
+    }
+  }
+
+  Future<File> saveFilePermanently(String imagepath) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final name = basename(imagepath);
+    final image = File('${directory.path}/$name');
+
+    return File(imagepath).copy(image.path);
+  }
+
+  Widget getCamera(BuildContext context) {
+    print('ici');
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+        getImage(ImageSource.camera);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +260,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                 child: Center(
                     child: IconButton(
                   onPressed: () {
-                    cam.getCamera(context);
+                    getCamera(context);
                   },
                   icon: const Icon(
                     Icons.camera_alt,

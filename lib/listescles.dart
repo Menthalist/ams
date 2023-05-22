@@ -354,8 +354,9 @@ class _listcleState extends State<listcle> {
           Column(
             children: cles.map((e) {
               return conteneurliste(
-                piece: "N° ordre: " + e['num_ordre'],
-                nbrecle: e['nom'],
+                piece:
+                    "N° ordre: " + e['num_ordre'] == null ? e['num_ordre'] : "",
+                nbrecle: e['nom'] == null ? e['nom'] : "",
               );
             }).toList(),
           )
