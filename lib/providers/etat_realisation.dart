@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
@@ -92,7 +93,6 @@ class EtatRealisationProvider extends ChangeNotifier {
       var result = [];
       result = await InternetAddress.lookup('example.com');
       print(result);
-      //print(result[0].rawAddress.isNotEmpty);
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         Uri getAllClient = Uri(
             scheme: "http",
@@ -102,11 +102,9 @@ class EtatRealisationProvider extends ChangeNotifier {
           'Authorization':
               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgzMjkxNDYwLCJpYXQiOjE2ODI0Mjc0NjAsImp0aSI6ImZjNTcwMTJhYzVkNzQ5NTRhNWYyYTU5MjIyZDYxZGI5IiwidXNlcl9pZCI6NzI2fQ.roWIMbNgk4KRzeFaiHecbES63i_WLfhdhdeLsO0xYG8",
         });
-        //print(response);
-        //I/flutter (11509): [InternetAddress('93.184.216.34', IPv4), InternetAddress('2606:2800:220:1:248:1893:25c8:1946', IPv6)]
         if (response.statusCode == 200) {
           (json.decode(response.body) as List).map((usersJson) async {
-            int ln = edlBox.values
+            var ln = edlBox.values
                 .where((object) => object['_id'] == usersJson['_id'])
                 .toList()
                 .length;
@@ -128,11 +126,13 @@ class EtatRealisationProvider extends ChangeNotifier {
     _etat = [];
     edls.forEach((usersJson) {
       _etat.add(EtatRealisation(
-          titre: "EDL " + usersJson['type_edl'],
+          titre: "EDL " + usersJson['type_edl'] == null
+              ? ""
+              : usersJson['type_edl'],
           numero: "",
           rue: "Rue indéfinie",
-          edl: usersJson['type_edl'],
-          etat: usersJson['avancement'],
+          edl: usersJson['type_edl'] == null ? "" : usersJson['type_edl'],
+          etat: usersJson['avancement'] == null ? "" : usersJson['avancement'],
           description: "Description standard d'un EDL",
           participant: "",
           pieces: "",
@@ -164,16 +164,22 @@ class EtatRealisationProvider extends ChangeNotifier {
     return _pieces;
   }
 
-  List getRubriqueOfApiece(_id) {
+  List<dynamic> getRubriqueOfApiece(_id) {
     _rubriques = [];
     List liste =
         UnmodifiableListView(this.getPieces.where((edl) => edl["_id"] == _id));
     if (liste.isEmpty == false) {
       var piece = liste[0];
       piece['rubriq'].forEach((key, value) {
+        value['value'] = value['_id'];
         _rubriques.add(value);
       });
     }
+    /* _rubriques.forEach((element) {
+      if (element['constate'] != null) {
+        _rubriques.insert(_rubriques.length - 1, element);
+      }
+    });*/
     return _rubriques;
   }
 
@@ -201,6 +207,61 @@ class EtatRealisationProvider extends ChangeNotifier {
       });
     }
     return _clefs;
+  }
+
+  void displayDialog(BuildContext context_,
+      {String text = "Constat effectué avec succès",
+      String titre = "Réussite!!!"}) {
+    Text message = Text(text);
+    Text title = Text(titre);
+    // show the dialog
+    showDialog(
+      context: context_,
+      builder: (BuildContext context) => AlertDialog(
+        title: title,
+        content: message,
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'OK'),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  constatRubrique(
+      String idEdl,
+      String idPiece,
+      String idRub,
+      String etat,
+      String description,
+      String commentaire,
+      String commentaitreFinal,
+      BuildContext context) async {
+    var edlBox = await Hive.openBox<dynamic>("edl");
+    var edl =
+        edlBox.values.where((object) => object['_id'] == idEdl).toList()[0];
+    print(idPiece);
+    edl["logement"]['type_log']['piece'].forEach((key, value) {
+      print(value["_id"]);
+      if (value['_id'] == idPiece) {
+        value['rubriq'].forEach((key, valueR) {
+          if (valueR['_id'] == idRub) {
+            valueR['etat'] = etat;
+            valueR['description'] = description;
+            valueR['commentaire'] = commentaire;
+            valueR['commentaireFinal'] = commentaitreFinal;
+            valueR['constate'] = "ok";
+            value['rubriq'][key] = valueR;
+            print("ici");
+          }
+        });
+      }
+    });
+    print("après");
+    print(edl["logement"]['type_log']['piece']);
+    displayDialog(context);
   }
 
   void add(EtatRealisation item) {

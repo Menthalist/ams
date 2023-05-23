@@ -4,10 +4,12 @@ import 'package:ams_mobile/Textform_Constat.dart';
 import 'package:ams_mobile/camera.dart';
 import 'package:ams_mobile/connexion/loginpage.dart';
 import 'package:ams_mobile/conteneur.dart';
+import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Formulaire_Constat extends StatefulWidget {
@@ -20,11 +22,37 @@ class Formulaire_Constat extends StatefulWidget {
 class _Formulaire_ConstatState extends State<Formulaire_Constat> {
   late SharedPreferences globals;
 
+  EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
+  String idPiece = "";
+  String idEdl = "";
+  String idRub = "";
+  String etat = "";
+  String description = "";
+  String commentaire = "";
+  String commentaireFinal = "";
+  TextEditingController Commentairecontrolle = TextEditingController();
+  TextEditingController CommentaireFinalcontroller = TextEditingController();
+  String selectchoice = "0";
+
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
-    setState(() {});
+
+    setState(() {
+      idPiece = globals.getString("pieceId").toString();
+      idEdl = globals.getString("edlId").toString();
+      idRub = globals.getString("idRub").toString();
+      selectchoice = globals.getString("idRub").toString();
+    });
   }
 
+  void ClearForm() {
+    CommentaireFinalcontroller.text = "";
+    Commentairecontrolle.text = "";
+    selectchoix = "Etat";
+    selectcommentaire = "Descriptions";
+  }
+
+  List constatList = [];
   @override
   void initState() {
     super.initState();
@@ -32,16 +60,9 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
   }
 
   _Formulaire_ConstatState() {
-    selectchoice = constatList[0];
+    //selectchoice = globals.getString("idRub").toString();
   }
 
-  String selectchoice = "rubriques";
-  List constatList = [
-    "rubriques",
-    "Boites aux Lettres",
-    "Detecteur de monoxyde de carbon",
-    "Decteur de fumée",
-  ];
   String selectchoix = "Etat";
   List etatList = [
     "Etat",
@@ -64,8 +85,39 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
   String p = "Piece";
   String a = "1", b = "3";
 
+  void displayDialogWarning(BuildContext context_,
+      {String text =
+          "Attention les données en cours de saisie seront perdues car vous ne les avez pas encore enregistrés. Confirmez-vous cette opération??",
+      String titre = "Voulez vous annuler le constat en cours??"}) {
+    Text message = Text(text);
+    Text title = Text(titre);
+    // show the dialog
+    showDialog(
+      context: context_,
+      builder: (BuildContext context) => AlertDialog(
+        title: title,
+        content: message,
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              ClearForm();
+              Navigator.pop(context, 'OK');
+            },
+            child: const Text('Continuer'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'OK'),
+            child: const Text('Annuler'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    constatList = Provider.of<EtatRealisationProvider>(context)
+        .getRubriqueOfApiece(idPiece);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -140,14 +192,26 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
               margin: EdgeInsets.only(left: 20, right: 20, top: 15),
               child: DropdownButton(
                 value: selectchoice,
-                items: constatList
-                    .map((e) => DropdownMenuItem(
-                          child: Text(e),
-                          value: e,
-                        ))
-                    .toList(),
+                items: [
+                  const DropdownMenuItem(
+                      value: "0", child: Text("faite un choix")),
+                  ...constatList
+                      .map((e) => DropdownMenuItem(
+                          value: e["value"], child: Text(e['nom'])))
+                      .toList(),
+                ],
                 onChanged: (val) {
                   setState(() {
+                    if (selectcommentaire == "Descriptions" &&
+                        selectchoix == 'Etat' &&
+                        CommentaireFinalcontroller.text == '' &&
+                        Commentairecontrolle.text == '') {
+                      idRub = val as String;
+                      globals.setString("idRub", idRub);
+                      globals.setString("nomRubriqueConstat", "test");
+                    } else {
+                      displayDialogWarning(context);
+                    }
                     selectchoice = val as String;
                   });
                 },
@@ -173,6 +237,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                 onChanged: (Val) {
                   setState(() {
                     selectchoix = Val as String;
+                    etat = Val as String;
                   });
                 },
                 /* icon: const  Icon(
@@ -197,6 +262,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                 onChanged: (Val) {
                   setState(() {
                     selectcommentaire = Val as String;
+                    commentaire = Val as String;
                   });
                 },
                 /* icon: const  Icon(
@@ -208,9 +274,11 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
               ),
             ),
             Conteneur_formulaire(
+                controller: Commentairecontrolle,
                 hauteur: MediaQuery.of(context).size.height * 0.06,
                 text: "Commentaire"),
             Conteneur_formulaire(
+                controller: CommentaireFinalcontroller,
                 hauteur: MediaQuery.of(context).size.height * 0.2,
                 text: "Commentaire Final"),
             Container(
@@ -260,7 +328,18 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                         color: Colors.white),
                   )),
                 ),
-                onTap: () {},
+                onTap: () {
+                  etatRealisationProvider.constatRubrique(
+                      idEdl,
+                      idPiece,
+                      idRub,
+                      etat,
+                      description,
+                      Commentairecontrolle.text,
+                      CommentaireFinalcontroller.text,
+                      context);
+                  ClearForm();
+                },
               )
             ]),
           ],

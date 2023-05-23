@@ -202,7 +202,8 @@ class _piececonteneurState extends State<piececonteneur> {
                     ),
                     onTap: () {
                       globals.setString("pieceId", e["_id"]);
-                      //globals.setString("nomPiece", e["nom"]);
+                      globals.setString(
+                          "nomPiece", e["nom"] == null ? "" : e["nom"]);
                       Navigator.push(
                           context,
                           MaterialPageRoute(

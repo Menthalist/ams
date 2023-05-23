@@ -202,6 +202,7 @@ class _rubriquelisteState extends State<rubriqueliste> {
                       image: Image.asset("assets/img/rect.png")),
                   onTap: () {
                     globals.setString("nomRubriqueConstat", e['nom']);
+                    globals.setString("idRub", e['_id']);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
