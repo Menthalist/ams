@@ -35,6 +35,59 @@ class _acceuilState extends State<acceuil> {
       DeviceOrientation.portraitDown,
     ]);
     return Scaffold(
+       appBar: AppBar(
+          toolbarHeight: 56,
+          backgroundColor: Colors.white,
+          actions: [
+            InkWell(
+                onTap: (() {
+                  showModalBottomSheet(
+                      elevation: 4.0,
+                      context: context,
+                      builder: (context) {
+                        return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              ListTile(
+                                title: GestureDetector(
+                                  onTap: () {
+                                    //deconnexion(context);
+                                  },
+                                  child: const Text(
+                                    'Deconnexion',
+                                    style: TextStyle(
+                                      fontFamily: "FuturaLT.ttf",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ]);
+                      });
+                }),
+                child: const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+                    child: Icon(
+                      Icons.settings,
+                      size: 25,
+                      color: Colors.black,
+                    )))
+          ],
+          centerTitle: true,
+          title: const Text(
+            "AMEXPERT",
+            //textAlign: TextAlign.right,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                fontFamily: 'FuturaLT.ttf',
+                color: Colors.black),
+          ),
+        ),
         body: ListView(children: [
       Container(
         child: Column(

@@ -15,9 +15,7 @@ class camera extends StatefulWidget {
   @override
   _cameraState createState() => _cameraState();
 
-  getCamera(BuildContext context) {
-    myAppState.getCamera(context);
-  }
+ 
 }
 
 class _cameraState extends State<camera> {
@@ -46,33 +44,9 @@ class _cameraState extends State<camera> {
 
     return File(imagepath).copy(image.path);
   }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Widget getCamera(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-        getImage(ImageSource.camera);
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     return IconButton(onPressed: (){getImage(ImageSource.camera);}, icon: Icon(Icons.camera_alt,size: 30,color: Colors.white,),);
     
-=======
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-        getImage(ImageSource.camera);
-      },
-    );
->>>>>>> 771cf7755f4e714fd4b9b0e0f7d0e956eaa8f2eb
   }
 }

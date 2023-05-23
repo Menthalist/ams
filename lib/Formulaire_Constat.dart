@@ -6,27 +6,15 @@ import 'package:ams_mobile/connexion/loginpage.dart';
 import 'package:ams_mobile/conteneur.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-<<<<<<< HEAD
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-class Formulaire_Constat extends StatefulWidget {
-const Formulaire_Constat({Key? key}) : super(key: key);
- 
-   
-=======
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Formulaire_Constat extends StatefulWidget {
->>>>>>> 771cf7755f4e714fd4b9b0e0f7d0e956eaa8f2eb
   @override
   State<Formulaire_Constat> createState() => _Formulaire_ConstatState();
 }
 
 class _Formulaire_ConstatState extends State<Formulaire_Constat> {
-<<<<<<< HEAD
-=======
   late SharedPreferences globals;
->>>>>>> 771cf7755f4e714fd4b9b0e0f7d0e956eaa8f2eb
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
@@ -41,18 +29,11 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
 
   _Formulaire_ConstatState() {
     selectchoice = constatList[0];
-<<<<<<< HEAD
-  
-  }
-  
-  String selectchoice="rubriques";
-=======
     // _SelectedVal = _EtatList[0] ;
     //_selectedVal = _commentaireList[0];
     //_SelectedVAL = _ajoutList[0];
   }
   String selectchoice = "rubriques";
->>>>>>> 771cf7755f4e714fd4b9b0e0f7d0e956eaa8f2eb
   List constatList = [
     "rubriques",
     "Boites aux Lettres",
@@ -60,6 +41,8 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
     "Decteur de fumée",
   ];
   String selectchoix = "Etat";
+  List piece=['Piece','Compteur','Cle'];
+  String select="Piece";
   List etatList = [
     "Etat",
     "Bon état",
@@ -78,21 +61,11 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
     "Phrases Types",
     "Observations"
   ];
-<<<<<<< HEAD
-  String p="Piece";
-  String a= "1",b="3";
- 
-  
-  @override
-  
-  
-=======
   String p = "Piece";
   String a = "1", b = "3";
   final camera cam = camera();
 
   @override
->>>>>>> 771cf7755f4e714fd4b9b0e0f7d0e956eaa8f2eb
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -163,75 +136,6 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                     fontFamily: "FuturaLT.ttf"),
               )),
             ),
-<<<<<<< HEAD
-           child: const  Center(child: camera())),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-       children: [
-        InkWell(
-          child: Container(
-            height: MediaQuery.of(context).size.height*0.06,
-            width: MediaQuery.of(context).size.width*0.3,
-            margin: EdgeInsets.only(left: 10,top: 30),
-            decoration:  BoxDecoration(
-              
-                 color: Colors.red,
-                  borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Center(child: Text("ANNULER",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w700,color: Colors.white),)),
-                 
-               ),
-               onTap: () {
-                 
-               },
-        ),
-        InkWell(
-          child: Container(
-            height: MediaQuery.of(context).size.height*0.06,
-            width: MediaQuery.of(context).size.width*0.3,
-            margin: const EdgeInsets.only(right: 10,top: 30),
-            decoration:  BoxDecoration(
-              
-                 color: Colors.black,
-                  borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: const Center(child: Text("ENREGISTRER",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w700,color: Colors.white),)),
-                 
-               ),
-               onTap: () {
-                 
-               },
-        )
-          
-    ] ),
-       ],
-      )
-
-  
-  
-  
-    
-
- 
-      
-
-      
-    
-   );
-
-         
-     
-
-
-
-
-
-
-
-
-
-   
-=======
             Container(
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(left: 20, right: 20, top: 15),
@@ -249,7 +153,6 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                   });
                 },
                 /* icon: const  Icon(
->>>>>>> 771cf7755f4e714fd4b9b0e0f7d0e956eaa8f2eb
         
       Icons.arrow_drop_down_circle,
    // color: Colors.grey,
@@ -319,16 +222,10 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                     borderRadius: BorderRadius.circular(120),
                     border: Border.all(width: 1, color: Colors.black)),
                 child: Center(
-                    child: IconButton(
-                  onPressed: () {
-                    cam.getCamera(context);
-                  },
-                  icon: const Icon(
-                    Icons.camera_alt,
-                    size: 30,
-                    color: Colors.white,
+                    child: camera(),
+                  
                   ),
-                ))),
+                ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               InkWell(
                 child: Container(
