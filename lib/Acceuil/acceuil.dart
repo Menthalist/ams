@@ -1,11 +1,9 @@
-import 'dart:math';
 
 import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/conteneurcorps.dart';
 import 'package:ams_mobile/etatdelieu/etat_de_lieu_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/painting.dart';
 import '../etatdelieu/etatUI.dart';
 import '../etatdelieu/liste_etat.dart';
 
@@ -35,6 +33,7 @@ class _acceuilState extends State<acceuil> {
       DeviceOrientation.portraitDown,
     ]);
     return Scaffold(
+      
         body: ListView(children: [
       Container(
         child: Column(

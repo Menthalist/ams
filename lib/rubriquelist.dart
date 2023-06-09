@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:ams_mobile/conteneurrubrique.dart';
-import 'package:ams_mobile/list_rubrique.dart';
 import 'package:ams_mobile/listescles.dart';
 import 'package:ams_mobile/providers/dialogProvider.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
@@ -9,7 +6,6 @@ import 'package:ams_mobile/view/home/Home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'Formulaire_Constat.dart';
 import 'button.dart';
 import 'conteneur.dart';
@@ -32,6 +28,7 @@ class _rubriquelisteState extends State<rubriqueliste> {
   String idPiece = "";
   DialogProvider dialogProvider = DialogProvider();
   EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
+
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
     setState(() {
@@ -190,19 +187,20 @@ class _rubriquelisteState extends State<rubriqueliste> {
           //Padding(padding: EdgeInsets.only()),
           InkWell(
             child: conteneurmenu(
-                go: () {
-                  dialogProvider.formRubrique(
-                      globals.getString("pieceId").toString(),
-                      globals.getString("edlId").toString(),
-                      context);
-                  Future res = etatRealisationProvider.getRubriqueOfApiece(
-                      globals.getString("edlId").toString(),
-                      globals.getString("pieceId").toString());
-                  res.then((value) => rubriques = value);
-                },
-                text1: titre,
-                nomb: globals.getString("nomPiece").toString(),
-                text2: "AJOUTER"),
+              go: () {
+                dialogProvider.formRubrique(
+                    globals.getString("pieceId").toString(),
+                    globals.getString("edlId").toString(),
+                    context);
+                Future res = etatRealisationProvider.getRubriqueOfApiece(
+                    globals.getString("edlId").toString(),
+                    globals.getString("pieceId").toString());
+                res.then((value) => rubriques = value);
+              },
+              text1: titre,
+              nomb: globals.getString("nomPiece").toString(),
+              text2: "AJOUTER",
+            ),
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,

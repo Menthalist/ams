@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 final List cle_list= [
   {

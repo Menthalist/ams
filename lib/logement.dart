@@ -145,6 +145,12 @@ class _LogementState extends State<Logement> {
           ),
         ),
         Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.03,
+      color: Color.fromRGBO(174, 184, 234, 0.19),
+      padding: EdgeInsets.only(left: 10),
+       child:Text("24 Rue du Commandant Guilbaud, 75016 Paris, France",style: TextStyle(fontFamily: 'Futura.LT',fontSize: 16,fontWeight: FontWeight.w700),)),
+        Container(
           margin: EdgeInsets.only(top: 20, left: 10, right: 10),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height * 0.12,
@@ -203,7 +209,8 @@ class _LogementState extends State<Logement> {
                             fontFamily: "Futura.LT"),
                       )),
                 ],
-              )
+              ),
+               
             ],
           ),
         )

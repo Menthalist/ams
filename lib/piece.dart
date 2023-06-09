@@ -1,6 +1,6 @@
 import 'package:ams_mobile/ConteneurPiece.dart';
-import 'package:ams_mobile/Formulaire_Constat.dart';
 import 'package:ams_mobile/conteneur.dart';
+import 'package:ams_mobile/conteneurmenu.dart';
 import 'package:ams_mobile/conteneurrubrique.dart';
 import 'package:ams_mobile/layout/AppLayout.dart';
 import 'package:ams_mobile/pdfpreview.dart';
@@ -9,19 +9,18 @@ import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:ams_mobile/rubriquelist.dart';
 import 'package:ams_mobile/view/home/Home.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Appbar.dart';
-import 'List_Piece.dart';
 import 'button.dart';
-import 'conteneurmenu.dart';
 import 'listecompteurs.dart';
 import 'listescles.dart';
 import 'logement.dart';
 
 class piececonteneur extends StatefulWidget {
   String idToEdit;
+
   piececonteneur({Key? key, required this.idToEdit}) : super(key: key);
 
   @override
@@ -32,6 +31,7 @@ class _piececonteneurState extends State<piececonteneur> {
   late SharedPreferences globals;
   DialogProvider dialogProvider = DialogProvider();
   EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
+  bool? check1 = false;
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();

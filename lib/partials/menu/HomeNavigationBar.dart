@@ -1,10 +1,7 @@
 import 'package:ams_mobile/listescles.dart';
-import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:ams_mobile/view/parameters/Parameters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/material/bottom_navigation_bar.dart';
-import 'package:provider/provider.dart';
 
 import '../../view/home/Home.dart';
 import '../../pagenavigation/agenda.dart';

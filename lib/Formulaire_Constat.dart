@@ -2,15 +2,13 @@ import 'dart:core';
 
 import 'dart:io';
 
+import 'package:ams_mobile/Signature.dart';
 import 'package:ams_mobile/Textform_Constat.dart';
 import 'package:ams_mobile/camera.dart';
-import 'package:ams_mobile/connexion/loginpage.dart';
 import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,6 +23,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
   late SharedPreferences globals;
 
   EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
+  String constate = "ok";
   String idPiece = "";
   String idEdl = "";
   String idRub = "";
@@ -69,6 +68,8 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
   }
 
   String selectchoix = "Etat";
+  List piece = ['Piece', 'Compteur', 'Cle'];
+  String select = "Piece";
   List etatList = [
     "Etat",
     "Bon état",
@@ -310,7 +311,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                 onChanged: (Val) {
                   setState(() {
                     selectchoix = Val as String;
-                    etat = Val as String;
+                    etat = Val;
                   });
                 },
                 dropdownColor: Colors.white,
@@ -332,7 +333,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                 onChanged: (Val) {
                   setState(() {
                     selectcommentaire = Val as String;
-                    commentaire = Val as String;
+                    commentaire = Val;
                   });
 
                   Future res = etatRealisationProvider
@@ -392,49 +393,58 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                 hauteur: MediaQuery.of(context).size.height * 0.10,
                 text: "Commentaire Final"),
             Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Container(
-                margin: EdgeInsets.only(top: 20, right: 10, left: 10),
-                width: MediaQuery.of(context).size.width * 0.27,
-                height: MediaQuery.of(context).size.height * 0.12,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 1)),
-                child: Center(
-                    child: Image(
-                  image: FileImage(
-                      File(globals.getString("urlImage1").toString())),
-                  fit: BoxFit.cover,
-                )),
+              InkWell(
+                onTap: () {
+                  ShowDialogwidget(context);
+                },
+                child: Container(
+                  margin: EdgeInsets.only(top: 20, right: 10, left: 10),
+                  width: MediaQuery.of(context).size.width * 0.27,
+                  height: MediaQuery.of(context).size.height * 0.12,
+                  child: Center(
+                      child: Image(
+                    image: FileImage(
+                        File(globals.getString("urlImage1").toString())),
+                    fit: BoxFit.cover,
+                  )),
+                ),
               ),
-              Container(
-                margin: EdgeInsets.only(top: 20, right: 10, left: 18),
-                width: MediaQuery.of(context).size.width * 0.27,
-                height: MediaQuery.of(context).size.height * 0.12,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 1)),
-                child: Center(
-                    child: Image(
-                  image: FileImage(
-                      File(globals.getString("urlImage2").toString())),
-                  fit: BoxFit.cover,
-                )),
+              InkWell(
+                onTap: () {
+                  ShowDialogwidget(context);
+                },
+                child: Container(
+                  margin: EdgeInsets.only(top: 20, right: 10, left: 18),
+                  width: MediaQuery.of(context).size.width * 0.27,
+                  height: MediaQuery.of(context).size.height * 0.12,
+                  child: Center(
+                      child: Image(
+                    image: FileImage(
+                        File(globals.getString("urlImage2").toString())),
+                    fit: BoxFit.cover,
+                  )),
+                ),
               ),
-              Container(
-                margin: EdgeInsets.only(top: 20, right: 10, left: 18),
-                width: MediaQuery.of(context).size.width * 0.27,
-                height: MediaQuery.of(context).size.height * 0.12,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 1)),
-                child: Center(
-                    child: Image(
-                  image: FileImage(
-                      File(globals.getString("urlImage3").toString())),
-                  fit: BoxFit.cover,
-                )),
+              InkWell(
+                onTap: () {
+                  ShowDialogwidget(context);
+                },
+                child: Container(
+                  margin: EdgeInsets.only(top: 20, right: 10, left: 18),
+                  width: MediaQuery.of(context).size.width * 0.27,
+                  height: MediaQuery.of(context).size.height * 0.12,
+                  child: Center(
+                      child: Image(
+                    image: FileImage(
+                        File(globals.getString("urlImage3").toString())),
+                    fit: BoxFit.cover,
+                  )),
+                ),
               ),
             ]),
             Container(
                 height: MediaQuery.of(context).size.height * 0.08,
-                margin: EdgeInsets.only(top: 30, right: 170, left: 170),
+                margin: EdgeInsets.only(top: 20, right: 170, left: 170),
                 decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(120),
@@ -443,12 +453,12 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               InkWell(
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   margin: EdgeInsets.only(left: 10, top: 30),
                   decoration: BoxDecoration(
                     color: Colors.red,
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(30),
                   ),
                   child: Center(
                       child: Text(
@@ -459,16 +469,19 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                         color: Colors.white),
                   )),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Signature()));
+                },
               ),
               InkWell(
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   margin: EdgeInsets.only(right: 10, top: 30),
                   decoration: BoxDecoration(
                     color: Colors.black,
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(30),
                   ),
                   child: Center(
                       child: Text(
@@ -502,4 +515,27 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
           ],
         ));
   }
+}
+
+ShowDialogwidget(BuildContext context) {
+  AlertDialog alert = AlertDialog(
+    content: Text("Voulez vous vraiment supprimer cette photo?"),
+    actions: [
+      TextButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text("NON"),
+      ),
+      TextButton(
+        onPressed: () {},
+        child: Text("OUI"),
+      ),
+    ],
+  );
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      });
 }

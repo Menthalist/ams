@@ -1,11 +1,7 @@
-import 'dart:io';
 
 import 'package:ams_mobile/camera.dart';
+import 'package:ams_mobile/providers/dialogProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 
 /*class conteneurProvider<compteur_list> extends ChangeNotifier{
   String compteur,consom;
@@ -13,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 class conteneurcompteur extends StatelessWidget {
 
 final  String compteur, consom;
+DialogProvider dialogProvider = DialogProvider();
  conteneurcompteur({required this.compteur,required this.consom});
   @override
   Widget build(BuildContext context) {
@@ -87,7 +84,7 @@ final  String compteur, consom;
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           ListTile(
-                            title: new Text('Photo',style: TextStyle(fontFamily: "FuturaLT.ttf",
+                            title: new Text('Previsuliser',style: TextStyle(fontFamily: "FuturaLT.ttf",
                               fontSize: 14,
                               fontWeight: FontWeight.w800,),),
                             leading: new Icon(Icons.camera,color: Colors.black,),
@@ -97,21 +94,20 @@ final  String compteur, consom;
                             },
                           ),
                           ListTile(
-                            title: new Text('Modifier',style: TextStyle(fontFamily: "FuturaLT.ttf",
+                            title: Text('Modifier',style: TextStyle(fontFamily: "FuturaLT.ttf",
                               fontSize: 14,
                               fontWeight: FontWeight.w800,),),
-                            leading: new Icon(Icons.edit,color: Colors.black,),
-                            
+                            leading:  Icon(Icons.edit,color: Colors.black,),
                             onTap: () {
-                              Navigator.pop(context);
+                              Navigator.pop(context); 
                             },
                           ),
                           ListTile(
                             
-                            title: new Text('Supprimer',style: TextStyle(fontFamily: "FuturaLT.ttf",
+                            title: Text('Supprimer',style: TextStyle(fontFamily: "FuturaLT.ttf",
                               fontSize: 14,
                               fontWeight: FontWeight.w800,),),
-                              leading: new Icon(Icons.delete,color: Colors.black,),
+                              leading:  Icon(Icons.delete,color: Colors.black,),
                             onTap: () {
                               Navigator.pop(context);
                             },

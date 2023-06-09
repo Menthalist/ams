@@ -74,17 +74,80 @@ class conteneurliste extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 200),
+                padding:  EdgeInsets.only(left: 200),
               ),
               InkWell(
-                child: Align(
+                child:   Align(
                   alignment: Alignment.centerRight,
                   child: Image(image: AssetImage("assets/img/bu.png")),
                 ),
-                onTap: (() {}),
-              ),
-            ],
-          ),
-        ]));
+                onTap: (() {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              title: new Text(
+                                'prévisualiser',
+                                style: TextStyle(
+                                  fontFamily: "FuturaLT.ttf",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              leading: new Icon(
+                                Icons.camera,
+                                color: Colors.black,
+                              ),
+                              onTap: () {
+                              
+                              },
+                            ),
+                            ListTile(
+                              title: new Text(
+                                'Modifier',
+                                style: TextStyle(
+                                  fontFamily: "FuturaLT.ttf",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              leading: new Icon(
+                                Icons.edit,
+                                color: Colors.black,
+                              ),
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            ListTile(
+                              title: new Text(
+                                'Supprimer',
+                                style: TextStyle(
+                                  fontFamily: "FuturaLT.ttf",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              leading: new Icon(
+                                Icons.delete,
+                                color: Colors.black,
+                              ),
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        );
+                      });
+                }),
+              )
+            ]),
+               ]) 
+               );
+              
+          
   }
 }

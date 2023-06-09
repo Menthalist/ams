@@ -128,7 +128,7 @@ class conteneurrubrique extends StatelessWidget {
                           children: <Widget>[
                             ListTile(
                               title: new Text(
-                                'Photos',
+                                'prévisualiser',
                                 style: TextStyle(
                                   fontFamily: "FuturaLT.ttf",
                                   fontSize: 14,

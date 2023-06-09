@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
-import '../listescles.dart';
 
 class etatUIdesign extends StatefulWidget {
   String textedl,

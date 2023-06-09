@@ -6,10 +6,7 @@ import 'package:ams_mobile/pagenavigation/realisation.dart';
 import 'package:ams_mobile/piedpage/home.dart';
 import 'package:ams_mobile/view/home/Home.dart';
 import 'package:ams_mobile/view/parameters/Parameters.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class CustomBottomNavigation extends StatefulWidget {
   

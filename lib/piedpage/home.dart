@@ -1,7 +1,6 @@
 import 'package:ams_mobile/listescles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/material/bottom_navigation_bar.dart';
 
 import '../Acceuil/acceuil.dart';
 import '../pagenavigation/agenda.dart';

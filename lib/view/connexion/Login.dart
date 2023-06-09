@@ -1,10 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ams_mobile/controller/AuthController/AuthController.dart';
-import 'package:ams_mobile/view/home/Home.dart';
 import 'package:ams_mobile/layout/AppLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+
+import '../../MdpOublie.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -248,8 +249,8 @@ class _LoginState extends State<Login> {
                       decoration: TextDecoration.underline),
                 ),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AppLayout()));
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Mdp()));
                 },
               )),
           const SizedBox(

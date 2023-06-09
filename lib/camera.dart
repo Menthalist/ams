@@ -1,9 +1,6 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,10 +12,6 @@ class camera extends StatefulWidget {
   final _cameraState myAppState = new _cameraState();
   @override
   _cameraState createState() => _cameraState();
-
-  getCamera(BuildContext context) {
-    myAppState.getCamera(context);
-  }
 }
 
 class _cameraState extends State<camera> {
@@ -80,15 +73,6 @@ class _cameraState extends State<camera> {
       return File(imagepath).copy(image.path);
     }
     return File(imagepath).copy(image.path);
-  }
-
-  Widget getCamera(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-        getImage(ImageSource.camera);
-      },
-    );
   }
 
   @override

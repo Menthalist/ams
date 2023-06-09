@@ -1,11 +1,8 @@
-import 'dart:math';
 
 import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/conteneurcorps.dart';
-import 'package:ams_mobile/etatdelieu/etat_de_lieu_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../etatdelieu/etatUI.dart';
@@ -68,9 +65,7 @@ class _HomeState extends State<Home> {
     ]);
     var total = etat1.length.toString();
 
-    if (total != null) {
-      totalEdl = total;
-    }
+    totalEdl = total;
     return Scaffold(
         body: ListView(children: [
       Column(

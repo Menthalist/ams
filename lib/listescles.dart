@@ -1,11 +1,9 @@
-import 'package:ams_mobile/CustumBottomNavigation.dart';
 import 'package:ams_mobile/button.dart';
-import 'package:ams_mobile/clelist.dart';
 import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/conteneurliste.dart';
 import 'package:ams_mobile/conteneurmenu.dart';
 import 'package:ams_mobile/listecompteurs.dart';
-import 'package:ams_mobile/layout/AppLayout.dart';
+import 'package:ams_mobile/providers/dialogProvider.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:ams_mobile/rubriquelist.dart';
 import 'package:ams_mobile/view/home/Home.dart';
@@ -14,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'logement.dart';
 import 'piece.dart';
+import 'layout/AppLayout.dart';
 
 class listcle extends StatefulWidget {
   const listcle({super.key});
@@ -25,6 +24,7 @@ class listcle extends StatefulWidget {
 class _listcleState extends State<listcle> {
   late SharedPreferences globals;
   String idRub = "";
+  DialogProvider dialogProvider = DialogProvider();
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
@@ -362,6 +362,7 @@ class _listcleState extends State<listcle> {
             children: cles.map((e) {
               return conteneurliste(
                 piece:
+                    // ignore: unnecessary_null_comparison
                     "N° ordre: " + e['num_ordre'] == null ? "" : e['num_ordre'],
                 nbrecle: e['nom'] == null ? "" : e['nom'],
               );

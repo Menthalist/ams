@@ -1,4 +1,4 @@
-import 'package:ams_mobile/Acceuil/acceuil.dart';
+import 'package:ams_mobile/MdpOublie.dart';
 import 'package:ams_mobile/piedpage/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -180,7 +180,7 @@ class _loginState extends State<login> {
                 ),
                 onTap: () {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => home()));
+                      context, MaterialPageRoute(builder: (context) => Mdp()));
                 },
               )),
           SizedBox(
