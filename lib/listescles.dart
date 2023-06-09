@@ -76,7 +76,7 @@ class _listcleState extends State<listcle> {
           ),
           onTap: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Home()));
+                context, MaterialPageRoute(builder: (context) => AppLayout()));
           },
         ),
         centerTitle: true,
@@ -184,7 +184,10 @@ class _listcleState extends State<listcle> {
           //Padding(padding: EdgeInsets.only()),
           InkWell(
             child: conteneurmenu(
-                text1: "CLES", nomb: cles.length.toString(), text2: "AJOUTER"),
+                go: () {},
+                text1: "CLES",
+                nomb: cles.length.toString(),
+                text2: "AJOUTER"),
             onTap: () {
               showDialog(
                   context: context,

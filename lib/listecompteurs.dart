@@ -13,6 +13,7 @@ import 'Appbar.dart';
 import 'button.dart';
 import 'conteneur.dart';
 import 'conteneurmenu.dart';
+import 'layout/AppLayout.dart';
 
 class listecompteur extends StatefulWidget {
   const listecompteur({super.key});
@@ -72,8 +73,8 @@ class _listecompteurState extends State<listecompteur> {
               ),
             ),
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Home()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AppLayout()));
             },
           ),
           centerTitle: true,
@@ -176,6 +177,7 @@ class _listecompteurState extends State<listecompteur> {
             scrollDirection: Axis.horizontal,
             child: InkWell(
               child: conteneurmenu(
+                  go: () {},
                   text1: "COMPTEURS",
                   nomb: compteurs.length.toString(),
                   text2: "AJOUTER"),

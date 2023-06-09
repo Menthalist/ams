@@ -2,6 +2,9 @@ import 'package:ams_mobile/ConteneurPiece.dart';
 import 'package:ams_mobile/Formulaire_Constat.dart';
 import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/conteneurrubrique.dart';
+import 'package:ams_mobile/layout/AppLayout.dart';
+import 'package:ams_mobile/pdfpreview.dart';
+import 'package:ams_mobile/providers/dialogProvider.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:ams_mobile/rubriquelist.dart';
 import 'package:ams_mobile/view/home/Home.dart';
@@ -27,6 +30,8 @@ class piececonteneur extends StatefulWidget {
 
 class _piececonteneurState extends State<piececonteneur> {
   late SharedPreferences globals;
+  DialogProvider dialogProvider = DialogProvider();
+  EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
@@ -47,8 +52,9 @@ class _piececonteneurState extends State<piececonteneur> {
 
   @override
   Widget build(BuildContext context) {
-    pieces = Provider.of<EtatRealisationProvider>(context)
+    Future res = Provider.of<EtatRealisationProvider>(context)
         .getSpecificEDL(widget.idToEdit);
+    res.then((value) => pieces = value);
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: 56,
@@ -75,8 +81,8 @@ class _piececonteneurState extends State<piececonteneur> {
               ),
             ),
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Home()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AppLayout()));
             },
           ),
           centerTitle: true,
@@ -174,6 +180,22 @@ class _piececonteneurState extends State<piececonteneur> {
                               builder: (context) => listecompteur()));
                     },
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5),
+                  child: InkWell(
+                    child: button(
+                      text: "PDF",
+                      couleur1: Color.fromRGBO(17, 45, 194, 0.11),
+                      couleur2: Colors.white,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PdfViewerPage()));
+                    },
+                  ),
                 )
               ]),
             ),
@@ -181,9 +203,21 @@ class _piececonteneurState extends State<piececonteneur> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.00009,
           ),
-          ConteneurPiece(
-            text: "24 Rue du Commandant Guilbaud, 75016 Paris, France"
-                .toUpperCase(),
+          InkWell(
+            child: conteneurmenu(
+                go: () async {
+                  await dialogProvider.displayFormPiece(
+                      widget.idToEdit, context);
+                  Future res =
+                      etatRealisationProvider.getSpecificEDL(widget.idToEdit);
+                  res.then((value) {
+                    pieces = value;
+                    print(pieces);
+                  });
+                },
+                text1: "",
+                nomb: "",
+                text2: "AJOUTER"),
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.009,
@@ -192,16 +226,23 @@ class _piececonteneurState extends State<piececonteneur> {
             scrollDirection: Axis.horizontal,
             child: Column(
               children: pieces.map((e) {
+                Color couleur = Colors.grey;
+                String okay = 'Non';
+                if (e['constate'] == "oui") {
+                  okay = "oui";
+                  couleur = Color.fromARGB(255, 104, 245, 111);
+                }
                 return InkWell(
                     child: conteneurrubrique(
+                      couleur: couleur,
                       piece: e['nom'] == null ? "" : e["nom"],
-                      nbrei: "N° ordre: ",
+                      nbrei: "Rubriques: " + e['rubriques'].toString(),
                       image: Image.asset("assets/img/pie2.png"),
-                      nbrem: e['num_ordre'] == null ? '' : e['num_ordre'],
-                      typepi: e['etat'] == null ? "" : e["etat"],
+                      nbrem: '',
+                      typepi: "Constaté: " + okay.toUpperCase(),
                     ),
                     onTap: () {
-                      globals.setString("pieceId", e["_id"]);
+                      globals.setString("pieceId", e["key"]);
                       globals.setString(
                           "nomPiece", e["nom"] == null ? "" : e["nom"]);
                       Navigator.push(
