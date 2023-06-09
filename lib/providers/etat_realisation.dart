@@ -1,9 +1,12 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:async';
 
 class EtatRealisation {
   String titre;
@@ -79,77 +82,68 @@ class EtatRealisationProvider extends ChangeNotifier {
   UnmodifiableListView<dynamic> get getClefs => UnmodifiableListView(_clefs);
 
   Future getItems() async {
-    Uri getAllClient = Uri(
-        scheme: "http", host: "195.15.228.250", path: "edlplanning/edl/tous");
-
+    WidgetsFlutterBinding.ensureInitialized();
+    final directory = await getApplicationDocumentsDirectory();
+    Hive.init(directory.path);
+    var edlBox = await Hive.openBox<dynamic>("edl");
     try {
-      http.Response response = await http.get(getAllClient, headers: {
-        'Authorization':
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgzMjkxNDYwLCJpYXQiOjE2ODI0Mjc0NjAsImp0aSI6ImZjNTcwMTJhYzVkNzQ5NTRhNWYyYTU5MjIyZDYxZGI5IiwidXNlcl9pZCI6NzI2fQ.roWIMbNgk4KRzeFaiHecbES63i_WLfhdhdeLsO0xYG8",
-      });
-      if (response.statusCode == 200) {
-        (json.decode(response.body) as List).map((usersJson) {
-          _etat.add(EtatRealisation(
-              titre: "EDL " + usersJson['type_edl'],
-              numero: "",
-              rue: "Rue indéfinie",
-              edl: usersJson['type_edl'],
-              etat: usersJson['avancement'],
-              description: "Description standard d'un EDL",
-              participant: "",
-              pieces: "",
-              date: usersJson['date_edl'],
-              id: usersJson["_id"]));
-          _edlJson.add(usersJson);
-          usersJson = {};
-        }).toList();
-
-        this.notifyListeners();
+      var result = [];
+      result = await InternetAddress.lookup('example.com');
+      print(result);
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        Uri getAllClient = Uri(
+            scheme: "http",
+            host: "195.15.228.250",
+            path: "edlplanning/edl/tous");
+        http.Response response = await http.get(getAllClient, headers: {
+          'Authorization':
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgzMjkxNDYwLCJpYXQiOjE2ODI0Mjc0NjAsImp0aSI6ImZjNTcwMTJhYzVkNzQ5NTRhNWYyYTU5MjIyZDYxZGI5IiwidXNlcl9pZCI6NzI2fQ.roWIMbNgk4KRzeFaiHecbES63i_WLfhdhdeLsO0xYG8",
+        });
+        if (response.statusCode == 200) {
+          (json.decode(response.body) as List).map((usersJson) async {
+            var ln = edlBox.values
+                .where((object) => object['_id'] == usersJson['_id'])
+                .toList()
+                .length;
+            if (ln == 0) {
+              await edlBox.add(usersJson);
+            }
+            usersJson = {};
+          }).toList();
+        } else {
+          print('ici');
+        }
+      } else {
+        print('pas de connexion else');
       }
-    } catch (e) {
-      rethrow;
+    } on SocketException catch (_) {
+      print('pas de connexion');
     }
-
+    List edls = edlBox.values.toList();
+    _etat = [];
+    edls.forEach((usersJson) {
+      _etat.add(EtatRealisation(
+          titre: "EDL " + usersJson['type_edl'] == null
+              ? ""
+              : usersJson['type_edl'],
+          numero: "",
+          rue: "Rue indéfinie",
+          edl: usersJson['type_edl'] == null ? "" : usersJson['type_edl'],
+          etat: usersJson['avancement'] == null ? "" : usersJson['avancement'],
+          description: "Description standard d'un EDL",
+          participant: "",
+          pieces: "",
+          date: usersJson['date_edl'],
+          id: usersJson["_id"]));
+      _edlJson.add(usersJson);
+      usersJson = {};
+    });
+    notifyListeners();
     /*DateTime date1 = DateTime.utc(2023, 12, 5);
     DateTime date2 = DateTime.utc(2023, 15, 6);
-    String day1 = date1.day.toString().length > 1
-        ? date1.day.toString()
-        : "0" + date1.day.toString();
-
-    String day2 = date2.day.toString().length > 1
-        ? date2.day.toString()
-        : "0" + date2.day.toString();
-
     String month1 = date1.month.toString().length > 1
         ? date1.month.toString()
-        : "0" + date1.month.toString();
-
-    String month2 = date2.month.toString().length > 1
-        ? date2.month.toString()
-        : "0" + date2.month.toString();
-    _etat = [
-      EtatRealisation(
-          date: day1 + "/" + month1 + "/" + date1.year.toString(),
-          description: "Decsription1",
-          edl: "001",
-          etat: "realise",
-          numero: "12",
-          participant: "5",
-          pieces: "5",
-          rue: "Rue Albert",
-          titre: "EDL de Test"),
-      EtatRealisation(
-          date: day2 + "/" + month2 + "/" + date2.year.toString(),
-          description: "Decsription2",
-          edl: "002",
-          etat: "annule",
-          numero: "3",
-          participant: "8",
-          pieces: "5",
-          rue: "Rue Gabriel",
-          titre: "EDL de Test1"),
-    ];
-    this.notifyListeners();*/
+        : "0" + date1.month.toString();*/
   }
 
   List getSpecificEDL(String _id) {
@@ -167,16 +161,22 @@ class EtatRealisationProvider extends ChangeNotifier {
     return _pieces;
   }
 
-  List getRubriqueOfApiece(_id) {
+  List<dynamic> getRubriqueOfApiece(_id) {
     _rubriques = [];
     List liste =
         UnmodifiableListView(this.getPieces.where((edl) => edl["_id"] == _id));
     if (liste.isEmpty == false) {
       var piece = liste[0];
       piece['rubriq'].forEach((key, value) {
+        value['value'] = value['_id'];
         _rubriques.add(value);
       });
     }
+    /* _rubriques.forEach((element) {
+      if (element['constate'] != null) {
+        _rubriques.insert(_rubriques.length - 1, element);
+      }
+    });*/
     return _rubriques;
   }
 
@@ -204,6 +204,61 @@ class EtatRealisationProvider extends ChangeNotifier {
       });
     }
     return _clefs;
+  }
+
+  void displayDialog(BuildContext context_,
+      {String text = "Constat effectué avec succès",
+      String titre = "Réussite!!!"}) {
+    Text message = Text(text);
+    Text title = Text(titre);
+    // show the dialog
+    showDialog(
+      context: context_,
+      builder: (BuildContext context) => AlertDialog(
+        title: title,
+        content: message,
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'OK'),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  constatRubrique(
+      String idEdl,
+      String idPiece,
+      String idRub,
+      String etat,
+      String description,
+      String commentaire,
+      String commentaitreFinal,
+      BuildContext context) async {
+    var edlBox = await Hive.openBox<dynamic>("edl");
+    var edl =
+        edlBox.values.where((object) => object['_id'] == idEdl).toList()[0];
+    print(idPiece);
+    edl["logement"]['type_log']['piece'].forEach((key, value) {
+      print(value["_id"]);
+      if (value['_id'] == idPiece) {
+        value['rubriq'].forEach((key, valueR) {
+          if (valueR['_id'] == idRub) {
+            valueR['etat'] = etat;
+            valueR['description'] = description;
+            valueR['commentaire'] = commentaire;
+            valueR['commentaireFinal'] = commentaitreFinal;
+            valueR['constate'] = "ok";
+            value['rubriq'][key] = valueR;
+            print("ici");
+          }
+        });
+      }
+    });
+    print("après");
+    print(edl["logement"]['type_log']['piece']);
+    displayDialog(context);
   }
 
   void add(EtatRealisation item) {

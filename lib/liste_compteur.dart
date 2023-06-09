@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 final List compteur_list= [
   {
     'compteur':'COMPTEUR ELECTRIQUE',

@@ -1,6 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ams_mobile/controller/AuthController/AuthController.dart';
-import 'package:ams_mobile/view/home/Home.dart';
 import 'package:ams_mobile/layout/AppLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

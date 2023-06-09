@@ -1,14 +1,11 @@
-import 'dart:math';
-
 import 'package:ams_mobile/conteneurrubrique.dart';
-import 'package:ams_mobile/list_rubrique.dart';
 import 'package:ams_mobile/listescles.dart';
+import 'package:ams_mobile/providers/dialogProvider.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:ams_mobile/view/home/Home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'Formulaire_Constat.dart';
 import 'button.dart';
 import 'conteneur.dart';
@@ -28,6 +25,7 @@ class rubriqueliste extends StatefulWidget {
 class _rubriquelisteState extends State<rubriqueliste> {
   late SharedPreferences globals;
   String idPiece = "";
+  DialogProvider dialogProvider = DialogProvider();
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
@@ -185,9 +183,14 @@ class _rubriquelisteState extends State<rubriqueliste> {
           //Padding(padding: EdgeInsets.only()),
           InkWell(
             child: conteneurmenu(
+              go: () {
+                
+                dialogProvider.displayDialogWarning(context);
+              },
                 text1: titre,
                 nomb: globals.getString("nomPiece").toString(),
-                text2: "AJOUTER"),
+                text2: "AJOUTER",
+                ),
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -195,13 +198,14 @@ class _rubriquelisteState extends State<rubriqueliste> {
               children: rubriques.map((e) {
                 return InkWell(
                   child: conteneurrubrique(
-                      piece: e['nom'],
+                      piece: e['nom'] == null ? "" : e['nom'],
                       nbrei: "total",
                       nbrem: "1",
-                      typepi: e['etat'],
+                      typepi: e['etat'] == null ? "" : e['etat'],
                       image: Image.asset("assets/img/rect.png")),
                   onTap: () {
                     globals.setString("nomRubriqueConstat", e['nom']);
+                    globals.setString("idRub", e['_id']);
                     Navigator.push(
                         context,
                         MaterialPageRoute(

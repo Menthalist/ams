@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 class Couleur{
 
-  var orange = const Color.fromARGB(255, 252, 221, 128);
+  var gris = const Color.fromARGB(218, 219, 219, 215);
   var black = const Color.fromARGB(255, 10, 10, 10);
   var white = const Color.fromARGB(255, 255, 253, 253);
   var marron = const Color.fromARGB(255, 201, 197, 197);

@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class conteneurmenu extends StatelessWidget {
   final String nomb;
   final String text1, text2;
   String nombrPiece = "";
-  conteneurmenu({required this.nomb, required this.text1, required this.text2});
+  VoidCallback go;
+  conteneurmenu({required this.nomb, required this.text1, required this.text2,required this.go});
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +65,15 @@ class conteneurmenu extends StatelessWidget {
               alignment: Alignment.center,
               child: Padding(
                 padding: EdgeInsets.only(left: 260),
-                child: Text(
-                  text2,
-                  style: TextStyle(
-                    fontFamily: "FuturaLT.ttf",
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
+                child: InkWell(
+                  onTap: go,
+                  child: Text(
+                    text2,
+                    style: TextStyle(
+                      fontFamily: "FuturaLT.ttf",
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ),

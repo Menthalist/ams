@@ -1,9 +1,6 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -46,7 +43,15 @@ class _cameraState extends State<camera> {
   }
   @override
   Widget build(BuildContext context) {
-    return IconButton(onPressed: (){getImage(ImageSource.camera);}, icon: Icon(Icons.camera_alt,size: 30,color: Colors.white,),);
-    
+    return IconButton(
+      onPressed: () {
+        getImage(ImageSource.camera);
+      },
+      icon: Icon(
+        Icons.camera_alt,
+        size: 30,
+        color: Colors.white,
+      ),
+    );
   }
 }

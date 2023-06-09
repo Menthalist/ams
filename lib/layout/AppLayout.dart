@@ -1,5 +1,4 @@
 import 'package:ams_mobile/controller/AuthController/AuthController.dart';
-import 'package:ams_mobile/listescles.dart';
 import 'package:ams_mobile/view/connexion/Login.dart';
 import 'package:ams_mobile/view/parameters/Parameters.dart';
 import 'package:flutter/material.dart';

@@ -1,24 +1,23 @@
 import 'package:ams_mobile/ConteneurPiece.dart';
-import 'package:ams_mobile/Formulaire_Constat.dart';
 import 'package:ams_mobile/conteneur.dart';
+import 'package:ams_mobile/conteneurmenu.dart';
 import 'package:ams_mobile/conteneurrubrique.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:ams_mobile/rubriquelist.dart';
 import 'package:ams_mobile/view/home/Home.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Appbar.dart';
-import 'List_Piece.dart';
 import 'button.dart';
-import 'conteneurmenu.dart';
 import 'listecompteurs.dart';
 import 'listescles.dart';
 import 'logement.dart';
 
 class piececonteneur extends StatefulWidget {
   String idToEdit;
+
   piececonteneur({Key? key, required this.idToEdit}) : super(key: key);
 
   @override
@@ -27,6 +26,7 @@ class piececonteneur extends StatefulWidget {
 
 class _piececonteneurState extends State<piececonteneur> {
   late SharedPreferences globals;
+  bool? check1 = false;
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
@@ -181,10 +181,132 @@ class _piececonteneurState extends State<piececonteneur> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.00009,
           ),
-          ConteneurPiece(
-            text: "24 Rue du Commandant Guilbaud, 75016 Paris, France"
-                .toUpperCase(),
-          ),
+         Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(right: 10),
+      height: MediaQuery.of(context).size.height * 0.03,
+      color: Color.fromRGBO(174, 184, 234, 0.19),
+      child: InkWell(
+        child: Align(
+          alignment: Alignment.centerRight,
+          child:Text("Ajouter",style: TextStyle(fontFamily: 'Futura.LT',fontSize: 18,fontWeight: FontWeight.w700),)),
+      onTap: () {
+        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => rubriqueliste())
+                              );
+                         showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                        title: Text(
+                          "AJOUTER UNE PIECE ",
+                          style: TextStyle(
+                              fontFamily: "futura.LT",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800),
+                          textAlign: TextAlign.left,
+                        ),
+                        content: SingleChildScrollView(
+                            child: ListBody(children: [
+                          Container(
+                              margin: EdgeInsets.only(left: 11),
+                              child: Text(
+                                "NOM",
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w900),
+                              )),
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                            width: MediaQuery.of(context).size.width * 0.08,
+                            margin: EdgeInsets.only(
+                              left: 3,
+                              right: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                  width: 1.0,
+                                  color: Color.fromARGB(218, 219, 219, 215)),
+                            ),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Nom",
+                                  contentPadding: EdgeInsets.only(
+                                    left: 9,
+                                  ),
+                                  hintStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ),
+                          ),
+                         
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                            width: MediaQuery.of(context).size.width * 0.08,
+                            margin: EdgeInsets.only(
+                              left: 3,
+                              right: 3,
+                              top: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                  width: 1.0,
+                                  color: Color.fromARGB(218, 219, 219, 215)),
+                            ),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Description",
+                                  contentPadding: EdgeInsets.only(
+                                    left: 9,
+                                  ),
+                                  hintStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ),
+                          ),
+                         
+                          InkWell(
+                            child: Container(
+                              margin:
+                                  EdgeInsets.only(left: 5, right: 5, top: 10),
+                              height: MediaQuery.of(context).size.height * 0.04,
+                              width: MediaQuery.of(context).size.width * 0.08,
+                              decoration: BoxDecoration(
+                                color: Color(0xFF333333),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "ENREGISTRER",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  )),
+                            ),
+                            onTap: () {
+                              // Navigator.push(
+                              //     context, MaterialPageRoute(builder: (context) => home()));
+                            },
+                          ),
+                        ])),
+                      ));     
+      },
+      ),
+      ),
+     
+        
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.009,
           ),
@@ -206,7 +328,8 @@ class _piececonteneurState extends State<piececonteneur> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => rubriqueliste()));
+                              builder: (context) => rubriqueliste())
+                              );
                     });
               }).toList(),
             ),

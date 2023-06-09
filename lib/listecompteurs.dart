@@ -1,7 +1,7 @@
 import 'package:ams_mobile/conteneurcompteur.dart';
-import 'package:ams_mobile/liste_compteur.dart';
 import 'package:ams_mobile/listescles.dart';
 import 'package:ams_mobile/piece.dart';
+import 'package:ams_mobile/providers/dialogProvider.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:ams_mobile/rubriquelist.dart';
 import 'package:ams_mobile/view/home/Home.dart';
@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Appbar.dart';
 import 'button.dart';
 import 'conteneur.dart';
 import 'conteneurmenu.dart';
@@ -24,6 +23,7 @@ class listecompteur extends StatefulWidget {
 class _listecompteurState extends State<listecompteur> {
   late SharedPreferences globals;
   String idRub = "";
+  DialogProvider dialogProvider = DialogProvider();
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
@@ -174,21 +174,26 @@ class _listecompteurState extends State<listecompteur> {
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: InkWell(
               child: conteneurmenu(
+                go: () {
+                  dialogProvider.displayDialogCompteur(context); 
+                },
                   text1: "COMPTEURS",
                   nomb: compteurs.length.toString(),
                   text2: "AJOUTER"),
-              onTap: (() {}),
-            ),
+              
+            
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Column(
               children: compteurs.map((e) {
                 return conteneurcompteur(
-                  compteur: e['nom'],
-                  consom: "N° ordre: " + e['num_ordre'],
+                  compteur: e['nom'] == null ? "" : e['nom'],
+                  // ignore: unnecessary_null_comparison
+                  consom: "N° ordre: " + e['num_ordre'] == null
+                      ? e["num_ordre"]
+                      : "",
                 );
               }).toList(),
             ),

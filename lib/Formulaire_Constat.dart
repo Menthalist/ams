@@ -1,14 +1,17 @@
-import 'dart:io';
 
+import 'package:ams_mobile/Signature.dart';
 import 'package:ams_mobile/Textform_Constat.dart';
 import 'package:ams_mobile/camera.dart';
-import 'package:ams_mobile/connexion/loginpage.dart';
 import 'package:ams_mobile/conteneur.dart';
+import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Formulaire_Constat extends StatefulWidget {
+  const Formulaire_Constat({Key? key}) : super(key: key);
+
   @override
   State<Formulaire_Constat> createState() => _Formulaire_ConstatState();
 }
@@ -16,11 +19,40 @@ class Formulaire_Constat extends StatefulWidget {
 class _Formulaire_ConstatState extends State<Formulaire_Constat> {
   late SharedPreferences globals;
 
+  EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
+  String constate= "ok";
+  String idPiece = "";
+  String idEdl = "";
+  String idRub = "";
+  String etat = "";
+  String description = "";
+  String commentaire = "";
+  String commentaireFinal = "";
+  TextEditingController Commentairecontrolle = TextEditingController();
+  TextEditingController CommentaireFinalcontroller = TextEditingController();
+  String selectchoice = "0";
+  bool  validator=false;
+  
+
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
-    setState(() {});
+
+    setState(() {
+      idPiece = globals.getString("pieceId").toString();
+      idEdl = globals.getString("edlId").toString();
+      idRub = globals.getString("idRub").toString();
+      selectchoice = "0";
+    });
   }
 
+  void ClearForm() {
+    CommentaireFinalcontroller.text = "";
+    Commentairecontrolle.text = "";
+    selectchoix = "Etat";
+    selectcommentaire = "Descriptions";
+  }
+
+  List constatList = [];
   @override
   void initState() {
     super.initState();
@@ -28,18 +60,9 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
   }
 
   _Formulaire_ConstatState() {
-    selectchoice = constatList[0];
-    // _SelectedVal = _EtatList[0] ;
-    //_selectedVal = _commentaireList[0];
-    //_SelectedVAL = _ajoutList[0];
+    //selectchoice = globals.getString("idRub").toString();
   }
-  String selectchoice = "rubriques";
-  List constatList = [
-    "rubriques",
-    "Boites aux Lettres",
-    "Detecteur de monoxyde de carbon",
-    "Decteur de fumée",
-  ];
+
   String selectchoix = "Etat";
   List piece=['Piece','Compteur','Cle'];
   String select="Piece";
@@ -63,10 +86,41 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
   ];
   String p = "Piece";
   String a = "1", b = "3";
-  final camera cam = camera();
+  
+
+  void displayDialogWarning(BuildContext context_,
+      {String text =
+          "Attention les données en cours de saisie seront perdues car vous ne les avez pas encore enregistrés. Confirmez-vous cette opération??",
+      String titre = "Voulez vous annuler le constat en cours??"}) {
+    Text message = Text(text);
+    Text title = Text(titre);
+    // show the dialog
+    showDialog(
+      context: context_,
+      builder: (BuildContext context) => AlertDialog(
+        title: title,
+        content: message,
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              ClearForm();
+              Navigator.pop(context, 'OK');
+            },
+            child: const Text('Continuer'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'OK'),
+            child: const Text('Annuler'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    constatList = Provider.of<EtatRealisationProvider>(context)
+        .getRubriqueOfApiece(idPiece);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -141,14 +195,37 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
               margin: EdgeInsets.only(left: 20, right: 20, top: 15),
               child: DropdownButton(
                 value: selectchoice,
-                items: constatList
-                    .map((e) => DropdownMenuItem(
-                          child: Text(e),
-                          value: e,
-                        ))
-                    .toList(),
+                items: [
+                  const DropdownMenuItem(
+                      value: "0", child: Text("faite un choix")),
+                  ...constatList
+                      .map((e){
+                        Color? couleur = Colors.black;
+                        if(e['constate']!= null){
+                          couleur = Colors.green[400];
+                        }
+                          return DropdownMenuItem(
+                          value:e['constate'],
+                          child: Text(e['nom'],style: TextStyle(color: couleur),
+                          ),);
+                          
+                          
+                      }).toList(), 
+                ],
+               
                 onChanged: (val) {
                   setState(() {
+                   
+                    if (selectcommentaire == "Descriptions" &&
+                        selectchoix == 'Etat' &&
+                        CommentaireFinalcontroller.text == '' &&
+                        Commentairecontrolle.text == '') {
+                      idRub = val as String;
+                      globals.setString("idRub", idRub);
+                      globals.setString("nomRubriqueConstat", "test");
+                    } else {
+                      displayDialogWarning(context);
+                    }
                     selectchoice = val as String;
                   });
                 },
@@ -174,6 +251,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                 onChanged: (Val) {
                   setState(() {
                     selectchoix = Val as String;
+                    etat = Val;
                   });
                 },
                 /* icon: const  Icon(
@@ -198,6 +276,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                 onChanged: (Val) {
                   setState(() {
                     selectcommentaire = Val as String;
+                    commentaire = Val;
                   });
                 },
                 /* icon: const  Icon(
@@ -209,32 +288,78 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
               ),
             ),
             Conteneur_formulaire(
+                controller: Commentairecontrolle,
                 hauteur: MediaQuery.of(context).size.height * 0.06,
                 text: "Commentaire"),
             Conteneur_formulaire(
-                hauteur: MediaQuery.of(context).size.height * 0.2,
+                controller: CommentaireFinalcontroller,
+                hauteur: MediaQuery.of(context).size.height * 0.08,
                 text: "Commentaire Final"),
+                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                       onTap: () {
+                     ShowDialogwidget(context);
+                        
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only( top:20,right: 10, left: 10),
+                        width: MediaQuery.of(context).size.width* 0.2,
+                        height: MediaQuery.of(context).size.height * 0.12,
+                       
+                       child: const Center(child:Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
+                      ),
+                    ),
+                     InkWell(
+                       onTap: () {
+                       
+                       ShowDialogwidget(context);
+                        
+                      },
+                       child: Container(
+                        margin: EdgeInsets.only( top:20,right: 10, left: 18),
+                        width: MediaQuery.of(context).size.width* 0.2,
+                        height: MediaQuery.of(context).size.height * 0.12,
+                        
+                       child: const Center(child:  Image(image: AssetImage("assets/img/pie1.png"),fit: BoxFit.cover,)),
+                                         ),
+                     ),
+                     InkWell(
+                      onTap: () {
+                       ShowDialogwidget(context);
+                        
+                      },
+                       child: Container(
+                        margin: EdgeInsets.only( top:20,right: 10, left: 18),
+                        width: MediaQuery.of(context).size.width* 0.2,
+                        height: MediaQuery.of(context).size.height * 0.12,
+                        
+                       child: const Center(child:  Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
+                                         ),
+                     ),
+                    
+                    
+                    
+          ]),
+               
             Container(
                 height: MediaQuery.of(context).size.height * 0.08,
-                margin: EdgeInsets.only(top: 30, right: 170, left: 170),
+                margin: EdgeInsets.only( top:20,right: 170, left: 170),
                 decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(120),
                     border: Border.all(width: 1, color: Colors.black)),
-                child: Center(
-                    child: camera(),
-                  
-                  ),
-                ),
+                child: Center(child: camera())),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               InkWell(
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   margin: EdgeInsets.only(left: 10, top: 30),
                   decoration: BoxDecoration(
                     color: Colors.red,
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(30),
                   ),
                   child: Center(
                       child: Text(
@@ -245,16 +370,19 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                         color: Colors.white),
                   )),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Signature()));
+                },
               ),
               InkWell(
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   margin: EdgeInsets.only(right: 10, top: 30),
                   decoration: BoxDecoration(
                     color: Colors.black,
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(30),
                   ),
                   child: Center(
                       child: Text(
@@ -265,10 +393,34 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                         color: Colors.white),
                   )),
                 ),
-                onTap: () {},
+                onTap: () {
+                  etatRealisationProvider.constatRubrique(
+                      idEdl,
+                      idPiece,
+                      idRub,
+                      etat,
+                      description,
+                      Commentairecontrolle.text,
+                      CommentaireFinalcontroller.text,
+                      context);
+                  ClearForm();
+                },
               )
             ]),
           ],
         ));
   }
+}
+ShowDialogwidget(BuildContext context){
+AlertDialog alert = AlertDialog(
+  content: Text("Voulez vous vraiment supprimer cette photo?"),
+  actions: [
+    TextButton(onPressed: (){Navigator.pop(context);}, child: Text("NON"),),
+    TextButton(onPressed: (){}, child: Text("OUI"),),
+  ],
+);
+showDialog(context: context, builder: (BuildContext context){
+  return alert;
+});
+
 }
