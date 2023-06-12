@@ -10,6 +10,7 @@ import 'Formulaire_Constat.dart';
 import 'button.dart';
 import 'conteneur.dart';
 import 'conteneurmenu.dart';
+import 'layout/AppLayout.dart';
 import 'listecompteurs.dart';
 import 'logement.dart';
 import 'piece.dart';
@@ -26,6 +27,7 @@ class _rubriquelisteState extends State<rubriqueliste> {
   late SharedPreferences globals;
   String idPiece = "";
   DialogProvider dialogProvider = DialogProvider();
+  EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
@@ -46,8 +48,10 @@ class _rubriquelisteState extends State<rubriqueliste> {
 
   @override
   Widget build(BuildContext context) {
-    rubriques = Provider.of<EtatRealisationProvider>(context)
-        .getRubriqueOfApiece(idPiece);
+    Future res = Provider.of<EtatRealisationProvider>(context)
+        .getRubriqueOfApiece(globals.getString("edlId").toString(),
+            globals.getString("pieceId").toString());
+    res.then((value) => rubriques = value);
     String titre = rubriques.length.toString() + "  Rubriques";
     return Scaffold(
         appBar: AppBar(
@@ -75,8 +79,8 @@ class _rubriquelisteState extends State<rubriqueliste> {
               ),
             ),
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Home()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AppLayout()));
             },
           ),
           centerTitle: true,
@@ -184,28 +188,42 @@ class _rubriquelisteState extends State<rubriqueliste> {
           InkWell(
             child: conteneurmenu(
               go: () {
-                
-                dialogProvider.displayDialogWarning(context);
+                dialogProvider.formRubrique(
+                    globals.getString("pieceId").toString(),
+                    globals.getString("edlId").toString(),
+                    context);
+                Future res = etatRealisationProvider.getRubriqueOfApiece(
+                    globals.getString("edlId").toString(),
+                    globals.getString("pieceId").toString());
+                res.then((value) => rubriques = value);
               },
-                text1: titre,
-                nomb: globals.getString("nomPiece").toString(),
-                text2: "AJOUTER",
-                ),
+              text1: titre,
+              nomb: globals.getString("nomPiece").toString(),
+              text2: "AJOUTER",
+            ),
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Column(
               children: rubriques.map((e) {
+                Color couleur = Colors.grey;
+                String okay = 'Non';
+                if (e['constate'] != null) {
+                  okay = "Oui";
+                  couleur = Color.fromARGB(255, 104, 245, 111);
+                }
                 return InkWell(
                   child: conteneurrubrique(
+                      couleur: couleur,
                       piece: e['nom'] == null ? "" : e['nom'],
                       nbrei: "total",
                       nbrem: "1",
-                      typepi: e['etat'] == null ? "" : e['etat'],
+                      typepi: "Constaté: " + okay.toUpperCase(),
                       image: Image.asset("assets/img/rect.png")),
                   onTap: () {
                     globals.setString("nomRubriqueConstat", e['nom']);
-                    globals.setString("idRub", e['_id']);
+                    globals.setString("idRub", e['key']);
+                    globals.setString("idRubNotKey", e['_id']);
                     Navigator.push(
                         context,
                         MaterialPageRoute(

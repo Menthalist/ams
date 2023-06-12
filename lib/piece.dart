@@ -2,6 +2,9 @@ import 'package:ams_mobile/ConteneurPiece.dart';
 import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/conteneurmenu.dart';
 import 'package:ams_mobile/conteneurrubrique.dart';
+import 'package:ams_mobile/layout/AppLayout.dart';
+import 'package:ams_mobile/pdfpreview.dart';
+import 'package:ams_mobile/providers/dialogProvider.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:ams_mobile/rubriquelist.dart';
 import 'package:ams_mobile/view/home/Home.dart';
@@ -26,6 +29,8 @@ class piececonteneur extends StatefulWidget {
 
 class _piececonteneurState extends State<piececonteneur> {
   late SharedPreferences globals;
+  DialogProvider dialogProvider = DialogProvider();
+  EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
   bool? check1 = false;
 
   void initSharedPref() async {
@@ -47,8 +52,9 @@ class _piececonteneurState extends State<piececonteneur> {
 
   @override
   Widget build(BuildContext context) {
-    pieces = Provider.of<EtatRealisationProvider>(context)
+    Future res = Provider.of<EtatRealisationProvider>(context)
         .getSpecificEDL(widget.idToEdit);
+    res.then((value) => pieces = value);
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: 56,
@@ -75,8 +81,8 @@ class _piececonteneurState extends State<piececonteneur> {
               ),
             ),
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Home()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AppLayout()));
             },
           ),
           centerTitle: true,
@@ -174,6 +180,22 @@ class _piececonteneurState extends State<piececonteneur> {
                               builder: (context) => listecompteur()));
                     },
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5),
+                  child: InkWell(
+                    child: button(
+                      text: "PDF",
+                      couleur1: Color.fromRGBO(17, 45, 194, 0.11),
+                      couleur2: Colors.white,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PdfViewerPage()));
+                    },
+                  ),
                 )
               ]),
             ),
@@ -181,132 +203,22 @@ class _piececonteneurState extends State<piececonteneur> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.00009,
           ),
-         Container(
-      width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(right: 10),
-      height: MediaQuery.of(context).size.height * 0.03,
-      color: Color.fromRGBO(174, 184, 234, 0.19),
-      child: InkWell(
-        child: Align(
-          alignment: Alignment.centerRight,
-          child:Text("Ajouter",style: TextStyle(fontFamily: 'Futura.LT',fontSize: 18,fontWeight: FontWeight.w700),)),
-      onTap: () {
-        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => rubriqueliste())
-                              );
-                         showDialog(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                        title: Text(
-                          "AJOUTER UNE PIECE ",
-                          style: TextStyle(
-                              fontFamily: "futura.LT",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w800),
-                          textAlign: TextAlign.left,
-                        ),
-                        content: SingleChildScrollView(
-                            child: ListBody(children: [
-                          Container(
-                              margin: EdgeInsets.only(left: 11),
-                              child: Text(
-                                "NOM",
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w900),
-                              )),
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.05,
-                            width: MediaQuery.of(context).size.width * 0.08,
-                            margin: EdgeInsets.only(
-                              left: 3,
-                              right: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                  width: 1.0,
-                                  color: Color.fromARGB(218, 219, 219, 215)),
-                            ),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Nom",
-                                  contentPadding: EdgeInsets.only(
-                                    left: 9,
-                                  ),
-                                  hintStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                            ),
-                          ),
-                         
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.05,
-                            width: MediaQuery.of(context).size.width * 0.08,
-                            margin: EdgeInsets.only(
-                              left: 3,
-                              right: 3,
-                              top: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                  width: 1.0,
-                                  color: Color.fromARGB(218, 219, 219, 215)),
-                            ),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Description",
-                                  contentPadding: EdgeInsets.only(
-                                    left: 9,
-                                  ),
-                                  hintStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                            ),
-                          ),
-                         
-                          InkWell(
-                            child: Container(
-                              margin:
-                                  EdgeInsets.only(left: 5, right: 5, top: 10),
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              width: MediaQuery.of(context).size.width * 0.08,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF333333),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "ENREGISTRER",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  )),
-                            ),
-                            onTap: () {
-                              // Navigator.push(
-                              //     context, MaterialPageRoute(builder: (context) => home()));
-                            },
-                          ),
-                        ])),
-                      ));     
-      },
-      ),
-      ),
-     
-        
+          InkWell(
+            child: conteneurmenu(
+                go: () async {
+                  await dialogProvider.displayFormPiece(
+                      widget.idToEdit, context);
+                  Future res =
+                      etatRealisationProvider.getSpecificEDL(widget.idToEdit);
+                  res.then((value) {
+                    pieces = value;
+                    print(pieces);
+                  });
+                },
+                text1: "",
+                nomb: "",
+                text2: "AJOUTER"),
+          ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.009,
           ),
@@ -314,22 +226,29 @@ class _piececonteneurState extends State<piececonteneur> {
             scrollDirection: Axis.horizontal,
             child: Column(
               children: pieces.map((e) {
+                Color couleur = Colors.grey;
+                String okay = 'Non';
+                if (e['constate'] == "oui") {
+                  okay = "oui";
+                  couleur = Color.fromARGB(255, 104, 245, 111);
+                }
                 return InkWell(
                     child: conteneurrubrique(
-                      piece: e['nom'],
-                      nbrei: "N° ordre: ",
+                      couleur: couleur,
+                      piece: e['nom'] == null ? "" : e["nom"],
+                      nbrei: "Rubriques: " + e['rubriques'].toString(),
                       image: Image.asset("assets/img/pie2.png"),
-                      nbrem: e['num_ordre'],
-                      typepi: e['etat'],
+                      nbrem: '',
+                      typepi: "Constaté: " + okay.toUpperCase(),
                     ),
                     onTap: () {
-                      globals.setString("pieceId", e["_id"]);
-                      globals.setString("nomPiece", e["nom"]);
+                      globals.setString("pieceId", e["key"]);
+                      globals.setString(
+                          "nomPiece", e["nom"] == null ? "" : e["nom"]);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => rubriqueliste())
-                              );
+                              builder: (context) => rubriqueliste()));
                     });
               }).toList(),
             ),

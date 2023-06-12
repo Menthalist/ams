@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'button.dart';
 import 'conteneur.dart';
 import 'conteneurmenu.dart';
+import 'layout/AppLayout.dart';
 
 class listecompteur extends StatefulWidget {
   const listecompteur({super.key});
@@ -73,8 +74,8 @@ class _listecompteurState extends State<listecompteur> {
               ),
             ),
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Home()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AppLayout()));
             },
           ),
           centerTitle: true,
@@ -175,15 +176,13 @@ class _listecompteurState extends State<listecompteur> {
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-              child: conteneurmenu(
+            child: conteneurmenu(
                 go: () {
-                  dialogProvider.displayDialogCompteur(context); 
+                  dialogProvider.displayDialogCompteur(context);
                 },
-                  text1: "COMPTEURS",
-                  nomb: compteurs.length.toString(),
-                  text2: "AJOUTER"),
-              
-            
+                text1: "COMPTEURS",
+                nomb: compteurs.length.toString(),
+                text2: "AJOUTER"),
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,

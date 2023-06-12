@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 class conteneurrubrique extends StatelessWidget {
   final String nbrei, nbrem, piece, typepi;
   final Image image;
+  Color couleur = Colors.grey;
   conteneurrubrique(
       {required this.nbrei,
       required this.nbrem,
       required this.piece,
       required this.typepi,
-      required this.image});
+      required this.image,
+      required this.couleur});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class conteneurrubrique extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey,
+              color: couleur,
               offset: const Offset(
                 1.0,
                 1.0,
@@ -93,9 +95,6 @@ class conteneurrubrique extends StatelessWidget {
                     textAlign: TextAlign.justify),
                 Padding(
                   padding: EdgeInsets.only(left: 10, top: 20),
-                ),
-                Image(
-                  image: AssetImage("assets/img/me.png"),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 5),

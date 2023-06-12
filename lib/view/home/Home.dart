@@ -37,11 +37,17 @@ class _HomeState extends State<Home> {
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
+    setState(() {
+      globals.setString("urlImage1", "");
+      globals.setString("urlImage2", "");
+      globals.setString("urlImage3", "");
+    });
   }
 
   @override
   void initState() {
     // TODO: implement initState
+    setState(() {});
     initSharedPref();
     etatRealisationProvider.getItems();
     super.initState();
@@ -91,7 +97,7 @@ class _HomeState extends State<Home> {
                   const Padding(
                       padding: EdgeInsets.only(left: 5, bottom: 35, top: 15),
                       child: Text(
-                        "TOTAL D'ETAT DE LIEUX",
+                        "TOTAL D'ETAT DES LIEUX",
                         style: TextStyle(
                             fontSize: 16,
                             fontFamily: "FuturaLT.ttf",

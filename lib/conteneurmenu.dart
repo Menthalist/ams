@@ -6,7 +6,11 @@ class conteneurmenu extends StatelessWidget {
   final String text1, text2;
   String nombrPiece = "";
   VoidCallback go;
-  conteneurmenu({required this.nomb, required this.text1, required this.text2,required this.go});
+  conteneurmenu(
+      {required this.nomb,
+      required this.text1,
+      required this.text2,
+      required this.go});
 
   @override
   Widget build(BuildContext context) {

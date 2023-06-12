@@ -8,6 +8,8 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class EtatRealisation {
   String titre;
   String numero;
@@ -64,14 +66,19 @@ class EtatRealisation {
 }
 
 class EtatRealisationProvider extends ChangeNotifier {
+  late SharedPreferences prefs;
+
   List<EtatRealisation> _etat = [];
   List<dynamic> _edlJson = [];
   List<dynamic> _pieces = [];
   List<dynamic> _rubriques = [];
   List<dynamic> _clefs = [];
   List<dynamic> _compteurs = [];
+  List<dynamic> _commentaires = [];
   UnmodifiableListView<EtatRealisation> get getEtats =>
       UnmodifiableListView(_etat);
+  UnmodifiableListView<dynamic> get getCommentaires =>
+      UnmodifiableListView(_commentaires);
   UnmodifiableListView<dynamic> get getEdlJsons =>
       UnmodifiableListView(_edlJson);
   UnmodifiableListView<dynamic> get getPieces => UnmodifiableListView(_pieces);
@@ -81,23 +88,93 @@ class EtatRealisationProvider extends ChangeNotifier {
       UnmodifiableListView(_rubriques);
   UnmodifiableListView<dynamic> get getClefs => UnmodifiableListView(_clefs);
 
+  Future addComposant(dynamic composant) async {
+    //variables
+    var edlBox = await Hive.openBox<dynamic>("edl");
+    int i = edlBox.values.length;
+    var edl1;
+    int index = 0;
+    int i_ = 0;
+    dynamic composantToAdd = {};
+    //initialisation
+    var edl = edlBox.values.firstWhere((object) {
+      return object['_id'] == composant['edl'];
+    });
+    for (int k = 0; k <= i - 1; k++) {
+      edl1 = edlBox.getAt(k);
+      if (edl1['_id'] == composant['edl']) {
+        index = k;
+      }
+    }
+    //logique
+    if (composant['type'] == "piece") {
+      composantToAdd['nom'] = composant['nom'];
+      composantToAdd['description'] = composant['description'];
+      composantToAdd['etat'] = composant['etat'];
+      composantToAdd['num_ordre'] = composant['num_ordre'];
+      composantToAdd['rubriq'] = {};
+      edl["logement"]['type_log']['piece'].forEach((key, valeur) {
+        i_ = i_ + 1;
+      });
+      i_ = i_ + 1;
+      String nom_ = "piece" + i_.toString();
+      composantToAdd['_id'] = nom_;
+      edl["logement"]['type_log']['piece'][nom_] = composantToAdd;
+      await edlBox.putAt(index, edl);
+      return edl;
+    }
+    if (composant['type'] == "rubrique") {
+      edl["logement"]['type_log']['piece'].forEach((key, valeur) async {
+        if (key == composant['piece']) {
+          composantToAdd['nom'] = composant['nom'];
+          composantToAdd['description'] = composant['description'];
+          composantToAdd['etat'] = composant['etat'];
+          composantToAdd['num_ordre'] = composant['num_ordre'];
+          int k = 0;
+          edl["logement"]['type_log']['piece'][key]["rubriq"]
+              .forEach((key, valeur) {
+            k = k + 1;
+          });
+          String nom_ = "rubriq" + k.toString();
+          composantToAdd['_id'] = nom_;
+          edl["logement"]['type_log']['piece'][key]["rubriq"][nom_] =
+              composantToAdd;
+          await edlBox.putAt(index, edl);
+        }
+      });
+      return edl;
+    }
+  }
+
   Future getItems() async {
     WidgetsFlutterBinding.ensureInitialized();
     final directory = await getApplicationDocumentsDirectory();
     Hive.init(directory.path);
+    //Hive.registerAdapter(EdlAdapter());
     var edlBox = await Hive.openBox<dynamic>("edl");
+    var commentaireBox = await Hive.openBox<dynamic>("commentaire");
     try {
       var result = [];
       result = await InternetAddress.lookup('example.com');
-      print(result);
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         Uri getAllClient = Uri(
             scheme: "http",
             host: "195.15.228.250",
             path: "edlplanning/edl/tous");
+
+        Uri getAllComments = Uri(
+            scheme: "http",
+            host: "195.15.218.172",
+            path: "edlgateway/api/v1/commentaire/all",
+            query: "start=1&limit=2&count=1");
         http.Response response = await http.get(getAllClient, headers: {
           'Authorization':
               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgzMjkxNDYwLCJpYXQiOjE2ODI0Mjc0NjAsImp0aSI6ImZjNTcwMTJhYzVkNzQ5NTRhNWYyYTU5MjIyZDYxZGI5IiwidXNlcl9pZCI6NzI2fQ.roWIMbNgk4KRzeFaiHecbES63i_WLfhdhdeLsO0xYG8",
+        });
+
+        http.Response responsecom = await http.get(getAllComments, headers: {
+          'Authorization':
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1ODcxMDI3LCJpYXQiOjE2ODUwMDcwMjcsImp0aSI6ImYzMzNmNzdhOGI1OTRjMzg5YjUzYmUwNTFkYzZkZDY0IiwidXNlcl9pZCI6MjYwfQ.LX0v9YHzGa6sHpW8D13xUu-Q1nguBzwoWg_rALjZG8g",
         });
         if (response.statusCode == 200) {
           (json.decode(response.body) as List).map((usersJson) async {
@@ -110,8 +187,17 @@ class EtatRealisationProvider extends ChangeNotifier {
             }
             usersJson = {};
           }).toList();
-        } else {
-          print('ici');
+        }
+        if (responsecom.statusCode == 200) {
+          commentaireBox.deleteAll(commentaireBox.keys);
+          (json.decode(responsecom.body)["results"] as List)
+              .map((usersJson) async {
+            await commentaireBox.add(usersJson);
+            usersJson = {};
+          }).toList();
+          _commentaires.addAll(commentaireBox.values.toList());
+          notifyListeners();
+          print(_commentaires);
         }
       } else {
         print('pas de connexion else');
@@ -123,9 +209,8 @@ class EtatRealisationProvider extends ChangeNotifier {
     _etat = [];
     edls.forEach((usersJson) {
       _etat.add(EtatRealisation(
-          titre: "EDL " + usersJson['type_edl'] == null
-              ? ""
-              : usersJson['type_edl'],
+          titre: "EDL " +
+              (usersJson['type_edl'] == null ? "" : usersJson['type_edl']),
           numero: "",
           rue: "Rue indéfinie",
           edl: usersJson['type_edl'] == null ? "" : usersJson['type_edl'],
@@ -133,7 +218,7 @@ class EtatRealisationProvider extends ChangeNotifier {
           description: "Description standard d'un EDL",
           participant: "",
           pieces: "",
-          date: usersJson['date_edl'],
+          date: usersJson['date_edl'] == null ? "" : usersJson['date_edl'],
           id: usersJson["_id"]));
       _edlJson.add(usersJson);
       usersJson = {};
@@ -146,37 +231,61 @@ class EtatRealisationProvider extends ChangeNotifier {
         : "0" + date1.month.toString();*/
   }
 
-  List getSpecificEDL(String _id) {
+  getSingleEdl(String id) async {
+    var edlBox = await Hive.openBox<dynamic>("edl");
+    return edlBox.values.toList().where((edl) => edl["_id"] == id).toList()[0];
+  }
+
+  getSpecificEDL(String _id) async {
+    var edlBox = await Hive.openBox<dynamic>("edl");
     this._pieces = [];
     List liste =
-        UnmodifiableListView(this.getEdlJsons.where((edl) => edl["_id"] == _id))
-            .toList();
-    //print(this.getEdlJsons);
+        edlBox.values.toList().where((edl) => edl["_id"] == _id).toList();
     if (liste.isEmpty == false) {
       var edl = liste[0];
       edl["logement"]['type_log']['piece'].forEach((key, value) {
-        _pieces.add(value);
+        int i = 0;
+        String constate = "oui";
+        value["key"] = key.toString();
+        value['rubriq'].forEach((ke, val) {
+          i = i + 1;
+          if (val["constate"] == null) {
+            constate = "non";
+          }
+        });
+        if (i == 0) {
+          value['constate'] = "non";
+        } else {
+          value['constate'] = constate;
+        }
+        value['rubriques'] = i.toString();
+        this._pieces.add(value);
       });
     }
+    notifyListeners();
     return _pieces;
   }
 
-  List<dynamic> getRubriqueOfApiece(_id) {
+  getRubriqueOfApiece(String edl, String piece_) async {
+    var edlBox = await Hive.openBox<dynamic>("edl");
+    var edlP = edlBox.values.firstWhere((object) {
+      return object['_id'] == edl;
+    });
+    dynamic piece;
+
     _rubriques = [];
-    List liste =
-        UnmodifiableListView(this.getPieces.where((edl) => edl["_id"] == _id));
-    if (liste.isEmpty == false) {
-      var piece = liste[0];
-      piece['rubriq'].forEach((key, value) {
-        value['value'] = value['_id'];
-        _rubriques.add(value);
-      });
-    }
-    /* _rubriques.forEach((element) {
-      if (element['constate'] != null) {
-        _rubriques.insert(_rubriques.length - 1, element);
+    edlP["logement"]['type_log']['piece'].forEach((key, value) {
+      if (key == piece_) {
+        piece = value;
       }
-    });*/
+    });
+
+    piece['rubriq'].forEach((key, value) {
+      value["key"] = key.toString();
+      value['value'] = value['_id'];
+      this._rubriques.add(value);
+    });
+    notifyListeners();
     return _rubriques;
   }
 
@@ -187,9 +296,11 @@ class EtatRealisationProvider extends ChangeNotifier {
     if (liste.isEmpty == false) {
       var piece = liste[0];
       piece['logement']['type_log']['compteur'].forEach((key, value) {
-        _compteurs.add(value);
+        value["key"] = key.toString();
+        this._compteurs.add(value);
       });
     }
+    notifyListeners();
     return _compteurs;
   }
 
@@ -200,7 +311,8 @@ class EtatRealisationProvider extends ChangeNotifier {
     if (liste.isEmpty == false) {
       var piece = liste[0];
       piece['logement']['type_log']['cles'].forEach((key, value) {
-        _clefs.add(value);
+        value["key"] = key.toString();
+        this._clefs.add(value);
       });
     }
     return _clefs;
@@ -235,30 +347,64 @@ class EtatRealisationProvider extends ChangeNotifier {
       String description,
       String commentaire,
       String commentaitreFinal,
-      BuildContext context) async {
+      BuildContext context,
+      String img1,
+      String img2,
+      String img3) async {
     var edlBox = await Hive.openBox<dynamic>("edl");
-    var edl =
-        edlBox.values.where((object) => object['_id'] == idEdl).toList()[0];
-    print(idPiece);
+    int i = edlBox.values.length;
+    var edl1;
+    int index = 0;
+
+    var edl = edlBox.values.firstWhere((object) {
+      return object['_id'] == idEdl;
+    });
+
+    for (int k = 0; k <= i - 1; k++) {
+      edl1 = edlBox.getAt(k);
+      if (edl1['_id'] == idEdl) {
+        index = k;
+      }
+    }
+    dynamic rubriqueFinale;
     edl["logement"]['type_log']['piece'].forEach((key, value) {
-      print(value["_id"]);
-      if (value['_id'] == idPiece) {
+      if (value['key'] == idPiece) {
         value['rubriq'].forEach((key, valueR) {
-          if (valueR['_id'] == idRub) {
+          if (valueR['key'] == idRub) {
             valueR['etat'] = etat;
             valueR['description'] = description;
             valueR['commentaire'] = commentaire;
             valueR['commentaireFinal'] = commentaitreFinal;
+            valueR['image1'] = img1;
+            valueR['image2'] = img2;
+            valueR['image3'] = img3;
             valueR['constate'] = "ok";
             value['rubriq'][key] = valueR;
-            print("ici");
+            rubriqueFinale = valueR;
           }
         });
       }
     });
-    print("après");
-    print(edl["logement"]['type_log']['piece']);
+
+    await edlBox.putAt(index, edl);
+    // ignore: use_build_context_synchronously
     displayDialog(context);
+    return rubriqueFinale;
+  }
+
+  getCommentairesOfanElement(String idEl, String typeCommentaire) async {
+    var commentaireBox = await Hive.openBox<dynamic>("commentaire");
+    List final_ = [];
+    commentaireBox.values.toList().forEach((element) {
+      if (element["type"].toString().toLowerCase() ==
+              typeCommentaire.toLowerCase() &&
+          element["key_"] == idEl) {
+        final_.add(element);
+        element = {};
+      }
+    });
+    print("dans le provider " + final_.length.toString());
+    return final_;
   }
 
   void add(EtatRealisation item) {

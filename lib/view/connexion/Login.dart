@@ -249,8 +249,8 @@ class _LoginState extends State<Login> {
                       decoration: TextDecoration.underline),
                 ),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>   Mdp()));
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Mdp()));
                 },
               )),
           const SizedBox(
