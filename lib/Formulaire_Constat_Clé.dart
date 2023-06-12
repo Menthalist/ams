@@ -1,23 +1,21 @@
-
-import 'package:ams_mobile/Signature.dart';
-import 'package:ams_mobile/Textform_Constat.dart';
-import 'package:ams_mobile/camera.dart';
-import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Formulaire_Constat extends StatefulWidget {
-  const Formulaire_Constat({Key? key}) : super(key: key);
+import 'Textform_Constat.dart';
+import 'camera.dart';
+import 'conteneur.dart';
+class Formulaire_Constat_Cle extends StatefulWidget {
+  
 
   @override
-  State<Formulaire_Constat> createState() => _Formulaire_ConstatState();
+  State<Formulaire_Constat_Cle> createState() => _Formulaire_Constat_CleState();
 }
 
-class _Formulaire_ConstatState extends State<Formulaire_Constat> {
-  late SharedPreferences globals;
+class _Formulaire_Constat_CleState extends State<Formulaire_Constat_Cle> {
+late SharedPreferences globals;
 
   EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
   String constate= "ok";
@@ -30,6 +28,12 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
   String commentaireFinal = "";
   TextEditingController Commentairecontrolle = TextEditingController();
   TextEditingController CommentaireFinalcontroller = TextEditingController();
+    TextEditingController remisecontroller = TextEditingController();
+  TextEditingController renduscontroller = TextEditingController();
+  TextEditingController nbrefacturecontroller= TextEditingController();
+  TextEditingController motiffactutationcontroller= TextEditingController();
+  TextEditingController prixttccontroller= TextEditingController();
+  
 
   String selectchoice = "0";
   bool  validator=false;
@@ -288,8 +292,11 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                 dropdownColor: Colors.white,
               ),
             ),
-
-           
+             Conteneur_formulaire(hauteur:  MediaQuery.of(context).size.height * 0.06, text: "Nombre de remise", controller:remisecontroller ),
+            Conteneur_formulaire(hauteur:  MediaQuery.of(context).size.height * 0.06, text: "Nombre de rendus", controller:renduscontroller ),
+            Conteneur_formulaire(hauteur:  MediaQuery.of(context).size.height * 0.06, text: "Nombre de facturé", controller:nbrefacturecontroller ),
+            Conteneur_formulaire(hauteur:  MediaQuery.of(context).size.height * 0.06, text: "Motifs de non facturation", controller:motiffactutationcontroller ),
+            Conteneur_formulaire(hauteur:  MediaQuery.of(context).size.height * 0.06, text: "Prix TTC", controller:prixttccontroller ),
             Conteneur_formulaire(
                 controller: Commentairecontrolle,
                 hauteur: MediaQuery.of(context).size.height * 0.06,
@@ -354,8 +361,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                     borderRadius: BorderRadius.circular(120),
                     border: Border.all(width: 1, color: Colors.black)),
                 child: Center(child: camera())),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, 
-            children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               InkWell(
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.05,
@@ -375,8 +381,8 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                   )),
                 ),
                 onTap: () {
-                  Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Signature()));
+               
+                  
                 },
               ),
               InkWell(

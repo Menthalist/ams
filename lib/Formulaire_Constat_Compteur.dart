@@ -1,22 +1,21 @@
-
-import 'package:ams_mobile/Signature.dart';
-import 'package:ams_mobile/Textform_Constat.dart';
-import 'package:ams_mobile/camera.dart';
-import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Formulaire_Constat extends StatefulWidget {
-  const Formulaire_Constat({Key? key}) : super(key: key);
+import 'Signature.dart';
+import 'Textform_Constat.dart';
+import 'camera.dart';
+import 'conteneur.dart';
+class Formulaire_Constat_compteur extends StatefulWidget {
+  const Formulaire_Constat_compteur({super.key});
 
   @override
-  State<Formulaire_Constat> createState() => _Formulaire_ConstatState();
+  State<Formulaire_Constat_compteur> createState() => _Formulaire_Constat_compteurState();
 }
 
-class _Formulaire_ConstatState extends State<Formulaire_Constat> {
+class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteur> {
   late SharedPreferences globals;
 
   EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
@@ -30,6 +29,9 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
   String commentaireFinal = "";
   TextEditingController Commentairecontrolle = TextEditingController();
   TextEditingController CommentaireFinalcontroller = TextEditingController();
+   TextEditingController IndexActuelcontroller = TextEditingController();
+   TextEditingController IndexPrecedentcontroller = TextEditingController();
+   TextEditingController Anomaliecontroller = TextEditingController();
 
   String selectchoice = "0";
   bool  validator=false;
@@ -289,7 +291,9 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
               ),
             ),
 
-           
+           Conteneur_formulaire(hauteur: MediaQuery.of(context).size.height * 0.06,text: "Index Actuel", controller: IndexActuelcontroller),
+            Conteneur_formulaire(hauteur: MediaQuery.of(context).size.height * 0.06,text: "Index Precedent ", controller: IndexPrecedentcontroller),
+             Conteneur_formulaire(hauteur: MediaQuery.of(context).size.height * 0.06,text: "Anomalie Compteur ", controller: Anomaliecontroller),
             Conteneur_formulaire(
                 controller: Commentairecontrolle,
                 hauteur: MediaQuery.of(context).size.height * 0.06,
@@ -428,3 +432,4 @@ showDialog(context: context, builder: (BuildContext context){
 });
 
 }
+ 

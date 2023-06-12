@@ -1,3 +1,4 @@
+import 'package:ams_mobile/Formulaire_Constat_Cl%C3%A9.dart';
 import 'package:ams_mobile/button.dart';
 import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/conteneurliste.dart';
@@ -193,11 +194,21 @@ class _listcleState extends State<listcle> {
           ),
           Column(
             children: cles.map((e) {
-              return conteneurliste(
-                piece:
-                    // ignore: unnecessary_null_comparison
-                    "N° ordre: " + e['num_ordre'] == null ? "" : e['num_ordre'],
-                nbrecle: e['nom'] == null ? "" : e['nom'],
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Formulaire_Constat_Cle())
+                              );
+                              
+                },
+                child: conteneurliste(
+                  piece:
+                      // ignore: unnecessary_null_comparison
+                      "N° ordre: " + e['num_ordre'] == null ? "" : e['num_ordre'],
+                  nbrecle: e['nom'] == null ? "" : e['nom'],
+                ),
               );
             }).toList(),
           )
