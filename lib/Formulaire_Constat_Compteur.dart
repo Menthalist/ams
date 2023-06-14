@@ -122,8 +122,7 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
 
   @override
   Widget build(BuildContext context) {
-    constatList = Provider.of<EtatRealisationProvider>(context)
-        .getRubriqueOfApiece(idPiece);
+   // constatList = Provider.of<EtatRealisationProvider>(context).getRubriqueOfApiece(idPiece);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -310,12 +309,17 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
                      ShowDialogwidget(context);
                         
                       },
-                      child: Container(
-                        margin: EdgeInsets.only( top:20,right: 10, left: 10),
-                        width: MediaQuery.of(context).size.width* 0.2,
-                        height: MediaQuery.of(context).size.height * 0.12,
-                       
-                       child: const Center(child:Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only( top:20,right: 10, left: 10),
+                            width: MediaQuery.of(context).size.width* 0.2,
+                            height: MediaQuery.of(context).size.height * 0.12,
+                           
+                           child: const Center(child:Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
+                          ),
+                           Text("12/06/2023"+" A "+"17H03 ",style: TextStyle(fontFamily: 'Futura.LT',fontWeight: FontWeight.w700,fontSize: 15),),
+                        ],
                       ),
                     ),
                      InkWell(
@@ -324,26 +328,37 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
                        ShowDialogwidget(context);
                         
                       },
-                       child: Container(
-                        margin: EdgeInsets.only( top:20,right: 10, left: 18),
-                        width: MediaQuery.of(context).size.width* 0.2,
-                        height: MediaQuery.of(context).size.height * 0.12,
-                        
-                       child: const Center(child:  Image(image: AssetImage("assets/img/pie1.png"),fit: BoxFit.cover,)),
-                                         ),
+                       child: Column(
+                         children: [
+                           Container(
+                            margin: EdgeInsets.only( top:20,right: 10, left: 18),
+                            width: MediaQuery.of(context).size.width* 0.2,
+                            height: MediaQuery.of(context).size.height * 0.12,
+                            
+                           child: const Center(child:  Image(image: AssetImage("assets/img/pie1.png"),fit: BoxFit.cover,)),
+                                             ),
+                              Text("12/06/2023"+" A "+"10H08"),
+                         ],
+                       ),
                      ),
                      InkWell(
                       onTap: () {
                        ShowDialogwidget(context);
                         
                       },
-                       child: Container(
-                        margin: EdgeInsets.only( top:20,right: 10, left: 18),
-                        width: MediaQuery.of(context).size.width* 0.2,
-                        height: MediaQuery.of(context).size.height * 0.12,
-                        
-                       child: const Center(child:  Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
-                                         ),
+                       child: Column(
+                         children: [
+                           Container(
+                            margin: EdgeInsets.only( top:20,right: 10, left: 18),
+                            width: MediaQuery.of(context).size.width* 0.2,
+                            height: MediaQuery.of(context).size.height * 0.12,
+                            
+                           child: const Center(child:  Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
+                                             ),
+                            Text("12/06/2023"+" A "+"18H37 "),
+
+                         ],
+                       ),
                      ),
                     
                     
@@ -402,7 +417,7 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
                   )),
                 ),
                 onTap: () {
-                  etatRealisationProvider.constatRubrique(
+                 /* etatRealisationProvider.constatRubrique(
                       idEdl,
                       idPiece,
                       idRub,
@@ -410,8 +425,8 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
                       description,
                       Commentairecontrolle.text,
                       CommentaireFinalcontroller.text,
-                      context);
-                  ClearForm();
+                      context)
+                  ClearForm();*/
                 },
               )
             ]),

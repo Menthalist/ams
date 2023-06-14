@@ -124,8 +124,7 @@ late SharedPreferences globals;
 
   @override
   Widget build(BuildContext context) {
-    constatList = Provider.of<EtatRealisationProvider>(context)
-        .getRubriqueOfApiece(idPiece);
+    //constatList = Provider.of<EtatRealisationProvider>(context).getRubriqueOfApiece(idPiece);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -313,12 +312,17 @@ late SharedPreferences globals;
                      ShowDialogwidget(context);
                         
                       },
-                      child: Container(
-                        margin: EdgeInsets.only( top:20,right: 10, left: 10),
-                        width: MediaQuery.of(context).size.width* 0.2,
-                        height: MediaQuery.of(context).size.height * 0.12,
-                       
-                       child: const Center(child:Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only( top:20,right: 10, left: 10),
+                            width: MediaQuery.of(context).size.width* 0.2,
+                            height: MediaQuery.of(context).size.height * 0.12,
+                           
+                           child: const Center(child:Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
+                          ),
+                           Text("12/06/2023"+" A "+"16H09 "),
+                        ],
                       ),
                     ),
                      InkWell(
@@ -327,26 +331,36 @@ late SharedPreferences globals;
                        ShowDialogwidget(context);
                         
                       },
-                       child: Container(
-                        margin: EdgeInsets.only( top:20,right: 10, left: 18),
-                        width: MediaQuery.of(context).size.width* 0.2,
-                        height: MediaQuery.of(context).size.height * 0.12,
-                        
-                       child: const Center(child:  Image(image: AssetImage("assets/img/pie1.png"),fit: BoxFit.cover,)),
-                                         ),
+                       child: Column(
+                         children: [
+                           Container(
+                            margin: EdgeInsets.only( top:20,right: 10, left: 18),
+                            width: MediaQuery.of(context).size.width* 0.2,
+                            height: MediaQuery.of(context).size.height * 0.12,
+                            
+                           child: const Center(child:  Image(image: AssetImage("assets/img/pie1.png"),fit: BoxFit.cover,)),
+                                             ),
+                                              Text("12/06/2023"+" A "+"14H15 "),
+                         ],
+                       ),
                      ),
                      InkWell(
                       onTap: () {
                        ShowDialogwidget(context);
                         
                       },
-                       child: Container(
-                        margin: EdgeInsets.only( top:20,right: 10, left: 18),
-                        width: MediaQuery.of(context).size.width* 0.2,
-                        height: MediaQuery.of(context).size.height * 0.12,
-                        
-                       child: const Center(child:  Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
-                                         ),
+                       child: Column(
+                         children: [
+                           Container(
+                            margin: EdgeInsets.only( top:20,right: 10, left: 18),
+                            width: MediaQuery.of(context).size.width* 0.2,
+                            height: MediaQuery.of(context).size.height * 0.12,
+                            
+                           child: const Center(child:  Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
+                                             ),
+                                              Text("12/06/2023"+" A "+"12H25 "),
+                         ],
+                       ),
                      ),
                     
                     
@@ -404,7 +418,7 @@ late SharedPreferences globals;
                   )),
                 ),
                 onTap: () {
-                  etatRealisationProvider.constatRubrique(
+                 /* etatRealisationProvider.constatRubrique(
                       idEdl,
                       idPiece,
                       idRub,
@@ -412,7 +426,7 @@ late SharedPreferences globals;
                       description,
                       Commentairecontrolle.text,
                       CommentaireFinalcontroller.text,
-                      context);
+                      context);*/
                   ClearForm();
                 },
               )

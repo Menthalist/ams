@@ -94,7 +94,7 @@ class _etatUIdesignState extends State<etatUIdesign> {
                     padding: EdgeInsets.only(left: 10, top: 0),
                     child: Icon(
                       Icons.location_on_outlined,
-                      size: 26,
+                      size: 36,
                     )),
                 Padding(
                   padding: EdgeInsets.only(top: 2, left: 10),
@@ -102,7 +102,7 @@ class _etatUIdesignState extends State<etatUIdesign> {
                     widget.textedl,
                     style: TextStyle(
                         fontFamily: "FuturaLT.ttf",
-                        fontSize: 12,
+                        fontSize: 20,
                         fontWeight: FontWeight.w600,
                         color: Colors.black),
                   ),
@@ -110,6 +110,7 @@ class _etatUIdesignState extends State<etatUIdesign> {
               ],
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
                   padding: EdgeInsets.only(top: 5, left: 15),
@@ -117,7 +118,7 @@ class _etatUIdesignState extends State<etatUIdesign> {
                     widget.typedl,
                     style: TextStyle(
                         fontFamily: "FuturaLT.ttf",
-                        fontSize: 18,
+                        fontSize: 22,
                         fontWeight: FontWeight.w900),
                   ),
                 ),
@@ -127,7 +128,7 @@ class _etatUIdesignState extends State<etatUIdesign> {
                     widget.signature,
                     style: TextStyle(
                         fontFamily: "FuturaLT.ttf",
-                        fontSize: 14,
+                        fontSize: 17,
                         fontWeight: FontWeight.w800,
                         color: widget.couleursigna),
                   ),
@@ -140,7 +141,7 @@ class _etatUIdesignState extends State<etatUIdesign> {
                 widget.commentaire,
                 style: TextStyle(
                   fontFamily: "FuturaLT.ttf",
-                  fontSize: 12,
+                  fontSize: 17,
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.justify,
@@ -153,41 +154,43 @@ class _etatUIdesignState extends State<etatUIdesign> {
                 style: TextStyle(
                     fontFamily: 'FuturaLT.ttf',
                     fontWeight: FontWeight.w500,
-                    fontSize: 12,
+                    fontSize: 16,
                     decoration: TextDecoration.underline),
               ),
             ),
-            Row(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
               Padding(
-                padding: EdgeInsets.only(top: 10, left: 15),
+                padding: EdgeInsets.only(top: 20, ),
                 child: Text(
                   "${widget.nbrepar} Participants",
                   style: TextStyle(
                       fontFamily: 'FuturaLT.ttf',
                       fontWeight: FontWeight.w800,
-                      fontSize: 13,
+                      fontSize: 16,
                       decoration: TextDecoration.underline),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10, left: 15),
+                padding: EdgeInsets.only(top: 20, ),
                 child: Text(
                   "${widget.nbrepiece} pièces commentés",
                   style: TextStyle(
                       fontFamily: 'FuturaLT.ttf',
                       fontWeight: FontWeight.w800,
-                      fontSize: 13,
+                      fontSize: 16,
                       decoration: TextDecoration.underline),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10, left: 40),
+                padding: EdgeInsets.only(top: 20, ),
                 child: Text(
                   "${widget.datej}",
                   style: TextStyle(
                     fontFamily: 'FuturaLT.ttf',
                     fontWeight: FontWeight.w800,
-                    fontSize: 14,
+                    fontSize: 16,
                   ),
                 ),
               ),

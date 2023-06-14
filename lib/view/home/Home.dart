@@ -91,51 +91,61 @@ class _HomeState extends State<Home> {
                   width: 4,
                   color: const Color.fromRGBO(221, 4, 4, 0.25),
                 )),
-            child: Column(
-              children: [
-                Row(children: [
-                  const Padding(
-                      padding: EdgeInsets.only(left: 5, bottom: 35, top: 15),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    const Padding(
+                        padding: EdgeInsets.only(left: 5, bottom: 35, top: 15),
+                        child: Text(
+                          "TOTAL D'ETAT DES LIEUX",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: "FuturaLT.ttf",
+                              fontWeight: FontWeight.w500),
+                        )),
+                    Row(
+                      children:[
+                     
+                        Padding(
+                            padding:
+                                const EdgeInsets.only(left: 40, bottom: 35, top: 15),
+                            child: Text(
+                              widget.text1,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontFamily: "FuturaLT.ttf",
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(239, 201, 10, 10),
+                              ),
+                            )),
+                      
+                    
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 35, right: 25, top: 15),
+                      child: Icon(
+                        Icons.favorite_border_outlined,
+                        color: Color.fromARGB(239, 201, 10, 10),
+                        size: 18,
+                      ),
+                    ),
+                  ]),]),
+                  Align(
+                      alignment: Alignment.center,
                       child: Text(
-                        "TOTAL D'ETAT DES LIEUX",
+                        totalEdl,
                         style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: "FuturaLT.ttf",
-                            fontWeight: FontWeight.w500),
-                      )),
-                  Padding(
-                      padding:
-                          const EdgeInsets.only(left: 40, bottom: 35, top: 15),
-                      child: Text(
-                        widget.text1,
-                        style: const TextStyle(
-                          fontSize: 15,
+                          fontSize: 42,
                           fontFamily: "FuturaLT.ttf",
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           color: Color.fromARGB(239, 201, 10, 10),
                         ),
-                      )),
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 35, left: 4, top: 15),
-                    child: Icon(
-                      Icons.favorite_border_outlined,
-                      color: Color.fromARGB(239, 201, 10, 10),
-                      size: 18,
-                    ),
-                  )
-                ]),
-                Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      totalEdl,
-                      style: TextStyle(
-                        fontSize: 42,
-                        fontFamily: "FuturaLT.ttf",
-                        fontWeight: FontWeight.w600,
-                        color: Color.fromARGB(239, 201, 10, 10),
-                      ),
-                    ))
-              ],
+                      ))
+                      
+                ],
+              ),
             ),
           )
         ],
@@ -143,84 +153,91 @@ class _HomeState extends State<Home> {
       const SizedBox(
         height: 13,
       ),
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: etat_realisation.map((e) {
-            return conteneurcorps(
-              text: e['titre'],
-              nomb: e['numero'],
-              couleur: e['couleurcontainer'],
-              // Color.fromRGBO(136, 255, 95, 0.16),
-              cal: e['couleurtext'],
-              colbordure: e['bordure'],
-              col: e['couleurtext'],
-              colorg: e['colorgr'],
-            );
-          }).toList(),
-        ),
-      ),
+      
+           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: etat_realisation.map((e) {
+              return conteneurcorps(
+                text: e['titre'],
+                nomb: e['numero'],
+                couleur: e['couleurcontainer'],
+                // Color.fromRGBO(136, 255, 95, 0.16),
+                cal: e['couleurtext'],
+                colbordure: e['bordure'],
+                col: e['couleurtext'],
+                colorg: e['colorgr'],
+              );
+            }).toList(),
+          ),
+       
+    
       const SizedBox(
         height: 10,
       ),
-      Row(
-        children: [
-          const Padding(
-              padding: EdgeInsets.only(left: 13, top: 8),
-              child: Text(
-                "Etats des lieux",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'FuturaLT.ttf',
-                ),
-              )),
-          Padding(
-              padding: const EdgeInsets.only(left: 250, top: 10),
-              child: InkWell(
-                onTap: (() {
-                  showDialog(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                          title: const Text(
-                            "FILTRES PAR ",
-                            style: TextStyle(
-                                fontFamily: "futura.LT",
-                                fontSize: 18,
-                                fontWeight: FontWeight.w800),
-                            textAlign: TextAlign.left,
-                          ),
-                          content: SingleChildScrollView(
-                            child: ListBody(children: [
-                              for (int i = 0; i < _etat.length; i++)
-                                Row(
-                                  children: [
-                                    Radio(
-                                        value: _etat[i].toString(),
-                                        groupValue: _selectedetat,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _selectedetat = value.toString();
-                                          });
-                                        }),
-                                    Text(
-                                      _etat[i],
-                                      style: const TextStyle(
-                                          fontFamily: "futura.LT",
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                )
-                            ]),
-                          )));
-                }),
-                child: const Image(
-                  image: AssetImage("assets/img/vector.png"),
-                ),
-              ))
-        ],
-      ),
+     
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Padding(
+                padding: EdgeInsets.only(left: 13, top: 8),
+                child: Text(
+                  "Etats des lieux",
+                
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'FuturaLT.ttf',
+                  ),
+                )),
+            Padding(
+                padding: const EdgeInsets.only( top: 10,right: 10),
+                child: InkWell(
+                  onTap: (() {
+                    showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                            title: const Text(
+                              "FILTRES PAR ",
+                              style: TextStyle(
+                                  fontFamily: "futura.LT",
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800),
+                              textAlign: TextAlign.left,
+                            ),
+                            content: SingleChildScrollView(
+                              child: ListBody(children: [
+                                for (int i = 0; i < _etat.length; i++)
+                                  Row(
+                                    children: [
+                                      Radio(
+                                          value: _etat[i].toString(),
+                                          groupValue: _selectedetat,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _selectedetat = value.toString();
+                                            });
+                                          }),
+                                      Text(
+                                        _etat[i],
+                                        style: const TextStyle(
+                                            fontFamily: "futura.LT",
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  )
+                              ]),
+                            )));
+                  }),
+                  
+                    child: const Image(
+                      image: AssetImage("assets/img/vector.png"),
+                    ),
+                  
+                ))
+          ],
+        ),
+      
       Column(
           children: etat1.map((e) {
         return etatUIdesign(

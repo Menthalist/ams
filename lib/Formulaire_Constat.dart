@@ -400,48 +400,66 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                 onTap: () {
                   ShowDialogwidget(context);
                 },
-                child: Container(
-                  margin: EdgeInsets.only(top: 20, right: 10, left: 10),
-                  width: MediaQuery.of(context).size.width * 0.27,
-                  height: MediaQuery.of(context).size.height * 0.12,
-                  child: Center(
-                      child: Image(
-                    image: FileImage(
-                        File(globals.getString("urlImage1").toString())),
-                    fit: BoxFit.cover,
-                  )),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 20, right: 10, left: 10),
+                      width: MediaQuery.of(context).size.width * 0.27,
+                      height: MediaQuery.of(context).size.height * 0.12,
+                      child: Center(
+                          child: Image(
+                        image: FileImage(
+                            File(globals.getString("urlImage1").toString())),
+                        fit: BoxFit.cover,
+                      )),
+                    ),
+                  
+                    Text("12/06/2023"+" A "+"17H30 "),
+                  ],
                 ),
               ),
               InkWell(
                 onTap: () {
                   ShowDialogwidget(context);
                 },
-                child: Container(
-                  margin: EdgeInsets.only(top: 20, right: 10, left: 18),
-                  width: MediaQuery.of(context).size.width * 0.27,
-                  height: MediaQuery.of(context).size.height * 0.12,
-                  child: Center(
-                      child: Image(
-                    image: FileImage(
-                        File(globals.getString("urlImage2").toString())),
-                    fit: BoxFit.cover,
-                  )),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 20, right: 10, left: 18),
+                      width: MediaQuery.of(context).size.width * 0.27,
+                      height: MediaQuery.of(context).size.height * 0.12,
+                      child: Center(
+                          child: Image(
+                        image: FileImage(
+                            File(globals.getString("urlImage2").toString())),
+                        fit: BoxFit.cover,
+                      )),
+                    ),
+                    
+                     Text("12/06/2023"+" A "+"18H02 "),
+                  ],
                 ),
               ),
               InkWell(
                 onTap: () {
                   ShowDialogwidget(context);
                 },
-                child: Container(
-                  margin: EdgeInsets.only(top: 20, right: 10, left: 18),
-                  width: MediaQuery.of(context).size.width * 0.27,
-                  height: MediaQuery.of(context).size.height * 0.12,
-                  child: Center(
-                      child: Image(
-                    image: FileImage(
-                        File(globals.getString("urlImage3").toString())),
-                    fit: BoxFit.cover,
-                  )),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 20, right: 10, left: 18),
+                      width: MediaQuery.of(context).size.width * 0.27,
+                      height: MediaQuery.of(context).size.height * 0.12,
+                      child: Center(
+                          child: Image(
+                        image: FileImage(
+                            File(globals.getString("urlImage3").toString())),
+                        fit: BoxFit.cover,
+                      )),
+                    ),
+                    
+                   Text("12/06/2023"+" A "+"17H03 "),
+                  ],
                 ),
               ),
             ]),
@@ -474,8 +492,8 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                   )),
                 ),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Signature()));
+                  Navigator.pop(context);
+                 
                 },
               ),
               InkWell(
