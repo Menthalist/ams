@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class conteneurliste extends StatelessWidget {
   String nbrecle, piece;
-  conteneurliste({required this.piece, required this.nbrecle});
+  VoidCallback onDelete;
+  conteneurliste(
+      {required this.piece, required this.nbrecle, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -70,84 +72,60 @@ class conteneurliste extends StatelessWidget {
             ],
           ),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding:  EdgeInsets.only(left: 200),
-              ),
-              InkWell(
-                child:   Align(
-                  alignment: Alignment.centerRight,
-                  child: Image(image: AssetImage("assets/img/bu.png")),
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 200),
                 ),
-                onTap: (() {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              title: new Text(
-                                'prévisualiser',
-                                style: TextStyle(
-                                  fontFamily: "FuturaLT.ttf",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+                InkWell(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Image(image: AssetImage("assets/img/bu.png")),
+                  ),
+                  onTap: (() {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              ListTile(
+                                title: new Text(
+                                  'prévisualiser',
+                                  style: TextStyle(
+                                    fontFamily: "FuturaLT.ttf",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
-                              ),
-                              leading: new Icon(
-                                Icons.camera,
-                                color: Colors.black,
-                              ),
-                              onTap: () {
-                              
-                              },
-                            ),
-                            ListTile(
-                              title: new Text(
-                                'Modifier',
-                                style: TextStyle(
-                                  fontFamily: "FuturaLT.ttf",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+                                leading: new Icon(
+                                  Icons.camera,
+                                  color: Colors.black,
                                 ),
+                                onTap: () {},
                               ),
-                              leading: new Icon(
-                                Icons.edit,
-                                color: Colors.black,
-                              ),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            ListTile(
-                              title: new Text(
-                                'Supprimer',
-                                style: TextStyle(
-                                  fontFamily: "FuturaLT.ttf",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+                              ListTile(
+                                title: new Text(
+                                  'Supprimer',
+                                  style: TextStyle(
+                                    fontFamily: "FuturaLT.ttf",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
+                                leading: new Icon(
+                                  Icons.delete,
+                                  color: Colors.black,
+                                ),
+                                onTap: onDelete,
                               ),
-                              leading: new Icon(
-                                Icons.delete,
-                                color: Colors.black,
-                              ),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        );
-                      });
-                }),
-              )
-            ]),
-               ]) 
-               );
-              
-          
+                            ],
+                          );
+                        });
+                  }),
+                )
+              ]),
+        ]));
   }
 }

@@ -5,13 +5,15 @@ class conteneurrubrique extends StatelessWidget {
   final String nbrei, nbrem, piece, typepi;
   final Image image;
   Color couleur = Colors.grey;
+  VoidCallback goDelete;
   conteneurrubrique(
       {required this.nbrei,
       required this.nbrem,
       required this.piece,
       required this.typepi,
       required this.image,
-      required this.couleur});
+      required this.couleur,
+      required this.goDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -145,23 +147,6 @@ class conteneurrubrique extends StatelessWidget {
                             ),
                             ListTile(
                               title: new Text(
-                                'Modifier',
-                                style: TextStyle(
-                                  fontFamily: "FuturaLT.ttf",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                              leading: new Icon(
-                                Icons.edit,
-                                color: Colors.black,
-                              ),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            ListTile(
-                              title: new Text(
                                 'Supprimer',
                                 style: TextStyle(
                                   fontFamily: "FuturaLT.ttf",
@@ -173,9 +158,7 @@ class conteneurrubrique extends StatelessWidget {
                                 Icons.delete,
                                 color: Colors.black,
                               ),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
+                              onTap: goDelete,
                             ),
                           ],
                         );

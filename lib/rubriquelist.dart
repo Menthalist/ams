@@ -214,6 +214,44 @@ class _rubriquelisteState extends State<rubriqueliste> {
                 }
                 return InkWell(
                   child: conteneurrubrique(
+                      goDelete: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: Text("Confirmation suppression"),
+                            content: Text(
+                                "Voulez vous vraiment supprimer cet élément??"),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  dynamic composant = {};
+                                  composant['_id'] = e["_id"];
+                                  composant['piece'] =
+                                      globals.getString("pieceId").toString();
+                                  composant['edl'] =
+                                      globals.getString("edlId").toString();
+                                  composant['type'] = "rubrique";
+                                  etatRealisationProvider
+                                      .deleteComposant(composant);
+                                  Future res = etatRealisationProvider
+                                      .getSpecificEDL(globals
+                                          .getString("edlId")
+                                          .toString());
+                                  res.then((value) {
+                                    rubriques = value;
+                                  });
+                                  Navigator.pop(context, 'OK');
+                                },
+                                child: const Text('Continuer'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('Annuler'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                       couleur: couleur,
                       piece: e['nom'] == null ? "" : e['nom'],
                       nbrei: "total",

@@ -88,6 +88,73 @@ class EtatRealisationProvider extends ChangeNotifier {
       UnmodifiableListView(_rubriques);
   UnmodifiableListView<dynamic> get getClefs => UnmodifiableListView(_clefs);
 
+  Future deleteComposant(dynamic composant) async {
+    //variables
+    var edlBox = await Hive.openBox<dynamic>("edl");
+    int i = edlBox.values.length;
+    var edl1;
+    int index = 0;
+    int i_ = 0;
+    dynamic composantToAdd = {};
+    //initialisation
+    var edl = edlBox.values.firstWhere((object) {
+      return object['_id'] == composant['edl'];
+    });
+    for (int k = 0; k <= i - 1; k++) {
+      edl1 = edlBox.getAt(k);
+      if (edl1['_id'] == composant['edl']) {
+        index = k;
+      }
+    }
+    //logique
+    if (composant['type'] == "piece") {
+      dynamic pieces = edl["logement"]['type_log']['piece'];
+      pieces.forEach((key, valeur) {
+        if (valeur['_id'] == composant['_id']) {
+          pieces.remove(key);
+        }
+      });
+      edl["logement"]['type_log']['piece'] = pieces;
+      await edlBox.putAt(index, edl);
+      return edl;
+    }
+    if (composant['type'] == "cles") {
+      dynamic cles = edl["logement"]['type_log']['cles'];
+      cles.forEach((key, valeur) {
+        if (valeur['_id'] == composant['_id']) {
+          cles.remove(key);
+        }
+      });
+      edl["logement"]['type_log']['cles'] = cles;
+      await edlBox.putAt(index, edl);
+      return edl;
+    }
+    if (composant['type'] == "compteur") {
+      dynamic compteur = edl["logement"]['type_log']['compteur'];
+      compteur.forEach((key, valeur) {
+        if (valeur['_id'] == composant['_id']) {
+          compteur.remove(key);
+        }
+      });
+      edl["logement"]['type_log']['compteur'] = compteur;
+      await edlBox.putAt(index, edl);
+      return edl;
+    }
+    if (composant['type'] == "rubrique") {
+      dynamic rubriques =
+          edl["logement"]['type_log']['piece'][composant['piece']]['rubriq'];
+      rubriques.forEach((key, valeur) {
+        if (valeur['_id'] == composant['_id']) {
+          rubriques.remove(key);
+        }
+      });
+      edl["logement"]['type_log']['piece'][composant['piece']]['rubriq'] =
+          rubriques;
+      await edlBox.putAt(index, edl);
+      return edl;
+    }
+  }
+
   Future addComposant(dynamic composant) async {
     //variables
     var edlBox = await Hive.openBox<dynamic>("edl");
@@ -123,6 +190,41 @@ class EtatRealisationProvider extends ChangeNotifier {
       await edlBox.putAt(index, edl);
       return edl;
     }
+
+    if (composant['type'] == "compteur") {
+      composantToAdd['nom'] = composant['nom'];
+      composantToAdd['description'] = composant['description'];
+      composantToAdd['etat'] = composant['etat'];
+      composantToAdd['num_ordre'] = composant['num_ordre'];
+      composantToAdd['id'] = composant['id'];
+      edl["logement"]['type_log']['compteur'].forEach((key, valeur) {
+        i_ = i_ + 1;
+      });
+      i_ = i_ + 1;
+      String nom_ = "compteur" + i_.toString();
+      composantToAdd['_id'] = nom_;
+      edl["logement"]['type_log']['compteur'][nom_] = composantToAdd;
+      await edlBox.putAt(index, edl);
+      return edl;
+    }
+
+    if (composant['type'] == "clef") {
+      composantToAdd['nom'] = composant['nom'];
+      composantToAdd['description'] = composant['description'];
+      composantToAdd['etat'] = composant['etat'];
+      composantToAdd['num_ordre'] = composant['num_ordre'];
+      composantToAdd['id'] = "";
+      edl["logement"]['type_log']['cles'].forEach((key, valeur) {
+        i_ = i_ + 1;
+      });
+      i_ = i_ + 1;
+      String nom_ = "cles" + i_.toString();
+      composantToAdd['_id'] = nom_;
+      edl["logement"]['type_log']['cles'][nom_] = composantToAdd;
+      await edlBox.putAt(index, edl);
+      return edl;
+    }
+
     if (composant['type'] == "rubrique") {
       edl["logement"]['type_log']['piece'].forEach((key, valeur) async {
         if (key == composant['piece']) {
@@ -289,31 +391,38 @@ class EtatRealisationProvider extends ChangeNotifier {
     return _rubriques;
   }
 
-  List getCompteur(_id) {
-    _compteurs = [];
-    List liste = UnmodifiableListView(
-        this.getEdlJsons.where((edl) => edl["_id"] == _id));
+  getCompteur(_id) async {
+    var edlBox = await Hive.openBox<dynamic>("edl");
+    this._compteurs = [];
+    List liste =
+        edlBox.values.toList().where((edl) => edl["_id"] == _id).toList();
+
     if (liste.isEmpty == false) {
-      var piece = liste[0];
-      piece['logement']['type_log']['compteur'].forEach((key, value) {
+      var edl = liste[0];
+      edl['logement']['type_log']['compteur'].forEach((key, value) {
         value["key"] = key.toString();
         this._compteurs.add(value);
+        value = {};
       });
+      notifyListeners();
     }
-    notifyListeners();
+
     return _compteurs;
   }
 
-  List getClef(_id) {
-    _clefs = [];
-    List liste = UnmodifiableListView(
-        this.getEdlJsons.where((edl) => edl["_id"] == _id));
+  getClef(_id) async {
+    var edlBox = await Hive.openBox<dynamic>("edl");
+    this._clefs = [];
+    List liste =
+        edlBox.values.toList().where((edl) => edl["_id"] == _id).toList();
     if (liste.isEmpty == false) {
       var piece = liste[0];
       piece['logement']['type_log']['cles'].forEach((key, value) {
         value["key"] = key.toString();
         this._clefs.add(value);
+        value = {};
       });
+      notifyListeners();
     }
     return _clefs;
   }

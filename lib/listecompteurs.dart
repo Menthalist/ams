@@ -23,15 +23,16 @@ class listecompteur extends StatefulWidget {
 
 class _listecompteurState extends State<listecompteur> {
   late SharedPreferences globals;
-  String idRub = "";
+  String idEdl = "";
   DialogProvider dialogProvider = DialogProvider();
+  EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
     setState(() {
       var id = globals.getString("edlId");
       if (id != null) {
-        idRub = id;
+        idEdl = id;
       }
     });
   }
@@ -45,8 +46,9 @@ class _listecompteurState extends State<listecompteur> {
   List compteurs = [];
   @override
   Widget build(BuildContext context) {
-    compteurs =
-        Provider.of<EtatRealisationProvider>(context).getCompteur(idRub);
+    Future rest = Provider.of<EtatRealisationProvider>(context)
+        .getCompteur(globals.getString("edlId").toString());
+    rest.then((value) => compteurs = value);
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: 56,
@@ -176,8 +178,12 @@ class _listecompteurState extends State<listecompteur> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: conteneurmenu(
-                go: () {
-                  dialogProvider.displayDialogCompteur(context);
+                go: () async {
+                  dialogProvider.displayDialogCompteur(idEdl, context);
+                  Future res = etatRealisationProvider.getCompteur(idEdl);
+                  res.then((value) {
+                    compteurs = value;
+                  });
                 },
                 text1: "COMPTEURS",
                 nomb: compteurs.length.toString(),
@@ -188,6 +194,41 @@ class _listecompteurState extends State<listecompteur> {
             child: Column(
               children: compteurs.map((e) {
                 return conteneurcompteur(
+                  onDelete: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: Text("Confirmation suppression"),
+                        content: Text(
+                            "Voulez vous vraiment supprimer cet élément??"),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              dynamic composant = {};
+                              composant['_id'] = e["_id"];
+                              composant['edl'] =
+                                  globals.getString("edlId").toString();
+                              composant['type'] = "compteur";
+                              etatRealisationProvider
+                                  .deleteComposant(composant);
+                              Future res =
+                                  etatRealisationProvider.getSpecificEDL(
+                                      globals.getString("edlId").toString());
+                              res.then((value) {
+                                compteurs = value;
+                              });
+                              Navigator.pop(context, 'OK');
+                            },
+                            child: const Text('Continuer'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('Annuler'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                   compteur: e['nom'] == null ? "" : e['nom'],
                   // ignore: unnecessary_null_comparison
                   consom: "N° ordre: " + e['num_ordre'] == null

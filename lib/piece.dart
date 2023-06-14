@@ -212,7 +212,6 @@ class _piececonteneurState extends State<piececonteneur> {
                       etatRealisationProvider.getSpecificEDL(widget.idToEdit);
                   res.then((value) {
                     pieces = value;
-                    print(pieces);
                   });
                 },
                 text1: "",
@@ -234,6 +233,41 @@ class _piececonteneurState extends State<piececonteneur> {
                 }
                 return InkWell(
                     child: conteneurrubrique(
+                      goDelete: () {
+                        print('ici');
+
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: Text("Confirmation suppression"),
+                            content: Text(
+                                "Voulez vous vraiment supprimer cet élément??"),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  dynamic composant = {};
+                                  composant['_id'] = e["_id"];
+                                  composant['edl'] = widget.idToEdit;
+                                  composant['type'] = "piece";
+                                  etatRealisationProvider
+                                      .deleteComposant(composant);
+                                  Future res = etatRealisationProvider
+                                      .getSpecificEDL(widget.idToEdit);
+                                  res.then((value) {
+                                    pieces = value;
+                                  });
+                                  Navigator.pop(context, 'OK');
+                                },
+                                child: const Text('Continuer'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('Annuler'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                       couleur: couleur,
                       piece: e['nom'] == null ? "" : e["nom"],
                       nbrei: "Rubriques: " + e['rubriques'].toString(),
