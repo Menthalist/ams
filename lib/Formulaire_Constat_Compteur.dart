@@ -318,7 +318,7 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
                            
                            child: const Center(child:Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
                           ),
-                           Text("12/06/2023"+" A "+"17H03 ",style: TextStyle(fontFamily: 'Futura.LT',fontWeight: FontWeight.w700,fontSize: 15),),
+                           Text("12/06/2023"+" A "+"17H03 "),
                         ],
                       ),
                     ),
@@ -365,14 +365,12 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
                     
           ]),
                
-            Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                margin: EdgeInsets.only( top:20,right: 170, left: 170),
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(120),
-                    border: Border.all(width: 1, color: Colors.black)),
-                child: Center(child: camera())),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+            children:[
+                camera(),
+            ]
+           ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, 
             children: [
               InkWell(

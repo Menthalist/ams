@@ -404,7 +404,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                   children: [
                     Container(
                       margin: EdgeInsets.only(top: 20, right: 10, left: 10),
-                      width: MediaQuery.of(context).size.width * 0.27,
+                      width: MediaQuery.of(context).size.width * 0.2,
                       height: MediaQuery.of(context).size.height * 0.12,
                       child: Center(
                           child: Image(
@@ -426,7 +426,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                   children: [
                     Container(
                       margin: EdgeInsets.only(top: 20, right: 10, left: 18),
-                      width: MediaQuery.of(context).size.width * 0.27,
+                      width: MediaQuery.of(context).size.width * 0.2,
                       height: MediaQuery.of(context).size.height * 0.12,
                       child: Center(
                           child: Image(
@@ -448,7 +448,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                   children: [
                     Container(
                       margin: EdgeInsets.only(top: 20, right: 10, left: 18),
-                      width: MediaQuery.of(context).size.width * 0.27,
+                      width: MediaQuery.of(context).size.width * 0.2,
                       height: MediaQuery.of(context).size.height * 0.12,
                       child: Center(
                           child: Image(
@@ -463,14 +463,12 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                 ),
               ),
             ]),
-            Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                margin: EdgeInsets.only(top: 20, right: 170, left: 170),
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(120),
-                    border: Border.all(width: 1, color: Colors.black)),
-                child: Center(child: camera())),
+           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:[
+                camera(),
+            ]
+           ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, 
             children: [
               InkWell(

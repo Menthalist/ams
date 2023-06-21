@@ -367,14 +367,12 @@ late SharedPreferences globals;
                     
           ]),
                
-            Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                margin: EdgeInsets.only( top:20,right: 170, left: 170),
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(120),
-                    border: Border.all(width: 1, color: Colors.black)),
-                child: Center(child: camera())),
+             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+            children:[
+                camera(),
+            ]
+           ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               InkWell(
                 child: Container(

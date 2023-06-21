@@ -203,7 +203,19 @@ class EtatRealisationProvider extends ChangeNotifier {
         print('pas de connexion else');
       }
     } on SocketException catch (_) {
-      print('pas de connexion');
+      ShowDialogwidget(BuildContext context){
+AlertDialog alert = AlertDialog(
+  content: Text("Pas de connexion internet"),
+  actions: [
+    TextButton(onPressed: (){Navigator.pop(context);}, child: Text("ok"),),
+   
+  ],
+);
+showDialog(context: context, builder: (BuildContext context){
+  return alert;
+});
+}
+      //print('pas de connexion');
     }
     List edls = edlBox.values.toList();
     _etat = [];
@@ -411,4 +423,16 @@ class EtatRealisationProvider extends ChangeNotifier {
     _etat.add(item);
     notifyListeners();
   }
+}
+ShowDialogwidget(BuildContext context){
+AlertDialog alert = AlertDialog(
+  content: Text("Pas de connexion internet"),
+  actions: [
+    TextButton(onPressed: (){Navigator.pop(context);}, child: Text("ok"),),
+   
+  ],
+);
+showDialog(context: context, builder: (BuildContext context){
+  return alert;
+});
 }

@@ -8,7 +8,7 @@ class conteneurliste extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.only(top: 20),
-        width: MediaQuery.of(context).size.width * 0.9,
+        width: MediaQuery.of(context).size.width * 0.948,
         height: MediaQuery.of(context).size.height * 0.06,
         decoration: BoxDecoration(
             border: Border.all(
@@ -31,122 +31,126 @@ class conteneurliste extends StatelessWidget {
                 spreadRadius: 0.0,
               ), //BoxSh
             ]),
-        child: Row(children: [
-          Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: 20,
-              ),
-              child: Image(image: AssetImage("assets/img/cle.png")),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 7, left: 10),
-                child: Text(
-                  '$nbrecle',
-                  style: TextStyle(
-                    fontFamily: "FuturaLT.ttf",
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: [
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 20,
                   ),
-                  textAlign: TextAlign.justify,
+                  child: Image(image: AssetImage("assets/img/cle.png")),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text('$piece',
-                    style: TextStyle(
-                      fontFamily: "FuturaLT.ttf",
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 7, left: 10),
+                    child: Text(
+                      '$nbrecle',
+                      style: TextStyle(
+                        fontFamily: "FuturaLT.ttf",
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                      ),
+                      textAlign: TextAlign.justify,
                     ),
-                    textAlign: TextAlign.justify),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text('$piece',
+                        style: TextStyle(
+                          fontFamily: "FuturaLT.ttf",
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.justify),
+                  ),
+                ],
               ),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding:  EdgeInsets.only(left: 200),
-              ),
-              InkWell(
-                child:   Align(
-                  alignment: Alignment.centerRight,
-                  child: Image(image: AssetImage("assets/img/bu.png")),
-                ),
-                onTap: (() {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              title: new Text(
-                                'prévisualiser',
-                                style: TextStyle(
-                                  fontFamily: "FuturaLT.ttf",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+           ] ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                 
+                  InkWell(
+                    child:   Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: Image(image: AssetImage("assets/img/bu.png")),
+                    ),
+                    onTap: (() {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                ListTile(
+                                  title: new Text(
+                                    'prévisualiser',
+                                    style: TextStyle(
+                                      fontFamily: "FuturaLT.ttf",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  leading: new Icon(
+                                    Icons.camera,
+                                    color: Colors.black,
+                                  ),
+                                  onTap: () {
+                                  
+                                  },
                                 ),
-                              ),
-                              leading: new Icon(
-                                Icons.camera,
-                                color: Colors.black,
-                              ),
-                              onTap: () {
-                              
-                              },
-                            ),
-                            ListTile(
-                              title: new Text(
-                                'Modifier',
-                                style: TextStyle(
-                                  fontFamily: "FuturaLT.ttf",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+                                ListTile(
+                                  title: new Text(
+                                    'Modifier',
+                                    style: TextStyle(
+                                      fontFamily: "FuturaLT.ttf",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  leading: new Icon(
+                                    Icons.edit,
+                                    color: Colors.black,
+                                  ),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
                                 ),
-                              ),
-                              leading: new Icon(
-                                Icons.edit,
-                                color: Colors.black,
-                              ),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            ListTile(
-                              title: new Text(
-                                'Supprimer',
-                                style: TextStyle(
-                                  fontFamily: "FuturaLT.ttf",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+                                ListTile(
+                                  title: new Text(
+                                    'Supprimer',
+                                    style: TextStyle(
+                                      fontFamily: "FuturaLT.ttf",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  leading: new Icon(
+                                    Icons.delete,
+                                    color: Colors.black,
+                                  ),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
                                 ),
-                              ),
-                              leading: new Icon(
-                                Icons.delete,
-                                color: Colors.black,
-                              ),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        );
-                      });
-                }),
-              )
-            ]),
-               ]) 
-               );
+                              ],
+                            );
+                          });
+                    }),
+                  )
+                ]),
+                   ]),
+         
+    ); 
+              
               
           
   }

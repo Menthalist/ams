@@ -97,7 +97,7 @@ class _HomeState extends State<Home> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                    const Padding(
+                     Padding(
                         padding: EdgeInsets.only(left: 5, bottom: 35, top: 15),
                         child: Text(
                           "TOTAL D'ETAT DES LIEUX",
@@ -111,7 +111,7 @@ class _HomeState extends State<Home> {
                      
                         Padding(
                             padding:
-                                const EdgeInsets.only(left: 40, bottom: 35, top: 15),
+                                 EdgeInsets.only( bottom: 35, top: 15),
                             child: Text(
                               widget.text1,
                               style: const TextStyle(
@@ -123,7 +123,7 @@ class _HomeState extends State<Home> {
                             )),
                       
                     
-                    const Padding(
+                     Padding(
                       padding: EdgeInsets.only(bottom: 35, right: 25, top: 15),
                       child: Icon(
                         Icons.favorite_border_outlined,
@@ -131,7 +131,8 @@ class _HomeState extends State<Home> {
                         size: 18,
                       ),
                     ),
-                  ]),]),
+                  ]),
+                  ]),
                   Align(
                       alignment: Alignment.center,
                       child: Text(

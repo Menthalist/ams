@@ -77,15 +77,29 @@ class _cameraState extends State<camera> {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        getImage(ImageSource.camera);
-      },
-      icon: Icon(
-        Icons.camera_alt,
-        size: 30,
-        color: Colors.white,
-      ),
-    );
+    return  ElevatedButton(
+         style: ButtonStyle(
+          padding: MaterialStateProperty.all(const EdgeInsets.only(right: 1.5)),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          
+           backgroundColor: MaterialStatePropertyAll<Color>(Colors.black),
+           shape: MaterialStateProperty.all(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),)
+         ),    
+        onPressed: () {
+          getImage(ImageSource.camera);
+        },
+       child: Center(
+         child: Icon(
+            Icons.camera_alt,
+            size: 30,
+            
+            color: Colors.white,
+          ),
+       ),
+      );
+    
   }
 }

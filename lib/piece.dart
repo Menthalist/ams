@@ -204,20 +204,25 @@ class _piececonteneurState extends State<piececonteneur> {
             height: MediaQuery.of(context).size.height * 0.00009,
           ),
           InkWell(
-            child: conteneurmenu(
-                go: () async {
-                  await dialogProvider.displayFormPiece(
-                      widget.idToEdit, context);
-                  Future res =
-                      etatRealisationProvider.getSpecificEDL(widget.idToEdit);
-                  res.then((value) {
-                    pieces = value;
-                    print(pieces);
-                  });
-                },
-                text1: "",
-                nomb: "",
-                text2: "AJOUTER"),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                conteneurmenu(
+                    go: () async {
+                      await dialogProvider.displayFormPiece(
+                          widget.idToEdit, context);
+                      Future res =
+                          etatRealisationProvider.getSpecificEDL(widget.idToEdit);
+                      res.then((value) {
+                        pieces = value;
+                        print(pieces);
+                      });
+                    },
+                    text1: "",
+                    nomb: "",
+                    text2: "AJOUTER"),
+              ],
+            ),
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.009,

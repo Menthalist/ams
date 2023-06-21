@@ -40,150 +40,152 @@ class conteneurrubrique extends StatelessWidget {
               spreadRadius: 0.0,
             ), //BoxSh
           ]),
-      child: Row(children: [
-        Align(
-          alignment: Alignment.center,
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 10,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 10,
+                ),
+                child: image,
+              ),
             ),
-            child: image,
-          ),
-        ),
-        Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 15, left: 15),
-                child: Text(
-                  '$piece',
-                  style: TextStyle(
-                    fontFamily: "FuturaLT.ttf",
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 15,left: 15),
+                    child: Text(
+                      '$piece',
+                      style: TextStyle(
+                        fontFamily: "FuturaLT.ttf",
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
                   ),
-                  textAlign: TextAlign.justify,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 15, top: 5),
-                child: Text('$typepi',
-                    style: TextStyle(
-                      fontFamily: "FuturaLT.ttf",
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
+                  Padding(
+                    padding: EdgeInsets.only( top: 5,left: 15),
+                    child: Text('$typepi',
+                        style: TextStyle(
+                          fontFamily: "FuturaLT.ttf",
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.justify),
+                  ),
+                  Row(children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 30,left: 15 ),
                     ),
-                    textAlign: TextAlign.justify),
-              ),
-              Row(children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 30, left: 15),
-                ),
-                Image(
-                  image: AssetImage("assets/img/pic.png"),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 5),
-                ),
-                Text('$nbrei',
-                    style: TextStyle(
-                      fontFamily: "FuturaLT.ttf",
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
+                    Image(
+                      image: AssetImage("assets/img/pic.png"),
                     ),
-                    textAlign: TextAlign.justify),
-                Padding(
-                  padding: EdgeInsets.only(left: 10, top: 20),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 5),
-                ),
-                Text('$nbrem',
-                    style: TextStyle(
-                      fontFamily: "FuturaLT.ttf",
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
+                    Padding(
+                      padding: EdgeInsets.only(left: 5),
                     ),
-                    textAlign: TextAlign.justify),
-              ]),
+                    Text('$nbrei',
+                        style: TextStyle(
+                          fontFamily: "FuturaLT.ttf",
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.justify),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, top: 20),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5),
+                    ),
+                    Text('$nbrem',
+                        style: TextStyle(
+                          fontFamily: "FuturaLT.ttf",
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.justify),
+                  ]),
+                ]),
             ]),
-        Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 170),
-              ),
-              InkWell(
-                child: Align(
-                  child: Image(image: AssetImage("assets/img/bu.png")),
-                ),
-                onTap: (() {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              title: new Text(
-                                'prévisualiser',
-                                style: TextStyle(
-                                  fontFamily: "FuturaLT.ttf",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+            
+                  InkWell(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: Image(image: AssetImage("assets/img/bu.png")),
+                    ),
+                    onTap: (() {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                ListTile(
+                                  title: new Text(
+                                    'prévisualiser',
+                                    style: TextStyle(
+                                      fontFamily: "FuturaLT.ttf",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  leading: new Icon(
+                                    Icons.camera,
+                                    color: Colors.black,
+                                  ),
+                                  onTap: () {
+                                    camera();
+                                  },
                                 ),
-                              ),
-                              leading: new Icon(
-                                Icons.camera,
-                                color: Colors.black,
-                              ),
-                              onTap: () {
-                                camera();
-                              },
-                            ),
-                            ListTile(
-                              title: new Text(
-                                'Modifier',
-                                style: TextStyle(
-                                  fontFamily: "FuturaLT.ttf",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+                                ListTile(
+                                  title: new Text(
+                                    'Modifier',
+                                    style: TextStyle(
+                                      fontFamily: "FuturaLT.ttf",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  leading: new Icon(
+                                    Icons.edit,
+                                    color: Colors.black,
+                                  ),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
                                 ),
-                              ),
-                              leading: new Icon(
-                                Icons.edit,
-                                color: Colors.black,
-                              ),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            ListTile(
-                              title: new Text(
-                                'Supprimer',
-                                style: TextStyle(
-                                  fontFamily: "FuturaLT.ttf",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+                                ListTile(
+                                  title: new Text(
+                                    'Supprimer',
+                                    style: TextStyle(
+                                      fontFamily: "FuturaLT.ttf",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  leading: new Icon(
+                                    Icons.delete,
+                                    color: Colors.black,
+                                  ),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
                                 ),
-                              ),
-                              leading: new Icon(
-                                Icons.delete,
-                                color: Colors.black,
-                              ),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        );
-                      });
-                }),
-              )
-            ]),
-      ]),
-    );
+                              ],
+                            );
+                          });
+                    }),
+                  )
+                ]),
+    
+      );
+      
+    
   }
 }

@@ -55,7 +55,7 @@ class _profilState extends State<profil> {
                         taille: 1, colorbordure: Colors.white),
                     child:  TextFormField(
                       //controller: _controllerr,
-                      obscureText: true,
+                      
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: '',
@@ -82,7 +82,7 @@ class _profilState extends State<profil> {
                         taille: 1, colorbordure: Colors.white),
                     child:  TextFormField(
                       //controller: _controllerr,
-                      obscureText: true,
+                      
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: '',
@@ -108,7 +108,7 @@ class _profilState extends State<profil> {
                         taille: 1, colorbordure: Colors.white),
                     child:  TextFormField(
                       //controller: _controllerr,
-                      obscureText: true,
+                     
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: '',
@@ -168,7 +168,7 @@ class _profilState extends State<profil> {
                           taille: 1, colorbordure: Colors.white),
                       child:  TextFormField(
                         //controller: _controllerr,
-                        obscureText: true,
+                        
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: '',
@@ -196,7 +196,7 @@ class _profilState extends State<profil> {
                           taille: 1, colorbordure: Colors.white),
                       child:  TextFormField(
                         //controller: _controllerr,
-                        obscureText: true,
+                        
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: '',
@@ -224,7 +224,7 @@ class _profilState extends State<profil> {
                           taille: 1, colorbordure: Colors.white),
                       child:  TextFormField(
                         //controller: _controllerr,
-                        obscureText: true,
+                        
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: '',
