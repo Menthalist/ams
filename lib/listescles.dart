@@ -1,3 +1,4 @@
+import 'package:ams_mobile/Formulaire_Constat_Cle.dart';
 import 'package:ams_mobile/button.dart';
 import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/conteneurliste.dart';
@@ -199,45 +200,56 @@ class _listcleState extends State<listcle> {
                   text2: "AJOUTER")),
           Column(
             children: cles.map((e) {
-              return conteneurliste(
-                onDelete: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                            title: Text("Confirmation suppression"),
-                            content: Text(
-                                "Voulez vous vraiment supprimer cet élément??"),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  dynamic composant = {};
-                                  composant['_id'] = e["_id"];
-                                  composant['edl'] =
-                                      globals.getString("edlId").toString();
-                                  composant['type'] = "cles";
-                                  etatRealisationProvider
-                                      .deleteComposant(composant);
-                                  Future res = etatRealisationProvider
-                                      .getSpecificEDL(globals
-                                          .getString("edlId")
-                                          .toString());
-                                  res.then((value) {
-                                    cles = value;
-                                  });
-                                  Navigator.pop(context, 'OK');
-                                },
-                                child: const Text('Continuer'),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('Annuler'),
-                              ),
-                            ],
-                          ));
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Formulaire_Constat_Cle()));
                 },
-                piece:
-                    "N° ordre: " + e['num_ordre'] == null ? "" : e['num_ordre'],
-                nbrecle: e['nom'] == null ? "" : e['nom'],
+                child: conteneurliste(
+                  onDelete: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                              title: Text("Confirmation suppression"),
+                              content: Text(
+                                  "Voulez vous vraiment supprimer cet élément??"),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    dynamic composant = {};
+                                    composant['_id'] = e["_id"];
+                                    composant['edl'] =
+                                        globals.getString("edlId").toString();
+                                    composant['type'] = "cles";
+                                    etatRealisationProvider
+                                        .deleteComposant(composant);
+                                    Future res = etatRealisationProvider
+                                        .getSpecificEDL(globals
+                                            .getString("edlId")
+                                            .toString());
+                                    res.then((value) {
+                                      cles = value;
+                                    });
+                                    Navigator.pop(context, 'OK');
+                                  },
+                                  child: const Text('Continuer'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'OK'),
+                                  child: const Text('Annuler'),
+                                ),
+                              ],
+                            ));
+                  },
+                  piece:
+                      // ignore: unnecessary_null_comparison
+                      "N° ordre: " + e['num_ordre'] == null
+                          ? ""
+                          : e['num_ordre'],
+                  nbrecle: e['nom'] == null ? "" : e['nom'],
+                ),
               );
             }).toList(),
           )

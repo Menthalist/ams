@@ -10,8 +10,8 @@ class conteneurcorps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 10),
-      width: MediaQuery.of(context).size.width*0.3,
+      margin: EdgeInsets.only(left: 10,right: 10),
+      width: MediaQuery.of(context).size.width*0.28,
       height: MediaQuery.of(context).size.height*0.2,
       decoration: BoxDecoration(
         color: couleur,
@@ -26,7 +26,7 @@ class conteneurcorps extends StatelessWidget {
             )]
        
       ),
-      child: Column(children: [
+      child: ListView(children: [
         Padding(padding: EdgeInsets.only(top: 5,left: 9),child: Text(text,style: TextStyle( color: col,
             fontSize: 20,
             fontWeight: FontWeight.w500,
@@ -34,12 +34,14 @@ class conteneurcorps extends StatelessWidget {
             textAlign: TextAlign.start,
              ),
             ),
-            Padding(padding: EdgeInsets.only(top: 28),child: Text(nomb,style: TextStyle( color: cal,
-            fontSize: 36,
-            fontWeight: FontWeight.w500,
-            fontFamily: "FuturaLT.ttf"),
-            textAlign: TextAlign.start,
-             ),
+            Padding(padding: EdgeInsets.only(top: 28),child: Center(
+              child: Text(nomb,style: TextStyle( color: cal,
+              fontSize: 36,
+              fontWeight: FontWeight.w500,
+              fontFamily: "FuturaLT.ttf"),
+              
+               ),
+            ),
             ),
 
       ]),

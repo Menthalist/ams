@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:ams_mobile/camera.dart';
 import 'package:ams_mobile/style.dart';
 import 'package:flutter/material.dart';
 import 'package:signature/signature.dart';
@@ -73,6 +74,15 @@ class _SignaturePadState extends State<SignaturePad> {
                   backgroundColor: MaterialStatePropertyAll<Color>(Colors.black)
                 ),
                 ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height*0.05,
+                width: MediaQuery.of(context).size.width*0.08,
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  shape: BoxShape.circle
+                ),
+                child: Center(child: camera()),
               ),
               
               Padding(

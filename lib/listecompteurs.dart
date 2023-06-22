@@ -1,3 +1,4 @@
+import 'package:ams_mobile/Formulaire_Constat_Compteur.dart';
 import 'package:ams_mobile/conteneurcompteur.dart';
 import 'package:ams_mobile/listescles.dart';
 import 'package:ams_mobile/piece.dart';
@@ -191,51 +192,59 @@ class _listecompteurState extends State<listecompteur> {
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Column(
-              children: compteurs.map((e) {
-                return conteneurcompteur(
-                  onDelete: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                        title: Text("Confirmation suppression"),
-                        content: Text(
-                            "Voulez vous vraiment supprimer cet élément??"),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              dynamic composant = {};
-                              composant['_id'] = e["_id"];
-                              composant['edl'] =
-                                  globals.getString("edlId").toString();
-                              composant['type'] = "compteur";
-                              etatRealisationProvider
-                                  .deleteComposant(composant);
-                              Future res =
-                                  etatRealisationProvider.getSpecificEDL(
-                                      globals.getString("edlId").toString());
-                              res.then((value) {
-                                compteurs = value;
-                              });
-                              Navigator.pop(context, 'OK');
-                            },
-                            child: const Text('Continuer'),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('Annuler'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  compteur: e['nom'] == null ? "" : e['nom'],
-                  // ignore: unnecessary_null_comparison
-                  consom: "N° ordre: " + e['num_ordre'] == null
-                      ? e["num_ordre"]
-                      : "",
-                );
-              }).toList(),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Formulaire_Constat_compteur()));
+              },
+              child: Column(
+                children: compteurs.map((e) {
+                  return conteneurcompteur(
+                    onDelete: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: Text("Confirmation suppression"),
+                          content: Text(
+                              "Voulez vous vraiment supprimer cet élément??"),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                dynamic composant = {};
+                                composant['_id'] = e["_id"];
+                                composant['edl'] =
+                                    globals.getString("edlId").toString();
+                                composant['type'] = "compteur";
+                                etatRealisationProvider
+                                    .deleteComposant(composant);
+                                Future res =
+                                    etatRealisationProvider.getSpecificEDL(
+                                        globals.getString("edlId").toString());
+                                res.then((value) {
+                                  compteurs = value;
+                                });
+                                Navigator.pop(context, 'OK');
+                              },
+                              child: const Text('Continuer'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'OK'),
+                              child: const Text('Annuler'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    compteur: e['nom'] == null ? "" : e['nom'],
+                    // ignore: unnecessary_null_comparison
+                    consom: "N° ordre: " + e['num_ordre'] == null
+                        ? e["num_ordre"]
+                        : "",
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ]));
