@@ -6,6 +6,7 @@ import 'package:ams_mobile/Signature.dart';
 import 'package:ams_mobile/Textform_Constat.dart';
 import 'package:ams_mobile/camera.dart';
 import 'package:ams_mobile/conteneur.dart';
+import 'package:ams_mobile/etatdelieu/liste_etat.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,6 +50,9 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
       globals.setString("urlImage1", "");
       globals.setString("urlImage2", "");
       globals.setString("urlImage3", "");
+      globals.setString("tempsImage1", "");
+      globals.setString("tempsImage2", "");
+      globals.setString("tempsImage3", "");
       selectchoice = "0";
     });
   }
@@ -101,9 +105,112 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
     ];
     CommentaireFinalcontroller.text = "";
     Commentairecontrolle = "";
+    globals.setString("urlImage1", "");
+    globals.setString("urlImage2", "");
+    globals.setString("urlImage3", "");
+    globals.setString("tempsImage1", "");
+    globals.setString("tempsImage2", "");
+    globals.setString("tempsImage3", "");
     selectchoix = "Etat";
     selectcommentaire = "Description";
     selectcommentaireContent = "0";
+  }
+
+  ShowDialogwidget(BuildContext context, String path, int idTof) {
+    AlertDialog alert = AlertDialog(
+      content: Text("Voulez vous vraiment supprimer cette photo?"),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text("NON"),
+        ),
+        TextButton(
+          onPressed: () {
+            etatRealisationProvider.deleteFile(path);
+            if (idTof == 1) {
+              globals.setString("urlImage1", "");
+              globals.setString("tempsImage1", "");
+            }
+            if (idTof == 2) {
+              globals.setString("tempsImage2", "");
+              globals.setString("urlImage2", "");
+            }
+            if (idTof == 3) {
+              globals.setString("urlImage3", "");
+              globals.setString("tempsImage3", "");
+            }
+            Navigator.pop(context);
+          },
+          child: Text("OUI"),
+        ),
+      ],
+    );
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+  }
+
+  void configForm(dynamic rubrique) {
+    CommentaireFinalcontroller.text = rubrique['commentaireFinal'].toString();
+    Commentairecontrolle = rubrique['commentaire'].toString();
+
+    if (rubrique['image1'] != null) {
+      File file = File(rubrique['image1'].toString());
+      if (file.existsSync()) {
+        globals.setString("urlImage1", rubrique['image1'].toString());
+        globals.setString("tempsImage1", rubrique['tempsImage1'].toString());
+      } else {
+        if (globals.getString("urlImage1").toString() == "") {
+          globals.setString("urlImage1", "");
+          globals.setString("tempsImage1", "");
+        }
+      }
+    } else {
+      if (globals.getString("urlImage1").toString() == "") {
+        globals.setString("urlImage1", "");
+        globals.setString("tempsImage1", "");
+      }
+    }
+
+    if (rubrique['image2'] != null) {
+      File file = File(rubrique['image2'].toString());
+      if (file.existsSync()) {
+        globals.setString("urlImage2", rubrique['image2'].toString());
+        globals.setString("tempsImage2", rubrique['tempsImage2'].toString());
+      } else {
+        if (globals.getString("urlImage2").toString() == "") {
+          globals.setString("urlImage2", "");
+          globals.setString("tempsImage2", "");
+        }
+      }
+    } else {
+      if (globals.getString("urlImage2").toString() == "") {
+        globals.setString("urlImage2", "");
+        globals.setString("tempsImage2", "");
+      }
+    }
+
+    if (rubrique['image3'] != null) {
+      File file = File(rubrique['image3'].toString());
+      if (file.existsSync()) {
+        globals.setString("urlImage3", rubrique['image3'].toString());
+        globals.setString("tempsImage3", rubrique['tempsImage3'].toString());
+      } else {
+        if (globals.getString("urlImage3").toString() == "") {
+          globals.setString("urlImage3", "");
+          globals.setString("tempsImage3", "");
+        }
+      }
+    } else {
+      if (globals.getString("urlImage3").toString() == "") {
+        globals.setString("urlImage3", "");
+        globals.setString("tempsImage3", "");
+      }
+    }
   }
 
   void displayDialogWarning(BuildContext context_, String val,
@@ -127,15 +234,16 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
               dynamic rubrique =
                   constatList.where((edl) => edl["key"] == idRub).toList()[0];
               if (rubrique['constate'] != null) {
-                CommentaireFinalcontroller.text =
-                    rubrique['commentaireFinal'].toString();
-                Commentairecontrolle = rubrique['commentaire'].toString();
-                selectchoix = rubrique['etat'].toString();
-                selectcommentaire = rubrique['description'].toString();
+                configForm(rubrique);
+              } else {
+                /*globals.setString("urlImage1", "");
+                globals.setString("urlImage2", "");
+                globals.setString("urlImage3", "");
+                globals.setString("tempsImage1", "");
+                globals.setString("tempsImage2", "");
+                globals.setString("tempsImage3", "");*/
               }
-              globals.setString("urlImage1", "");
-              globals.setString("urlImage2", "");
-              globals.setString("urlImage3", "");
+
               globals.setString(
                   "nomRubriqueConstat", rubrique['nom'].toString());
               Navigator.pop(context, 'OK');
@@ -162,24 +270,7 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
       dynamic rubrique =
           constatList.where((edl) => edl["key"] == idRub).toList()[0];
       if (rubrique['constate'] != null) {
-        CommentaireFinalcontroller.text =
-            rubrique['commentaireFinal'].toString();
-        Commentairecontrolle = rubrique['commentaire'].toString();
-        if (rubrique['image1'] != null) {
-          globals.setString("urlImage1", rubrique['image1'].toString());
-        } else {
-          globals.setString("urlImage1", "");
-        }
-        if (rubrique['image2'] != null) {
-          globals.setString("urlImage2", rubrique['image2'].toString());
-        } else {
-          globals.setString("urlImage2", "");
-        }
-        if (rubrique['image3'] != null) {
-          globals.setString("urlImage3", rubrique['image3'].toString());
-        } else {
-          globals.setString("urlImage3", "");
-        }
+        configForm(rubrique);
       } else {
         /**/
       }
@@ -262,10 +353,16 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                 items: [
                   const DropdownMenuItem(
                       value: "0", child: Text("faite un choix")),
-                  ...constatList
-                      .map((e) => DropdownMenuItem(
-                          value: e["key"], child: Text(e['nom'].toString())))
-                      .toList(),
+                  ...constatList.map((e) {
+                    Color? couleur = Colors.black;
+                    if (e['constate'] != null) {
+                      couleur = Colors.green[400];
+                    }
+                    return DropdownMenuItem(
+                        value: e["key"],
+                        child: Text(e['nom'].toString(),
+                            style: TextStyle(color: couleur)));
+                  }).toList(),
                 ],
                 onChanged: (val) {
                   setState(() {
@@ -377,31 +474,33 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                     dynamic comment = commentaires
                         .where((edl) => edl["id"] == commentaire)
                         .toList()[0];
-                    CommentaireFinalcontroller.text = " " +
+                    CommentaireFinalcontroller.text = "\n" +
                         selectcommentaire +
                         ": " +
-                        CommentaireFinalcontroller.text +
+                        comment["commentaire"] +
                         " " +
-                        comment["commentaire"];
+                        CommentaireFinalcontroller.text;
                   });
                 },
                 dropdownColor: Colors.white,
               ),
             ),
             Conteneur_formulaire(
+                maxLines: 10,
                 controller: CommentaireFinalcontroller,
                 hauteur: MediaQuery.of(context).size.height * 0.10,
                 text: "Commentaire Final"),
             Row(mainAxisAlignment: MainAxisAlignment.start, children: [
               InkWell(
                 onTap: () {
-                  ShowDialogwidget(context);
+                  ShowDialogwidget(
+                      context, globals.getString("urlImage1").toString(), 1);
                 },
                 child: Column(
                   children: [
                     Container(
                       margin: EdgeInsets.only(top: 20, right: 10, left: 10),
-                      width: MediaQuery.of(context).size.width * 0.27,
+                      width: MediaQuery.of(context).size.width * 0.2,
                       height: MediaQuery.of(context).size.height * 0.12,
                       child: Center(
                           child: Image(
@@ -410,19 +509,22 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                         fit: BoxFit.cover,
                       )),
                     ),
-                    Text("12/06/2023" + " A " + "17H30 "),
+                    Text("   " + globals.getString("tempsImage1").toString(),
+                        style: TextStyle(
+                            fontSize: 12.0, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
               InkWell(
                 onTap: () {
-                  ShowDialogwidget(context);
+                  ShowDialogwidget(
+                      context, globals.getString("urlImage2").toString(), 2);
                 },
                 child: Column(
                   children: [
                     Container(
                       margin: EdgeInsets.only(top: 20, right: 10, left: 18),
-                      width: MediaQuery.of(context).size.width * 0.27,
+                      width: MediaQuery.of(context).size.width * 0.2,
                       height: MediaQuery.of(context).size.height * 0.12,
                       child: Center(
                           child: Image(
@@ -431,19 +533,22 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                         fit: BoxFit.cover,
                       )),
                     ),
-                    Text("12/06/2023" + " A " + "18H02 "),
+                    Text("   " + globals.getString("tempsImage2").toString(),
+                        style: TextStyle(
+                            fontSize: 12.0, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
               InkWell(
                 onTap: () {
-                  ShowDialogwidget(context);
+                  ShowDialogwidget(
+                      context, globals.getString("urlImage3").toString(), 3);
                 },
                 child: Column(
                   children: [
                     Container(
                       margin: EdgeInsets.only(top: 20, right: 10, left: 18),
-                      width: MediaQuery.of(context).size.width * 0.27,
+                      width: MediaQuery.of(context).size.width * 0.2,
                       height: MediaQuery.of(context).size.height * 0.12,
                       child: Center(
                           child: Image(
@@ -452,7 +557,9 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                         fit: BoxFit.cover,
                       )),
                     ),
-                    Text("12/06/2023" + " A " + "17H03 "),
+                    Text("   " + globals.getString("tempsImage3").toString(),
+                        style: TextStyle(
+                            fontSize: 12.0, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -518,10 +625,10 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
                       context,
                       globals.getString("urlImage1").toString(),
                       globals.getString("urlImage2").toString(),
-                      globals.getString("urlImage3").toString());
-                  globals.setString("urlImage1", "");
-                  globals.setString("urlImage2", "");
-                  globals.setString("urlImage3", "");
+                      globals.getString("urlImage3").toString(),
+                      globals.getString("tempsImage1").toString(),
+                      globals.getString("tempsImage2").toString(),
+                      globals.getString("tempsImage3").toString());
                   ClearForm();
                 },
               )
@@ -529,27 +636,4 @@ class _Formulaire_ConstatState extends State<Formulaire_Constat> {
           ],
         ));
   }
-}
-
-ShowDialogwidget(BuildContext context) {
-  AlertDialog alert = AlertDialog(
-    content: Text("Voulez vous vraiment supprimer cette photo?"),
-    actions: [
-      TextButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        child: Text("NON"),
-      ),
-      TextButton(
-        onPressed: () {},
-        child: Text("OUI"),
-      ),
-    ],
-  );
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      });
 }

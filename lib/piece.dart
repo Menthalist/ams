@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Signature.dart';
 import 'button.dart';
 import 'listecompteurs.dart';
 import 'listescles.dart';
@@ -31,6 +32,8 @@ class _piececonteneurState extends State<piececonteneur> {
   late SharedPreferences globals;
   DialogProvider dialogProvider = DialogProvider();
   EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
+  List pieces = [];
+  bool signatureVisibility = true;
   bool? check1 = false;
 
   void initSharedPref() async {
@@ -43,7 +46,6 @@ class _piececonteneurState extends State<piececonteneur> {
     });
   }
 
-  List pieces = [];
   @override
   void initState() {
     super.initState();
@@ -55,6 +57,9 @@ class _piececonteneurState extends State<piececonteneur> {
     Future res = Provider.of<EtatRealisationProvider>(context)
         .getSpecificEDL(widget.idToEdit);
     res.then((value) => pieces = value);
+    Future fini = Provider.of<EtatRealisationProvider>(context)
+        .checkEdlConstatEnd(globals.getString("edlId"));
+    fini.then((value) => signatureVisibility = value as bool);
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: 56,
@@ -169,7 +174,7 @@ class _piececonteneurState extends State<piececonteneur> {
                   padding: EdgeInsets.only(left: 5),
                   child: InkWell(
                     child: button(
-                      text: "COMPTEUR",
+                      text: "COMPTEURS",
                       couleur1: Color.fromRGBO(17, 45, 194, 0.11),
                       couleur2: Colors.white,
                     ),
@@ -196,7 +201,25 @@ class _piececonteneurState extends State<piececonteneur> {
                               builder: (context) => PdfViewerPage()));
                     },
                   ),
-                )
+                ),
+                Visibility(
+                    visible: signatureVisibility,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: InkWell(
+                        child: button(
+                          text: "SIGNATAIRES",
+                          couleur1: Color.fromRGBO(17, 45, 194, 0.11),
+                          couleur2: Colors.transparent,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Signature()));
+                        },
+                      ),
+                    ))
               ]),
             ),
           ),
@@ -234,8 +257,6 @@ class _piececonteneurState extends State<piececonteneur> {
                 return InkWell(
                     child: conteneurrubrique(
                       goDelete: () {
-                        print('ici');
-
                         showDialog(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(

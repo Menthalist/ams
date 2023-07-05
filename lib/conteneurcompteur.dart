@@ -9,8 +9,12 @@ class conteneurcompteur extends StatelessWidget {
   final String compteur, consom;
   DialogProvider dialogProvider = DialogProvider();
   VoidCallback onDelete;
+  Color couleur = Colors.grey;
   conteneurcompteur(
-      {required this.compteur, required this.consom, required this.onDelete});
+      {required this.compteur,
+      required this.consom,
+      required this.onDelete,
+      required this.couleur});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,7 @@ class conteneurcompteur extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey,
+              color: couleur,
               offset: const Offset(
                 1.0,
                 1.0,
@@ -40,6 +44,7 @@ class conteneurcompteur extends StatelessWidget {
             ), //BoxShoxSh
           ]),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Align(
             alignment: Alignment.center,

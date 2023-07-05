@@ -3,14 +3,19 @@ import 'package:flutter/material.dart';
 class conteneurliste extends StatelessWidget {
   String nbrecle, piece;
   VoidCallback onDelete;
-  conteneurliste(
-      {required this.piece, required this.nbrecle, required this.onDelete});
+  Color couleur = Colors.grey;
+  conteneurliste({
+    required this.piece,
+    required this.nbrecle,
+    required this.onDelete,
+    required this.couleur,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.only(top: 20),
-        width: MediaQuery.of(context).size.width * 0.9,
+        width: MediaQuery.of(context).size.width * 0.948,
         height: MediaQuery.of(context).size.height * 0.06,
         decoration: BoxDecoration(
             border: Border.all(
@@ -18,7 +23,7 @@ class conteneurliste extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey,
+                color: couleur,
                 offset: const Offset(
                   1.0,
                   1.0,
@@ -33,41 +38,46 @@ class conteneurliste extends StatelessWidget {
                 spreadRadius: 0.0,
               ), //BoxSh
             ]),
-        child: Row(children: [
-          Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: 20,
-              ),
-              child: Image(image: AssetImage("assets/img/cle.png")),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Row(
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 7, left: 10),
-                child: Text(
-                  '$nbrecle',
-                  style: TextStyle(
-                    fontFamily: "FuturaLT.ttf",
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 20,
                   ),
-                  textAlign: TextAlign.justify,
+                  child: Image(image: AssetImage("assets/img/cle.png")),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text('$piece',
-                    style: TextStyle(
-                      fontFamily: "FuturaLT.ttf",
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 7, left: 10),
+                    child: Text(
+                      '$nbrecle',
+                      style: TextStyle(
+                        fontFamily: "FuturaLT.ttf",
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                      ),
+                      textAlign: TextAlign.justify,
                     ),
-                    textAlign: TextAlign.justify),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text('$piece',
+                        style: TextStyle(
+                          fontFamily: "FuturaLT.ttf",
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.justify),
+                  ),
+                ],
               ),
             ],
           ),

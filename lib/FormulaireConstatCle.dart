@@ -188,9 +188,7 @@ class _Formulaire_Constat_CleState extends State<Formulaire_Constat_Cle> {
               child: Center(
                   child: Text(
                 p +
-                    " " +
-                    globals.getString("nomPiece").toString() +
-                    "/" +
+                    "Compteur: " +
                     globals.getString("nomRubriqueConstat").toString(),
                 style: const TextStyle(
                     color: Colors.black,

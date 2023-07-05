@@ -4,6 +4,7 @@ import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/conteneurliste.dart';
 import 'package:ams_mobile/conteneurmenu.dart';
 import 'package:ams_mobile/listecompteurs.dart';
+import 'package:ams_mobile/pdfpreview.dart';
 import 'package:ams_mobile/providers/dialogProvider.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:ams_mobile/rubriquelist.dart';
@@ -11,6 +12,7 @@ import 'package:ams_mobile/view/home/Home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Signature.dart';
 import 'logement.dart';
 import 'piece.dart';
 import 'layout/AppLayout.dart';
@@ -27,6 +29,7 @@ class _listcleState extends State<listcle> {
   String idEdl = "";
   DialogProvider dialogProvider = DialogProvider();
   EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
+  bool signatureVisibility = true;
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
@@ -50,6 +53,9 @@ class _listcleState extends State<listcle> {
     Future res = Provider.of<EtatRealisationProvider>(context)
         .getClef(globals.getString("edlId"));
     res.then((value) => cles = value);
+    Future fini = Provider.of<EtatRealisationProvider>(context)
+        .checkEdlConstatEnd(globals.getString("edlId"));
+    fini.then((value) => signatureVisibility = value as bool);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 56,
@@ -170,7 +176,7 @@ class _listcleState extends State<listcle> {
                   padding: EdgeInsets.only(left: 5),
                   child: InkWell(
                     child: button(
-                      text: "COMPTEUR",
+                      text: "COMPTEURS",
                       couleur1: Color.fromRGBO(17, 45, 194, 0.11),
                       couleur2: Colors.transparent,
                     ),
@@ -181,7 +187,41 @@ class _listcleState extends State<listcle> {
                               builder: (context) => listecompteur()));
                     },
                   ),
-                )
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5),
+                  child: InkWell(
+                    child: button(
+                      text: "PDF",
+                      couleur1: Color.fromRGBO(17, 45, 194, 0.11),
+                      couleur2: Colors.white,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PdfViewerPage()));
+                    },
+                  ),
+                ),
+                Visibility(
+                    visible: signatureVisibility,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: InkWell(
+                        child: button(
+                          text: "SIGNATAIRES",
+                          couleur1: Color.fromRGBO(17, 45, 194, 0.11),
+                          couleur2: Colors.transparent,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Signature()));
+                        },
+                      ),
+                    ))
               ]),
             ),
           ),
@@ -200,14 +240,24 @@ class _listcleState extends State<listcle> {
                   text2: "AJOUTER")),
           Column(
             children: cles.map((e) {
+              Color couleur = Colors.grey;
+              String okay = 'Non';
+              if (e['constate'] != null) {
+                okay = "Oui";
+                couleur = Color.fromARGB(255, 104, 245, 111);
+              }
               return InkWell(
                 onTap: () {
+                  globals.setString("nomCles", e['nom'].toString());
+                  globals.setString("idKeyNotKey", e['_id'].toString());
+                  globals.setString("keyCles", e['key'].toString());
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => Formulaire_Constat_Cle()));
                 },
                 child: conteneurliste(
+                  couleur: couleur,
                   onDelete: () {
                     showDialog(
                         context: context,
@@ -245,10 +295,10 @@ class _listcleState extends State<listcle> {
                   },
                   piece:
                       // ignore: unnecessary_null_comparison
-                      "N° ordre: " + e['num_ordre'] == null
+                      "N° ordre: " + e['num_ordre'].toString() == null
                           ? ""
-                          : e['num_ordre'],
-                  nbrecle: e['nom'] == null ? "" : e['nom'],
+                          : e['num_ordre'].toString(),
+                  nbrecle: e['nom'] == null ? "" : e['nom'].toString(),
                 ),
               );
             }).toList(),

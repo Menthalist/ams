@@ -4,11 +4,21 @@ class Conteneur_formulaire extends StatelessWidget {
   final double hauteur;
   final String text;
   final TextEditingController controller;
+  TextInputType? type;
+  int? maxLines;
   Conteneur_formulaire(
-      {required this.hauteur, required this.text, required this.controller});
+      {required this.hauteur,
+      required this.text,
+      required this.controller,
+      this.type,
+      this.maxLines});
 
   @override
   Widget build(BuildContext context) {
+    if (type != null) {
+      type = TextInputType.number;
+    }
+
     return Container(
       height: hauteur,
       width: MediaQuery.of(context).size.width,
@@ -25,6 +35,8 @@ class Conteneur_formulaire extends StatelessWidget {
             )
           ]),
       child: TextFormField(
+        maxLines: maxLines,
+        keyboardType: type,
         controller: controller,
         decoration: InputDecoration(
           hintText: text,

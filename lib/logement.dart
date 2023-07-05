@@ -1,7 +1,12 @@
+import 'package:ams_mobile/pdfpreview.dart';
 import 'package:ams_mobile/piece.dart';
+import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:ams_mobile/rubriquelist.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Signature.dart';
 import 'button.dart';
 import 'conteneur.dart';
 import 'listecompteurs.dart';
@@ -15,8 +20,36 @@ class Logement extends StatefulWidget {
 }
 
 class _LogementState extends State<Logement> {
+  EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
+  bool signatureVisibility = true;
+  late SharedPreferences globals;
+  dynamic datas = {};
+
+  void initSharedPref() async {
+    globals = await SharedPreferences.getInstance();
+    setState(() {
+      var id = globals.getString("pieceId");
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initSharedPref();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Future fini = Provider.of<EtatRealisationProvider>(context)
+        .checkEdlConstatEnd(globals.getString("edlId"));
+    fini.then((value) => signatureVisibility = value as bool);
+
+    Future res = Provider.of<EtatRealisationProvider>(context)
+        .getSingleEdlData(globals.getString("edlId"));
+    res.then((value) {
+      datas = value;
+    });
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 56,
@@ -130,7 +163,7 @@ class _LogementState extends State<Logement> {
                 padding: EdgeInsets.only(left: 5),
                 child: InkWell(
                   child: button(
-                      text: "COMPTEUR",
+                      text: "COMPTEURS",
                       couleur1: Color.fromRGBO(17, 45, 194, 0.11),
                       couleur2: Colors.transparent),
                   onTap: () {
@@ -140,16 +173,56 @@ class _LogementState extends State<Logement> {
                             builder: (context) => listecompteur()));
                   },
                 ),
-              )
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 5),
+                child: InkWell(
+                  child: button(
+                    text: "PDF",
+                    couleur1: Color.fromRGBO(17, 45, 194, 0.11),
+                    couleur2: Colors.white,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PdfViewerPage()));
+                  },
+                ),
+              ),
+              Visibility(
+                  visible: signatureVisibility,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 5),
+                    child: InkWell(
+                      child: button(
+                        text: "SIGNATAIRES",
+                        couleur1: Color.fromRGBO(17, 45, 194, 0.11),
+                        couleur2: Colors.transparent,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Signature()));
+                      },
+                    ),
+                  ))
             ]),
           ),
         ),
         Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.03,
-      color: Color.fromRGBO(174, 184, 234, 0.19),
-      padding: EdgeInsets.only(left: 10),
-       child:Text("24 Rue du Commandant Guilbaud, 75016 Paris, France",style: TextStyle(fontFamily: 'Futura.LT',fontSize: 16,fontWeight: FontWeight.w700),)),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.03,
+            color: Color.fromRGBO(174, 184, 234, 0.19),
+            padding: EdgeInsets.only(left: 10),
+            child: Text(
+              datas["adresse"].toString().toUpperCase(),
+              style: TextStyle(
+                  fontFamily: 'Futura.LT',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700),
+            )),
         Container(
           margin: EdgeInsets.only(top: 20, left: 10, right: 10),
           width: MediaQuery.of(context).size.width,
@@ -179,38 +252,67 @@ class _LogementState extends State<Logement> {
                 // mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                      padding: const EdgeInsets.only(top: 5, left: 20),
-                      child: Text(
-                        widget.nbrepiece + " " + "pieces".toUpperCase(),
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: "Futura.LT"),
-                      )),
-                  Padding(
-                      padding:
-                          const EdgeInsets.only(top: 20, right: 10, left: 20),
-                      child: Text(
-                        widget.nbrecompteur + " " + "compteurs".toUpperCase(),
-                        style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: "Futura.LT"),
-                      )),
-                  Padding(
-                      padding:
-                          const EdgeInsets.only(top: 20, right: 10, left: 20),
-                      child: Text(
-                        widget.nbrecle + " " + "clés".toUpperCase(),
-                        style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: "Futura.LT"),
-                      )),
+                  InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => piececonteneur(
+                                      idToEdit: globals
+                                          .getString("pieceId")
+                                          .toString(),
+                                    )));
+                      },
+                      child: Padding(
+                          padding: const EdgeInsets.only(top: 5, left: 20),
+                          child: Text(
+                            datas['pieces'].toString() +
+                                " " +
+                                "pieces".toUpperCase(),
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: "Futura.LT"),
+                          ))),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => listecompteur()));
+                    },
+                    child: Padding(
+                        padding:
+                            const EdgeInsets.only(top: 20, right: 10, left: 20),
+                        child: Text(
+                          datas['compteurs'].toString() +
+                              " " +
+                              "compteurs".toUpperCase(),
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: "Futura.LT"),
+                        )),
+                  ),
+                  InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => listcle()));
+                      },
+                      child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 20, right: 10, left: 20),
+                          child: Text(
+                            datas['cles'].toString() +
+                                " " +
+                                "clés".toUpperCase(),
+                            style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Futura.LT"),
+                          )))
                 ],
               ),
-               
             ],
           ),
         )

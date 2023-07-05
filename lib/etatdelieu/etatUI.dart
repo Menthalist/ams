@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class etatUIdesign extends StatefulWidget {
   String textedl,
       typedl,
@@ -91,10 +90,10 @@ class _etatUIdesignState extends State<etatUIdesign> {
             Row(
               children: [
                 Padding(
-                    padding: EdgeInsets.only(left: 10, top: 0),
+                    padding: EdgeInsets.only(left: 5, top: 0),
                     child: Icon(
                       Icons.location_on_outlined,
-                      size: 36,
+                      size: 25,
                     )),
                 Padding(
                   padding: EdgeInsets.only(top: 2, left: 10),
@@ -102,7 +101,7 @@ class _etatUIdesignState extends State<etatUIdesign> {
                     widget.textedl,
                     style: TextStyle(
                         fontFamily: "FuturaLT.ttf",
-                        fontSize: 20,
+                        fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: Colors.black),
                   ),
@@ -150,19 +149,19 @@ class _etatUIdesignState extends State<etatUIdesign> {
             Padding(
               padding: EdgeInsets.only(top: 10, left: 15),
               child: Text(
-                "${widget.nbrecom} autres commentaires",
+                "${widget.nbrecom}",
                 style: TextStyle(
                     fontFamily: 'FuturaLT.ttf',
                     fontWeight: FontWeight.w500,
-                    fontSize: 16,
+                    fontSize: 15,
                     decoration: TextDecoration.underline),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Padding(
-                padding: EdgeInsets.only(top: 20, ),
+                padding: EdgeInsets.only(
+                  top: 20,
+                ),
                 child: Text(
                   "${widget.nbrepar} Participants",
                   style: TextStyle(
@@ -173,9 +172,11 @@ class _etatUIdesignState extends State<etatUIdesign> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 20, ),
+                padding: EdgeInsets.only(
+                  top: 20,
+                ),
                 child: Text(
-                  "${widget.nbrepiece} pièces commentés",
+                  "",
                   style: TextStyle(
                       fontFamily: 'FuturaLT.ttf',
                       fontWeight: FontWeight.w800,
@@ -184,7 +185,9 @@ class _etatUIdesignState extends State<etatUIdesign> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 20, ),
+                padding: EdgeInsets.only(
+                  top: 20,
+                ),
                 child: Text(
                   "${widget.datej}",
                   style: TextStyle(

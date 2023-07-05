@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,51 +10,89 @@ import 'Signature.dart';
 import 'Textform_Constat.dart';
 import 'camera.dart';
 import 'conteneur.dart';
+
 class Formulaire_Constat_compteur extends StatefulWidget {
   const Formulaire_Constat_compteur({super.key});
 
   @override
-  State<Formulaire_Constat_compteur> createState() => _Formulaire_Constat_compteurState();
+  State<Formulaire_Constat_compteur> createState() =>
+      _Formulaire_Constat_compteurState();
 }
 
-class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteur> {
+class _Formulaire_Constat_compteurState
+    extends State<Formulaire_Constat_compteur> {
   late SharedPreferences globals;
 
   EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
-  String constate= "ok";
-  String idPiece = "";
+  String constate = "ok";
   String idEdl = "";
-  String idRub = "";
   String etat = "";
   String description = "";
   String commentaire = "";
   String commentaireFinal = "";
-  TextEditingController Commentairecontrolle = TextEditingController();
+  String idCompteur = "";
+  String idCompteurNotKey = "";
+  String Commentairecontrolle = "";
+  TextEditingController Commentairecontroller = TextEditingController();
   TextEditingController CommentaireFinalcontroller = TextEditingController();
-   TextEditingController IndexActuelcontroller = TextEditingController();
-   TextEditingController IndexPrecedentcontroller = TextEditingController();
-   TextEditingController Anomaliecontroller = TextEditingController();
+  TextEditingController IndexActuelcontroller = TextEditingController();
+  TextEditingController IndexPrecedentcontroller = TextEditingController();
+  TextEditingController Anomaliecontroller = TextEditingController();
+  String selectcommentaireContent = "0";
 
   String selectchoice = "0";
-  bool  validator=false;
-  
+  List TypecommentaireList = [
+    "Description",
+    "Defaut",
+    "Phrase",
+    "Observation",
+    "Action",
+    "Travail"
+  ];
+
+  List commentaires = [
+    {
+      "commentaire": "Commentaire ",
+      "id": "0",
+      "key_": " ",
+      "nature": " ",
+      "type": " "
+    }
+  ];
+  bool validator = false;
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
 
     setState(() {
-      idPiece = globals.getString("pieceId").toString();
       idEdl = globals.getString("edlId").toString();
-      idRub = globals.getString("idRub").toString();
+      idCompteur = globals.getString("keyCompteur").toString();
+      idCompteurNotKey = globals.getString("idCompteurNotKey").toString();
+      globals.setString("urlImage1", "");
+      globals.setString("urlImage2", "");
+      globals.setString("urlImage3", "");
+      globals.setString("tempsImage1", "");
+      globals.setString("tempsImage2", "");
+      globals.setString("tempsImage3", "");
       selectchoice = "0";
+      selectchoix = "Etat";
     });
   }
 
   void ClearForm() {
     CommentaireFinalcontroller.text = "";
-    Commentairecontrolle.text = "";
+    Commentairecontroller.text = "";
+    IndexActuelcontroller.text = "";
+    IndexPrecedentcontroller.text = "";
+    Anomaliecontroller.text = "";
     selectchoix = "Etat";
-    selectcommentaire = "Descriptions";
+    selectcommentaire = "Description";
+    globals.setString("urlImage1", "");
+    globals.setString("urlImage2", "");
+    globals.setString("urlImage3", "");
+    globals.setString("tempsImage1", "");
+    globals.setString("tempsImage2", "");
+    globals.setString("tempsImage3", "");
   }
 
   List constatList = [];
@@ -67,8 +107,8 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
   }
 
   String selectchoix = "Etat";
-  List piece=['Piece','Compteur','Cle'];
-  String select="Piece";
+  List piece = ['Piece', 'Compteur', 'Cle'];
+  String select = "Piece";
   List etatList = [
     "Etat",
     "Bon état",
@@ -80,18 +120,160 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
     "Rénové",
     "Etat d'usage",
   ];
-  String selectcommentaire = "Descriptions";
+  String selectcommentaire = "Description";
   List commentaireList = [
-    "Descriptions",
-    "Defauts",
-    "Phrases Types",
-    "Observations"
+    "Description",
+    "Defaut",
+    "Phrase",
+    "Observation",
+    "Action",
+    "Travail"
   ];
-  String p = "Piece";
+  String p = "Compteur";
   String a = "1", b = "3";
-  
 
-  void displayDialogWarning(BuildContext context_,
+  ShowDialogwidget(BuildContext context, String path, int idTof) {
+    AlertDialog alert = AlertDialog(
+      content: Text("Voulez vous vraiment supprimer cette photo?"),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text("NON"),
+        ),
+        TextButton(
+          onPressed: () {
+            etatRealisationProvider.deleteFile(path);
+            if (idTof == 1) {
+              globals.setString("urlImage1", "");
+              globals.setString("tempsImage1", "");
+            }
+            if (idTof == 2) {
+              globals.setString("tempsImage2", "");
+              globals.setString("urlImage2", "");
+            }
+            if (idTof == 3) {
+              globals.setString("urlImage3", "");
+              globals.setString("tempsImage3", "");
+            }
+            Navigator.pop(context);
+          },
+          child: Text("OUI"),
+        ),
+      ],
+    );
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+  }
+
+  ShowDialogWarningIndex(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Text("Problème avec les indexes"),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text("Ok"),
+        ),
+      ],
+    );
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+  }
+
+  ShowDialogWarningField(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Text("Attention tous les champs sont obligatoires"),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text("Ok"),
+        ),
+      ],
+    );
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+  }
+
+  void configForm(dynamic compteur_) {
+    CommentaireFinalcontroller.text = compteur_['commentaireFinal'].toString();
+    IndexActuelcontroller.text = compteur_['indexActuel'].toString();
+    IndexPrecedentcontroller.text = compteur_['indexPrecedent'].toString();
+    Anomaliecontroller.text = compteur_['anomalie'].toString();
+    Commentairecontrolle = compteur_['commentaire'].toString();
+    selectchoix = compteur_['etat'].toString() == ""
+        ? "Etat"
+        : compteur_['etat'].toString();
+
+    if (compteur_['image1'] != null) {
+      File file = File(compteur_['image1'].toString());
+      if (file.existsSync()) {
+        globals.setString("urlImage1", compteur_['image1'].toString());
+        globals.setString("tempsImage1", compteur_['tempsImage1'].toString());
+      } else {
+        if (globals.getString("urlImage1").toString() == "") {
+          globals.setString("urlImage1", "");
+          globals.setString("tempsImage1", "");
+        }
+      }
+    } else {
+      if (globals.getString("urlImage1").toString() == "") {
+        globals.setString("urlImage1", "");
+        globals.setString("tempsImage1", "");
+      }
+    }
+
+    if (compteur_['image2'] != null) {
+      File file = File(compteur_['image2'].toString());
+      if (file.existsSync()) {
+        globals.setString("urlImage2", compteur_['image2'].toString());
+        globals.setString("tempsImage2", compteur_['tempsImage2'].toString());
+      } else {
+        if (globals.getString("urlImage2").toString() == "") {
+          globals.setString("urlImage2", "");
+          globals.setString("tempsImage2", "");
+        }
+      }
+    } else {
+      if (globals.getString("urlImage2").toString() == "") {
+        globals.setString("urlImage2", "");
+        globals.setString("tempsImage2", "");
+      }
+    }
+
+    if (compteur_['image3'] != null) {
+      File file = File(compteur_['image3'].toString());
+      if (file.existsSync()) {
+        globals.setString("urlImage3", compteur_['image3'].toString());
+        globals.setString("tempsImage3", compteur_['tempsImage3'].toString());
+      } else {
+        if (globals.getString("urlImage3").toString() == "") {
+          globals.setString("urlImage3", "");
+          globals.setString("tempsImage3", "");
+        }
+      }
+    } else {
+      if (globals.getString("urlImage3").toString() == "") {
+        globals.setString("urlImage3", "");
+        globals.setString("tempsImage3", "");
+      }
+    }
+  }
+
+  void displayDialogWarning(BuildContext context_, String val,
       {String text =
           "Attention les données en cours de saisie seront perdues car vous ne les avez pas encore enregistrés. Confirmez-vous cette opération??",
       String titre = "Voulez vous annuler le constat en cours??"}) {
@@ -107,6 +289,17 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
           TextButton(
             onPressed: () {
               ClearForm();
+              idCompteur = val;
+              globals.setString("keyCompteur", val);
+              dynamic compteur_ = constatList
+                  .where((compteur) => compteur["key"] == idCompteur)
+                  .toList()[0];
+              if (compteur_['constate'] != null) {
+                configForm(compteur_);
+              } else {
+                /**/
+              }
+              globals.setString("nomCompteur", compteur_['nom'].toString());
               Navigator.pop(context, 'OK');
             },
             child: const Text('Continuer'),
@@ -122,7 +315,22 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
 
   @override
   Widget build(BuildContext context) {
-   // constatList = Provider.of<EtatRealisationProvider>(context).getRubriqueOfApiece(idPiece);
+    Future res = Provider.of<EtatRealisationProvider>(context)
+        .getCompteur(globals.getString("edlId").toString());
+
+    res.then((value) {
+      constatList = value;
+      selectchoice = globals.getString("keyCompteur").toString();
+      dynamic compteur_ = constatList
+          .where((compteur) =>
+              compteur["key"] == globals.getString("keyCompteur").toString())
+          .toList()[0];
+      if (compteur_['constate'] != null) {
+        configForm(compteur_);
+      } else {
+        /**/
+      }
+    });
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -180,11 +388,7 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
               ),
               child: Center(
                   child: Text(
-                p +
-                    " " +
-                    globals.getString("nomPiece").toString() +
-                    "/" +
-                    globals.getString("nomRubriqueConstat").toString(),
+                p + "/" + globals.getString("nomCompteur").toString(),
                 style: const TextStyle(
                     color: Colors.black,
                     fontSize: 18,
@@ -200,42 +404,41 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
                 items: [
                   const DropdownMenuItem(
                       value: "0", child: Text("faite un choix")),
-                  ...constatList
-                      .map((e){
-                        Color? couleur = Colors.black;
-                        if(e['constate']!= null){
-                          couleur = Colors.green[400];
-                        }
-                          return DropdownMenuItem(
-                          value:e['constate'],
-                          child: Text(e['nom'],style: TextStyle(color: couleur),
-                          ),);
-                          
-                          
-                      }).toList(), 
+                  ...constatList.map((e) {
+                    Color? couleur = Colors.black;
+                    if (e['constate'] != null) {
+                      couleur = Colors.green[400];
+                    }
+                    return DropdownMenuItem(
+                      value: e['key'],
+                      child: Text(
+                        e['nom'].toString(),
+                        style: TextStyle(color: couleur),
+                      ),
+                    );
+                  }).toList(),
                 ],
-               
                 onChanged: (val) {
+                  displayDialogWarning(context, val as String);
                   setState(() {
-                   
-                    if (selectcommentaire == "Descriptions" &&
+                    /*if (selectcommentaire == "Description" &&
                         selectchoix == 'Etat' &&
                         CommentaireFinalcontroller.text == '' &&
-                        Commentairecontrolle.text == '') {
-                      idRub = val as String;
-                      globals.setString("idRub", idRub);
-                      globals.setString("nomRubriqueConstat", "test");
+                        Anomaliecontroller.text == '' &&
+                        IndexActuelcontroller.text == '' &&
+                        IndexPrecedentcontroller.text == '') {
+                      idCompteur = val as String;
+                      dynamic compteur_ = constatList
+                          .where((compteur) => compteur["key"] == idCompteur)
+                          .toList()[0];
+                      globals.setString("idCompteur", idCompteur);
+                      globals.setString("nomCompteur", compteur_['nom']);
                     } else {
-                      displayDialogWarning(context);
-                    }
+                      
+                    }*/
                     selectchoice = val as String;
                   });
                 },
-                /* icon: const  Icon(
-        
-      Icons.arrow_drop_down_circle,
-   // color: Colors.grey,
-  ),*/
                 dropdownColor: Colors.white,
               ),
             ),
@@ -256,11 +459,6 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
                     etat = Val;
                   });
                 },
-                /* icon: const  Icon(
-        
-      Icons.arrow_drop_down_circle,
-   // color: Colors.grey,
-  ),*/
                 dropdownColor: Colors.white,
               ),
             ),
@@ -280,101 +478,152 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
                     selectcommentaire = Val as String;
                     commentaire = Val;
                   });
+
+                  Future res =
+                      etatRealisationProvider.getCommentairesOfanElement(
+                          idCompteurNotKey, Val.toString());
+                  res.then((value) {
+                    commentaires = [
+                      {
+                        "commentaire": "Commentaire",
+                        "id": "0",
+                        "key_": " ",
+                        "nature": " ",
+                        "type": " "
+                      }
+                    ];
+                    selectcommentaireContent = "0";
+                    commentaires.addAll(value);
+                    selectcommentaireContent = commentaires[0]['id'];
+                  });
                 },
-                /* icon: const  Icon(
-        
-      Icons.arrow_drop_down_circle,
-   // color: Colors.grey,
-  ),*/
                 dropdownColor: Colors.white,
               ),
             ),
-
-           Conteneur_formulaire(hauteur: MediaQuery.of(context).size.height * 0.06,text: "Index Actuel", controller: IndexActuelcontroller),
-            Conteneur_formulaire(hauteur: MediaQuery.of(context).size.height * 0.06,text: "Index Precedent ", controller: IndexPrecedentcontroller),
-             Conteneur_formulaire(hauteur: MediaQuery.of(context).size.height * 0.06,text: "Anomalie Compteur ", controller: Anomaliecontroller),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+              child: DropdownButton(
+                value: selectcommentaireContent,
+                items: commentaires.map((e) {
+                  return DropdownMenuItem(
+                      value: e["id"], child: Text(e['commentaire']));
+                }).toList(),
+                onChanged: (val) {
+                  setState(() {
+                    selectcommentaireContent = val as String;
+                    commentaire = val;
+                    dynamic comment = commentaires
+                        .where((edl) => edl["id"] == commentaire)
+                        .toList()[0];
+                    CommentaireFinalcontroller.text = "\n" +
+                        selectcommentaire +
+                        ": " +
+                        comment["commentaire"] +
+                        " " +
+                        CommentaireFinalcontroller.text;
+                  });
+                },
+                dropdownColor: Colors.white,
+              ),
+            ),
             Conteneur_formulaire(
-                controller: Commentairecontrolle,
+                type: TextInputType.number,
                 hauteur: MediaQuery.of(context).size.height * 0.06,
-                text: "Commentaire"),
+                text: "Index Actuel",
+                controller: IndexActuelcontroller),
             Conteneur_formulaire(
+                type: TextInputType.number,
+                hauteur: MediaQuery.of(context).size.height * 0.06,
+                text: "Index Precedent ",
+                controller: IndexPrecedentcontroller),
+            Conteneur_formulaire(
+                hauteur: MediaQuery.of(context).size.height * 0.06,
+                text: "Anomalie Compteur ",
+                controller: Anomaliecontroller),
+            Conteneur_formulaire(
+                maxLines: 10,
                 controller: CommentaireFinalcontroller,
                 hauteur: MediaQuery.of(context).size.height * 0.08,
                 text: "Commentaire Final"),
-                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              InkWell(
+                onTap: () {
+                  ShowDialogwidget(
+                      context, globals.getString("urlImage1").toString(), 1);
+                },
+                child: Column(
                   children: [
-                    InkWell(
-                       onTap: () {
-                     ShowDialogwidget(context);
-                        
-                      },
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only( top:20,right: 10, left: 10),
-                            width: MediaQuery.of(context).size.width* 0.2,
-                            height: MediaQuery.of(context).size.height * 0.12,
-                           
-                           child: const Center(child:Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
-                          ),
-                           Text("12/06/2023"+" A "+"17H03 ",style: TextStyle(fontFamily: 'Futura.LT',fontWeight: FontWeight.w700,fontSize: 15),),
-                        ],
-                      ),
+                    Container(
+                      margin: EdgeInsets.only(top: 20, right: 10, left: 10),
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      height: MediaQuery.of(context).size.height * 0.12,
+                      child: Center(
+                          child: Image(
+                        image: FileImage(
+                            File(globals.getString("urlImage1").toString())),
+                        fit: BoxFit.cover,
+                      )),
                     ),
-                     InkWell(
-                       onTap: () {
-                       
-                       ShowDialogwidget(context);
-                        
-                      },
-                       child: Column(
-                         children: [
-                           Container(
-                            margin: EdgeInsets.only( top:20,right: 10, left: 18),
-                            width: MediaQuery.of(context).size.width* 0.2,
-                            height: MediaQuery.of(context).size.height * 0.12,
-                            
-                           child: const Center(child:  Image(image: AssetImage("assets/img/pie1.png"),fit: BoxFit.cover,)),
-                                             ),
-                              Text("12/06/2023"+" A "+"10H08"),
-                         ],
-                       ),
-                     ),
-                     InkWell(
-                      onTap: () {
-                       ShowDialogwidget(context);
-                        
-                      },
-                       child: Column(
-                         children: [
-                           Container(
-                            margin: EdgeInsets.only( top:20,right: 10, left: 18),
-                            width: MediaQuery.of(context).size.width* 0.2,
-                            height: MediaQuery.of(context).size.height * 0.12,
-                            
-                           child: const Center(child:  Image(image: AssetImage("assets/img/pie2.png"),fit: BoxFit.cover,)),
-                                             ),
-                            Text("12/06/2023"+" A "+"18H37 "),
-
-                         ],
-                       ),
-                     ),
-                    
-                    
-                    
-          ]),
-               
-            Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                margin: EdgeInsets.only( top:20,right: 170, left: 170),
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(120),
-                    border: Border.all(width: 1, color: Colors.black)),
-                child: Center(child: camera())),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, 
-            children: [
+                    Text("   " + globals.getString("tempsImage1").toString(),
+                        style: TextStyle(
+                            fontSize: 12.0, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  ShowDialogwidget(
+                      context, globals.getString("urlImage2").toString(), 2);
+                },
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 20, right: 10, left: 18),
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      height: MediaQuery.of(context).size.height * 0.12,
+                      child: Center(
+                          child: Image(
+                        image: FileImage(
+                            File(globals.getString("urlImage2").toString())),
+                        fit: BoxFit.cover,
+                      )),
+                    ),
+                    Text("   " + globals.getString("tempsImage2").toString(),
+                        style: TextStyle(
+                            fontSize: 12.0, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  ShowDialogwidget(
+                      context, globals.getString("urlImage3").toString(), 3);
+                },
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 20, right: 10, left: 18),
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      height: MediaQuery.of(context).size.height * 0.12,
+                      child: Center(
+                          child: Image(
+                        image: FileImage(
+                            File(globals.getString("urlImage3").toString())),
+                        fit: BoxFit.cover,
+                      )),
+                    ),
+                    Text("   " + globals.getString("tempsImage3").toString(),
+                        style: TextStyle(
+                            fontSize: 12.0, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+            ]),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              camera(cas: "compteur"),
+            ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               InkWell(
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.05,
@@ -394,8 +643,8 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
                   )),
                 ),
                 onTap: () {
-                  Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Signature()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Signature()));
                 },
               ),
               InkWell(
@@ -417,16 +666,38 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
                   )),
                 ),
                 onTap: () {
-                 /* etatRealisationProvider.constatRubrique(
+                  if (CommentaireFinalcontroller.text.isEmpty ||
+                      IndexActuelcontroller.text.isEmpty ||
+                      IndexPrecedentcontroller.text.isEmpty ||
+                      IndexActuelcontroller.text.isEmpty ||
+                      IndexPrecedentcontroller.text.isEmpty) {
+                    ShowDialogWarningField(context);
+                    return;
+                  }
+                  if (int.parse(IndexActuelcontroller.text) <
+                      int.parse(IndexPrecedentcontroller.text)) {
+                    ShowDialogWarningIndex(context);
+                    return;
+                  }
+
+                  etatRealisationProvider.constatCompteur(
                       idEdl,
-                      idPiece,
-                      idRub,
+                      idCompteur,
                       etat,
-                      description,
-                      Commentairecontrolle.text,
+                      IndexActuelcontroller.text,
+                      IndexPrecedentcontroller.text,
+                      Anomaliecontroller.text,
                       CommentaireFinalcontroller.text,
-                      context)
-                  ClearForm();*/
+                      Commentairecontroller.text,
+                      description,
+                      context,
+                      globals.getString("urlImage1").toString(),
+                      globals.getString("urlImage2").toString(),
+                      globals.getString("urlImage3").toString(),
+                      globals.getString("tempsImage1").toString(),
+                      globals.getString("tempsImage2").toString(),
+                      globals.getString("tempsImage3").toString());
+                  ClearForm();
                 },
               )
             ]),
@@ -434,17 +705,3 @@ class _Formulaire_Constat_compteurState extends State<Formulaire_Constat_compteu
         ));
   }
 }
-ShowDialogwidget(BuildContext context){
-AlertDialog alert = AlertDialog(
-  content: Text("Voulez vous vraiment supprimer cette photo?"),
-  actions: [
-    TextButton(onPressed: (){Navigator.pop(context);}, child: Text("NON"),),
-    TextButton(onPressed: (){}, child: Text("OUI"),),
-  ],
-);
-showDialog(context: context, builder: (BuildContext context){
-  return alert;
-});
-
-}
- 
