@@ -1,4 +1,3 @@
-
 import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/conteneurcorps.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../etatdelieu/etatUI.dart';
 import '../../etatdelieu/liste_etat.dart';
+import '../../logement.dart';
 import '../../piece.dart';
 import '../../providers/etat_realisation.dart';
 
@@ -59,6 +59,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     etat1 = Provider.of<EtatRealisationProvider>(context).getEtats;
+    etat1 = etat1.reversed.toList();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -113,13 +114,11 @@ class _HomeState extends State<Home> {
                             padding:
                                  EdgeInsets.only( bottom: 35, top: 15),
                             child: Text(
-                              widget.text1,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontFamily: "FuturaLT.ttf",
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(239, 201, 10, 10),
-                              ),
+                              "TOTAL D'ETAT DES LIEUX",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: "FuturaLT.ttf",
+                                  fontWeight: FontWeight.w500),
                             )),
                       
                     
@@ -144,7 +143,6 @@ class _HomeState extends State<Home> {
                           color: Color.fromARGB(239, 201, 10, 10),
                         ),
                       ))
-                      
                 ],
               ),
             ),
@@ -154,91 +152,83 @@ class _HomeState extends State<Home> {
       const SizedBox(
         height: 13,
       ),
-      
-           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: etat_realisation.map((e) {
-              return conteneurcorps(
-                text: e['titre'],
-                nomb: e['numero'],
-                couleur: e['couleurcontainer'],
-                // Color.fromRGBO(136, 255, 95, 0.16),
-                cal: e['couleurtext'],
-                colbordure: e['bordure'],
-                col: e['couleurtext'],
-                colorg: e['colorgr'],
-              );
-            }).toList(),
-          ),
-       
-    
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: etat_realisation.map((e) {
+          return conteneurcorps(
+            text: e['titre'],
+            nomb: e['numero'],
+            couleur: e['couleurcontainer'],
+            // Color.fromRGBO(136, 255, 95, 0.16),
+            cal: e['couleurtext'],
+            colbordure: e['bordure'],
+            col: e['couleurtext'],
+            colorg: e['colorgr'],
+          );
+        }).toList(),
+      ),
       const SizedBox(
         height: 10,
       ),
-     
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Padding(
-                padding: EdgeInsets.only(left: 13, top: 8),
-                child: Text(
-                  "Etats des lieux",
-                
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'FuturaLT.ttf',
-                  ),
-                )),
-            Padding(
-                padding: const EdgeInsets.only( top: 10,right: 10),
-                child: InkWell(
-                  onTap: (() {
-                    showDialog(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                            title: const Text(
-                              "FILTRES PAR ",
-                              style: TextStyle(
-                                  fontFamily: "futura.LT",
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800),
-                              textAlign: TextAlign.left,
-                            ),
-                            content: SingleChildScrollView(
-                              child: ListBody(children: [
-                                for (int i = 0; i < _etat.length; i++)
-                                  Row(
-                                    children: [
-                                      Radio(
-                                          value: _etat[i].toString(),
-                                          groupValue: _selectedetat,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _selectedetat = value.toString();
-                                            });
-                                          }),
-                                      Text(
-                                        _etat[i],
-                                        style: const TextStyle(
-                                            fontFamily: "futura.LT",
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ],
-                                  )
-                              ]),
-                            )));
-                  }),
-                  
-                    child: const Image(
-                      image: AssetImage("assets/img/vector.png"),
-                    ),
-                  
-                ))
-          ],
-        ),
-      
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Padding(
+              padding: EdgeInsets.only(left: 13, top: 8),
+              child: Text(
+                "Etats des lieux",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'FuturaLT.ttf',
+                ),
+              )),
+          Padding(
+              padding: const EdgeInsets.only(top: 10, right: 10),
+              child: InkWell(
+                onTap: (() {
+                  showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                          title: const Text(
+                            "FILTRES PAR ",
+                            style: TextStyle(
+                                fontFamily: "futura.LT",
+                                fontSize: 18,
+                                fontWeight: FontWeight.w800),
+                            textAlign: TextAlign.left,
+                          ),
+                          content: SingleChildScrollView(
+                            child: ListBody(children: [
+                              for (int i = 0; i < _etat.length; i++)
+                                Row(
+                                  children: [
+                                    Radio(
+                                        value: _etat[i].toString(),
+                                        groupValue: _selectedetat,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedetat = value.toString();
+                                          });
+                                        }),
+                                    Text(
+                                      _etat[i],
+                                      style: const TextStyle(
+                                          fontFamily: "futura.LT",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                )
+                            ]),
+                          )));
+                }),
+                child: const Image(
+                  image: AssetImage("assets/img/vector.png"),
+                ),
+              ))
+        ],
+      ),
       Column(
           children: etat1.map((e) {
         return etatUIdesign(
@@ -247,9 +237,7 @@ class _HomeState extends State<Home> {
             if (id != null) {
               globals.setString("edlId", id);
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => piececonteneur(idToEdit: id)));
+                  context, MaterialPageRoute(builder: (context) => Logement()));
             }
           },
           etat: e.etat,

@@ -1,4 +1,3 @@
-
 import 'package:ams_mobile/camera.dart';
 import 'package:ams_mobile/providers/dialogProvider.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +6,16 @@ import 'package:flutter/material.dart';
   String compteur,consom;
 }*/
 class conteneurcompteur extends StatelessWidget {
+  final String compteur, consom;
+  DialogProvider dialogProvider = DialogProvider();
+  VoidCallback onDelete;
+  Color couleur = Colors.grey;
+  conteneurcompteur(
+      {required this.compteur,
+      required this.consom,
+      required this.onDelete,
+      required this.couleur});
 
-final  String compteur, consom;
-DialogProvider dialogProvider = DialogProvider();
- conteneurcompteur({required this.compteur,required this.consom});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,28 +23,29 @@ DialogProvider dialogProvider = DialogProvider();
       width: MediaQuery.of(context).size.width*0.948,
       height: MediaQuery.of(context).size.height*0.06,
       decoration: BoxDecoration(
-        border: Border.all(width: 1.0, color: Color.fromARGB(218, 219, 219, 215) ),
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey,
-                      offset: const Offset(
-                        1.0,
-                        1.0,
-                      ),
-                      blurRadius: 8.0,
-                      spreadRadius: 1.0,
-                    ), //BoxShadow
-                    BoxShadow(
-                      color: Colors.white,
-                      offset: const Offset(0.0, 0.0),
-                      blurRadius: 0.0,
-                      spreadRadius: 0.0,
-                    ), //BoxShoxSh
-        ]
-      ),
+          border:
+              Border.all(width: 1.0, color: Color.fromARGB(218, 219, 219, 215)),
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: couleur,
+              offset: const Offset(
+                1.0,
+                1.0,
+              ),
+              blurRadius: 8.0,
+              spreadRadius: 1.0,
+            ), //BoxShadow
+            BoxShadow(
+              color: Colors.white,
+              offset: const Offset(0.0, 0.0),
+              blurRadius: 0.0,
+              spreadRadius: 0.0,
+            ), //BoxShoxSh
+          ]),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        
         children: [
           Row(
             children: [

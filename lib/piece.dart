@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Signature.dart';
 import 'button.dart';
 import 'listecompteurs.dart';
 import 'listescles.dart';
@@ -31,6 +32,8 @@ class _piececonteneurState extends State<piececonteneur> {
   late SharedPreferences globals;
   DialogProvider dialogProvider = DialogProvider();
   EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
+  List pieces = [];
+  bool signatureVisibility = true;
   bool? check1 = false;
 
   void initSharedPref() async {
@@ -43,7 +46,6 @@ class _piececonteneurState extends State<piececonteneur> {
     });
   }
 
-  List pieces = [];
   @override
   void initState() {
     super.initState();
@@ -55,6 +57,9 @@ class _piececonteneurState extends State<piececonteneur> {
     Future res = Provider.of<EtatRealisationProvider>(context)
         .getSpecificEDL(widget.idToEdit);
     res.then((value) => pieces = value);
+    Future fini = Provider.of<EtatRealisationProvider>(context)
+        .checkEdlConstatEnd(globals.getString("edlId"));
+    fini.then((value) => signatureVisibility = value as bool);
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: 56,
@@ -169,7 +174,7 @@ class _piececonteneurState extends State<piececonteneur> {
                   padding: EdgeInsets.only(left: 5),
                   child: InkWell(
                     child: button(
-                      text: "COMPTEUR",
+                      text: "COMPTEURS",
                       couleur1: Color.fromRGBO(17, 45, 194, 0.11),
                       couleur2: Colors.white,
                     ),
@@ -196,7 +201,25 @@ class _piececonteneurState extends State<piececonteneur> {
                               builder: (context) => PdfViewerPage()));
                     },
                   ),
-                )
+                ),
+                Visibility(
+                    visible: signatureVisibility,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: InkWell(
+                        child: button(
+                          text: "SIGNATAIRES",
+                          couleur1: Color.fromRGBO(17, 45, 194, 0.11),
+                          couleur2: Colors.transparent,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Signature()));
+                        },
+                      ),
+                    ))
               ]),
             ),
           ),
@@ -204,6 +227,7 @@ class _piececonteneurState extends State<piececonteneur> {
             height: MediaQuery.of(context).size.height * 0.00009,
           ),
           InkWell(
+<<<<<<< HEAD
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -223,6 +247,21 @@ class _piececonteneurState extends State<piececonteneur> {
                     text2: "AJOUTER"),
               ],
             ),
+=======
+            child: conteneurmenu(
+                go: () async {
+                  await dialogProvider.displayFormPiece(
+                      widget.idToEdit, context);
+                  Future res =
+                      etatRealisationProvider.getSpecificEDL(widget.idToEdit);
+                  res.then((value) {
+                    pieces = value;
+                  });
+                },
+                text1: "",
+                nomb: "",
+                text2: "AJOUTER"),
+>>>>>>> 6f03c59e7ecb77dab3cb1c3fba37e1371918626d
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.009,
@@ -239,6 +278,39 @@ class _piececonteneurState extends State<piececonteneur> {
                 }
                 return InkWell(
                     child: conteneurrubrique(
+                      goDelete: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: Text("Confirmation suppression"),
+                            content: Text(
+                                "Voulez vous vraiment supprimer cet élément??"),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  dynamic composant = {};
+                                  composant['_id'] = e["_id"];
+                                  composant['edl'] = widget.idToEdit;
+                                  composant['type'] = "piece";
+                                  etatRealisationProvider
+                                      .deleteComposant(composant);
+                                  Future res = etatRealisationProvider
+                                      .getSpecificEDL(widget.idToEdit);
+                                  res.then((value) {
+                                    pieces = value;
+                                  });
+                                  Navigator.pop(context, 'OK');
+                                },
+                                child: const Text('Continuer'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('Annuler'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                       couleur: couleur,
                       piece: e['nom'] == null ? "" : e["nom"],
                       nbrei: "Rubriques: " + e['rubriques'].toString(),

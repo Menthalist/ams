@@ -4,6 +4,7 @@ import 'package:ams_mobile/conteneur.dart';
 import 'package:ams_mobile/conteneurliste.dart';
 import 'package:ams_mobile/conteneurmenu.dart';
 import 'package:ams_mobile/listecompteurs.dart';
+import 'package:ams_mobile/pdfpreview.dart';
 import 'package:ams_mobile/providers/dialogProvider.dart';
 import 'package:ams_mobile/providers/etat_realisation.dart';
 import 'package:ams_mobile/rubriquelist.dart';
@@ -11,6 +12,7 @@ import 'package:ams_mobile/view/home/Home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Signature.dart';
 import 'logement.dart';
 import 'piece.dart';
 import 'layout/AppLayout.dart';
@@ -24,15 +26,17 @@ class listcle extends StatefulWidget {
 
 class _listcleState extends State<listcle> {
   late SharedPreferences globals;
-  String idRub = "";
+  String idEdl = "";
   DialogProvider dialogProvider = DialogProvider();
+  EtatRealisationProvider etatRealisationProvider = EtatRealisationProvider();
+  bool signatureVisibility = true;
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
     setState(() {
       var id = globals.getString("edlId");
       if (id != null) {
-        idRub = id;
+        idEdl = id;
       }
     });
   }
@@ -46,7 +50,12 @@ class _listcleState extends State<listcle> {
   List cles = [];
   @override
   Widget build(BuildContext context) {
-    cles = Provider.of<EtatRealisationProvider>(context).getClef(idRub);
+    Future res = Provider.of<EtatRealisationProvider>(context)
+        .getClef(globals.getString("edlId"));
+    res.then((value) => cles = value);
+    Future fini = Provider.of<EtatRealisationProvider>(context)
+        .checkEdlConstatEnd(globals.getString("edlId"));
+    fini.then((value) => signatureVisibility = value as bool);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 56,
@@ -167,7 +176,7 @@ class _listcleState extends State<listcle> {
                   padding: EdgeInsets.only(left: 5),
                   child: InkWell(
                     child: button(
-                      text: "COMPTEUR",
+                      text: "COMPTEURS",
                       couleur1: Color.fromRGBO(17, 45, 194, 0.11),
                       couleur2: Colors.transparent,
                     ),
@@ -178,203 +187,118 @@ class _listcleState extends State<listcle> {
                               builder: (context) => listecompteur()));
                     },
                   ),
-                )
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5),
+                  child: InkWell(
+                    child: button(
+                      text: "PDF",
+                      couleur1: Color.fromRGBO(17, 45, 194, 0.11),
+                      couleur2: Colors.white,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PdfViewerPage()));
+                    },
+                  ),
+                ),
+                Visibility(
+                    visible: signatureVisibility,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: InkWell(
+                        child: button(
+                          text: "SIGNATAIRES",
+                          couleur1: Color.fromRGBO(17, 45, 194, 0.11),
+                          couleur2: Colors.transparent,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Signature()));
+                        },
+                      ),
+                    ))
               ]),
             ),
           ),
           //Padding(padding: EdgeInsets.only()),
           InkWell(
-            child: conteneurmenu(
-                go: () {},
-                text1: "CLES",
-                nomb: cles.length.toString(),
-                text2: "AJOUTER"),
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                        title: Text(
-                          "AJOUTER UNE CLE ",
-                          style: TextStyle(
-                              fontFamily: "futura.LT",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w800),
-                          textAlign: TextAlign.left,
-                        ),
-                        content: SingleChildScrollView(
-                            child: ListBody(children: [
-                          Container(
-                              margin: EdgeInsets.only(left: 11),
-                              child: Text(
-                                "CLE",
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w900),
-                              )),
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.05,
-                            width: MediaQuery.of(context).size.width * 0.08,
-                            margin: EdgeInsets.only(
-                              left: 3,
-                              right: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                  width: 1.0,
-                                  color: Color.fromARGB(218, 219, 219, 215)),
-                            ),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Salon Principal",
-                                  contentPadding: EdgeInsets.only(
-                                    left: 9,
-                                  ),
-                                  hintStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                              margin: EdgeInsets.only(left: 11),
-                              child: Text(
-                                "NOMBRE",
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w900),
-                              )),
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.05,
-                            width: MediaQuery.of(context).size.width * 0.08,
-                            margin: EdgeInsets.only(
-                              left: 5,
-                              right: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                  width: 1.0,
-                                  color: Color.fromARGB(218, 219, 219, 215)),
-                            ),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "2",
-                                contentPadding: EdgeInsets.only(
-                                  left: 9,
-                                ),
-                                hintStyle: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ),
-                          ),
-                          Container(
-                              margin: EdgeInsets.only(left: 11),
-                              child: Text(
-                                "ETAT",
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w900),
-                              )),
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.05,
-                            width: MediaQuery.of(context).size.width * 0.08,
-                            margin: EdgeInsets.only(left: 5, right: 5, top: 5),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                  width: 1.0,
-                                  color: Color.fromARGB(218, 219, 219, 215)),
-                            ),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "CLE NEUVE",
-                                contentPadding: EdgeInsets.only(
-                                  left: 9,
-                                ),
-                                hintStyle: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ),
-                          ),
-                          Container(
-                              margin: EdgeInsets.only(left: 11),
-                              child: Text(
-                                "COMMENTAIRE",
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w900),
-                              )),
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.08,
-                            width: MediaQuery.of(context).size.width * 0.28,
-                            margin: EdgeInsets.only(left: 5, right: 5, top: 5),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                  width: 1.0,
-                                  color: Color.fromARGB(218, 219, 219, 215)),
-                            ),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Clé du Salon Principal",
-                                contentPadding: EdgeInsets.only(
-                                  left: 9,
-                                ),
-                                hintStyle: TextStyle(
-                                    color: Colors.black,
-                                   fontWeight: FontWeight.w400),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            child: Container(
-                              margin:
-                                  EdgeInsets.only(left: 5, right: 5, top: 10),
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              width: MediaQuery.of(context).size.width * 0.08,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF333333),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "ENREGISTRER",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  )),
-                            ),
-                            onTap: () {
-                              // Navigator.push(
-                              //     context, MaterialPageRoute(builder: (context) => home()));
-                            },
-                          ),
-                        ])),
-                      ));
-            },
-          ),
+              child: conteneurmenu(
+                  go: () {
+                    dialogProvider.displayFormKey(idEdl, context);
+                    Future res = etatRealisationProvider.getClef(idEdl);
+                    res.then((value) {
+                      cles = value;
+                    });
+                  },
+                  text1: "CLES",
+                  nomb: cles.length.toString(),
+                  text2: "AJOUTER")),
           Column(
             children: cles.map((e) {
+              Color couleur = Colors.grey;
+              String okay = 'Non';
+              if (e['constate'] != null) {
+                okay = "Oui";
+                couleur = Color.fromARGB(255, 104, 245, 111);
+              }
               return InkWell(
                 onTap: () {
+                  globals.setString("nomCles", e['nom'].toString());
+                  globals.setString("idKeyNotKey", e['_id'].toString());
+                  globals.setString("keyCles", e['key'].toString());
                   Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Formulaire_Constat_Cle())
-                              );
-                              
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Formulaire_Constat_Cle()));
                 },
                 child: conteneurliste(
+                  couleur: couleur,
+                  onDelete: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                              title: Text("Confirmation suppression"),
+                              content: Text(
+                                  "Voulez vous vraiment supprimer cet élément??"),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    dynamic composant = {};
+                                    composant['_id'] = e["_id"];
+                                    composant['edl'] =
+                                        globals.getString("edlId").toString();
+                                    composant['type'] = "cles";
+                                    etatRealisationProvider
+                                        .deleteComposant(composant);
+                                    Future res = etatRealisationProvider
+                                        .getSpecificEDL(globals
+                                            .getString("edlId")
+                                            .toString());
+                                    res.then((value) {
+                                      cles = value;
+                                    });
+                                    Navigator.pop(context, 'OK');
+                                  },
+                                  child: const Text('Continuer'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'OK'),
+                                  child: const Text('Annuler'),
+                                ),
+                              ],
+                            ));
+                  },
                   piece:
                       // ignore: unnecessary_null_comparison
-                      "N° ordre: " + e['num_ordre'] == null ? "" : e['num_ordre'],
-                  nbrecle: e['nom'] == null ? "" : e['nom'],
+                      "N° ordre: " + e['num_ordre'].toString() == null
+                          ? ""
+                          : e['num_ordre'].toString(),
+                  nbrecle: e['nom'] == null ? "" : e['nom'].toString(),
                 ),
               );
             }).toList(),

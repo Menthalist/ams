@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 
 class conteneurliste extends StatelessWidget {
   String nbrecle, piece;
-  conteneurliste({required this.piece, required this.nbrecle});
+  VoidCallback onDelete;
+  Color couleur = Colors.grey;
+  conteneurliste({
+    required this.piece,
+    required this.nbrecle,
+    required this.onDelete,
+    required this.couleur,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +23,7 @@ class conteneurliste extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey,
+                color: couleur,
                 offset: const Offset(
                   1.0,
                   1.0,
@@ -31,10 +38,10 @@ class conteneurliste extends StatelessWidget {
                 spreadRadius: 0.0,
               ), //BoxSh
             ]),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(children: [
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Row(
+            children: [
               Align(
                 alignment: Alignment.center,
                 child: Padding(
@@ -72,86 +79,63 @@ class conteneurliste extends StatelessWidget {
                   ),
                 ],
               ),
-           ] ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                 
-                  InkWell(
-                    child:   Padding(
-                      padding: EdgeInsets.only(right: 20),
-                      child: Image(image: AssetImage("assets/img/bu.png")),
-                    ),
-                    onTap: (() {
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                ListTile(
-                                  title: new Text(
-                                    'prévisualiser',
-                                    style: TextStyle(
-                                      fontFamily: "FuturaLT.ttf",
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w800,
-                                    ),
+            ],
+          ),
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 200),
+                ),
+                InkWell(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Image(image: AssetImage("assets/img/bu.png")),
+                  ),
+                  onTap: (() {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              ListTile(
+                                title: new Text(
+                                  'prévisualiser',
+                                  style: TextStyle(
+                                    fontFamily: "FuturaLT.ttf",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
                                   ),
-                                  leading: new Icon(
-                                    Icons.camera,
-                                    color: Colors.black,
-                                  ),
-                                  onTap: () {
-                                  
-                                  },
                                 ),
-                                ListTile(
-                                  title: new Text(
-                                    'Modifier',
-                                    style: TextStyle(
-                                      fontFamily: "FuturaLT.ttf",
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                  leading: new Icon(
-                                    Icons.edit,
-                                    color: Colors.black,
-                                  ),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
+                                leading: new Icon(
+                                  Icons.camera,
+                                  color: Colors.black,
                                 ),
-                                ListTile(
-                                  title: new Text(
-                                    'Supprimer',
-                                    style: TextStyle(
-                                      fontFamily: "FuturaLT.ttf",
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w800,
-                                    ),
+                                onTap: () {},
+                              ),
+                              ListTile(
+                                title: new Text(
+                                  'Supprimer',
+                                  style: TextStyle(
+                                    fontFamily: "FuturaLT.ttf",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
                                   ),
-                                  leading: new Icon(
-                                    Icons.delete,
-                                    color: Colors.black,
-                                  ),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
                                 ),
-                              ],
-                            );
-                          });
-                    }),
-                  )
-                ]),
-                   ]),
-         
-    ); 
-              
-              
-          
+                                leading: new Icon(
+                                  Icons.delete,
+                                  color: Colors.black,
+                                ),
+                                onTap: onDelete,
+                              ),
+                            ],
+                          );
+                        });
+                  }),
+                )
+              ]),
+        ]));
   }
 }

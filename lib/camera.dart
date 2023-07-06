@@ -7,7 +7,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class camera extends StatefulWidget {
-  camera({super.key});
+  String cas = "";
+  camera({super.key, cas});
 
   final _cameraState myAppState = new _cameraState();
   @override
@@ -23,11 +24,7 @@ class _cameraState extends State<camera> {
 
   void initSharedPref() async {
     globals = await SharedPreferences.getInstance();
-    setState(() {
-      img1 = globals.getString("urlImage1").toString();
-      img2 = globals.getString("urlImage2").toString();
-      img3 = globals.getString("urlImage3").toString();
-    });
+    setState(() {});
   }
 
   @override
@@ -53,25 +50,48 @@ class _cameraState extends State<camera> {
     }
   }
 
+  String TraitementDate() {
+    DateTime date1 = DateTime.now();
+    String month1 = date1.month.toString().length > 1
+        ? date1.month.toString()
+        : "0" + date1.month.toString();
+    String day1 = date1.day.toString().length > 1
+        ? date1.day.toString()
+        : "0" + date1.day.toString();
+    String year = date1.year.toString();
+    String heure = date1.hour.toString().length > 1
+        ? date1.hour.toString()
+        : "0" + date1.hour.toString();
+    String minute = date1.minute.toString().length > 1
+        ? date1.minute.toString()
+        : "0" + date1.minute.toString();
+    return day1 + "/" + month1 + "/" + year + " à " + heure + "h" + minute;
+  }
+
   Future<File> saveFilePermanently(String imagepath) async {
     final directory = await getApplicationDocumentsDirectory();
     final name = basename(imagepath);
     final image = File('${directory.path}/$name');
+
     if (globals.getString("urlImage1").toString() == "") {
       globals.setString("urlImage1", image.path.toString());
+      globals.setString("tempsImage1", TraitementDate());
       return File(imagepath).copy(image.path);
     }
     if (globals.getString("urlImage1").toString() != "" &&
         globals.getString("urlImage2").toString() == "") {
       globals.setString("urlImage2", image.path.toString());
+      globals.setString("tempsImage2", TraitementDate());
       return File(imagepath).copy(image.path);
     }
     if (globals.getString("urlImage1").toString() != "" &&
         globals.getString("urlImage2").toString() != "" &&
         globals.getString("urlImage3").toString() == "") {
       globals.setString("urlImage3", image.path.toString());
+      globals.setString("tempsImage3", TraitementDate());
       return File(imagepath).copy(image.path);
     }
+
     return File(imagepath).copy(image.path);
   }
 

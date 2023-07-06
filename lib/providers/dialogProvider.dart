@@ -271,12 +271,12 @@ class DialogProvider {
             ));
   }
 
-  void displayDialogCompteur(BuildContext context_,
-      {String text =
-          "Attention les données en cours de saisie seront perdues car vous ne les avez pas encore enregistrés. Confirmez-vous cette opération??",
-      String titre = "Voulez vous annuler le constat en cours??"}) {
+  void displayDialogCompteur(String idEdl, BuildContext context_,
+      {String text = "", String titre = ""}) {
     Text message = Text(text);
     Text title = Text(titre);
+    TextEditingController nom = TextEditingController();
+    TextEditingController description = TextEditingController();
 
     // show the dialog
     showDialog(
@@ -314,6 +314,7 @@ class DialogProvider {
                   child: Align(
                     alignment: Alignment.center,
                     child: TextFormField(
+                      controller: nom,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Nom",
@@ -342,6 +343,7 @@ class DialogProvider {
                   child: Align(
                     alignment: Alignment.center,
                     child: TextFormField(
+                      controller: description,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Description",
@@ -370,21 +372,32 @@ class DialogProvider {
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         )),
                   ),
-                  onTap: () {
-                    // Navigator.push(
-                    //     context, MaterialPageRoute(builder: (context) => home()));
+                  onTap: () async {
+                    dynamic rubrique = {};
+                    if (nom.text == "" || description.text == "") {
+                      messageErreur = "Champs vides";
+                    } else {
+                      rubrique['nom'] = nom.text;
+                      rubrique['description'] = description.text;
+                      rubrique['type'] = "compteur";
+                      rubrique['edl'] = idEdl;
+                      rubrique['etat'] = "RAS";
+                      rubrique['num_ordre'] = "";
+                      await etatRealisationProvider.addComposant(rubrique);
+                      Navigator.pop(context_, 'OK');
+                    }
                   },
                 ),
               ])),
             ));
   }
 
-  void displayFormKey(BuildContext context_,
-      {String text =
-          "Attention les données en cours de saisie seront perdues car vous ne les avez pas encore enregistrés. Confirmez-vous cette opération??",
-      String titre = "Voulez vous annuler le constat en cours??"}) {
+  void displayFormKey(String idEdl, BuildContext context_,
+      {String text = "", String titre = ""}) {
     Text message = Text(text);
     Text title = Text(titre);
+    TextEditingController nom = TextEditingController();
+    TextEditingController description = TextEditingController();
     // show the dialog
     showDialog(
         context: context_,
@@ -421,6 +434,7 @@ class DialogProvider {
                   child: Align(
                     alignment: Alignment.center,
                     child: TextFormField(
+                      controller: nom,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Nom",
@@ -449,6 +463,7 @@ class DialogProvider {
                   child: Align(
                     alignment: Alignment.center,
                     child: TextFormField(
+                      controller: description,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Description",
@@ -477,12 +492,25 @@ class DialogProvider {
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         )),
                   ),
-                  onTap: () {
-                    // Navigator.push(
-                    //     context, MaterialPageRoute(builder: (context) => home()));
+                  onTap: () async {
+                    dynamic rubrique = {};
+                    if (nom.text == "" || description.text == "") {
+                      messageErreur = "Champs vides";
+                    } else {
+                      rubrique['nom'] = nom.text;
+                      rubrique['description'] = description.text;
+                      rubrique['type'] = "clef";
+                      rubrique['edl'] = idEdl;
+                      rubrique['etat'] = "RAS";
+                      rubrique['num_ordre'] = "";
+                      await etatRealisationProvider.addComposant(rubrique);
+                      Navigator.pop(context_, 'OK');
+                    }
                   },
                 ),
               ])),
             ));
   }
+
+ 
 }
